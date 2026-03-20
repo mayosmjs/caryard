@@ -1,0 +1,189 @@
+<!--
+    _list.htm
+    - Pagination links use data-request-form="#vehicle-filter-form" so filter state is ALWAYS preserved
+    - Load More button appends new cards without replacing existing ones (JS handles appending)
+    - Both pagination and load-more include the page number in the URL via JS
+-->
+
+<!-- Results grid -->
+<div id="vehicle-cards-inner" class="row g-4">
+    {% partial __SELF__ ~ '::_cards' %}
+</div>
+
+<!-- Empty state -->
+{% if not results.count %}
+<div class="col-12 py-5 text-center">
+    <i class="fas fa-search fa-3x mb-3" style="opacity:0.12;"></i>
+    <h3 class="h5 text-muted">No vehicles match your criteria.</h3>
+    <p class="text-muted small">Try adjusting or resetting your filters.</p>
+</div>
+{% endif %}
+
+<!-- ── Pagination ───────────────────────────────── -->
+<!-- {% if results.lastPage > 1 %}
+<div class="mt-5 d-flex justify-content-center" id="pagination-wrap">
+    <nav aria-label="Vehicle pages">
+        <ul class="pagination pagination-premium">
+
+            {% if results.currentPage > 1 %}
+            <li class="page-item">
+                <a class="page-link page-nav" href="javascript:;" data-page="{{ results.currentPage - 1 }}"
+                    data-request="{{ __SELF__ }}::onChangePage" data-request-form="#vehicle-filter-form"
+                    data-request-update="'{{ __SELF__ }}::_list': '#vehicle-list'">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for p in 1..results.lastPage %}
+            <li class="page-item {% if p == results.currentPage %}active{% endif %}">
+                <a class="page-link page-nav" href="javascript:;" data-page="{{ p }}"
+                    data-request="{{ __SELF__ }}::onChangePage" data-request-form="#vehicle-filter-form"
+                    data-request-update="'{{ __SELF__ }}::_list': '#vehicle-list'">{{ p }}</a>
+            </li>
+            {% endfor %}
+
+            {% if results.currentPage < results.lastPage %} <li class="page-item">
+                <a class="page-link page-nav" href="javascript:;" data-page="{{ results.currentPage + 1 }}"
+                    data-request="{{ __SELF__ }}::onChangePage" data-request-form="#vehicle-filter-form"
+                    data-request-update="'{{ __SELF__ }}::_list': '#vehicle-list'">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                </li>
+                {% endif %}
+
+        </ul>
+    </nav>
+</div>
+{% endif %} -->
+
+<!-- ── Load More Button ─────────────────────────── -->
+{% if results.hasMorePages %}
+<div class="text-center mt-4" id="load-more-wrap">
+    <button id="load-more-btn" class="btn btn-outline-dark px-5" data-next-page="{{ results.currentPage + 1 }}"
+        data-has-more="{{ results.hasMorePages ? 'true' : 'false' }}">
+        <span class="load-more-text">Load More</span>
+        <span class="load-more-spinner spinner-border spinner-border-sm ms-2" style="display:none;"
+            role="status"></span>
+    </button>
+</div>
+{% endif %}
+
+<!-- Hidden page tracker (written by JS, read by AJAX form submits) -->
+<input type="hidden" id="current-page-tracker" value="{{ results.currentPage }}">
+
+<script>
+    (function () {
+        // Update count badge
+        var countEl = document.getElementById('vehicle-count');
+        if (countEl) countEl.innerText = '{{ results.total }}';
+
+        // ── Pagination: inject chosen page into filter form before submit ──
+        document.querySelectorAll('.page-nav').forEach(function (el) {
+            el.addEventListener('click', function () {
+                var page = this.getAttribute('data-page');
+                var form = document.getElementById('vehicle-filter-form');
+                var pageInput = form.querySelector('[name="page"]');
+                if (!pageInput) {
+                    pageInput = document.createElement('input');
+                    pageInput.type = 'hidden';
+                    pageInput.name = 'page';
+                    form.appendChild(pageInput);
+                }
+                pageInput.value = page;
+
+                // Update URL
+                updateUrl(page);
+            });
+        });
+
+        // ── Load More ──────────────────────────────────────────────────────
+        var loadMoreBtn = document.getElementById('load-more-btn');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', function () {
+                var btn = this;
+                var nextPage = parseInt(btn.getAttribute('data-next-page'));
+                var form = document.getElementById('vehicle-filter-form');
+
+                btn.querySelector('.load-more-text').style.opacity = '0.5';
+                btn.querySelector('.load-more-spinner').style.display = '';
+                btn.disabled = true;
+
+                // Collect form data + page
+                var $form = $(form);
+                $form.request('{{ __SELF__ }}::onLoadMore', {
+                    data: { page: nextPage },
+                    success: function (data) {
+                        // Append new cards to inner grid
+                        $('#vehicle-cards-inner').append(data['#vehicle-cards-inner']);
+
+                        // Update or remove Load More button
+                        if (data.hasMore) {
+                            btn.setAttribute('data-next-page', data.nextPage);
+                            btn.querySelector('.load-more-text').style.opacity = '';
+                            btn.querySelector('.load-more-spinner').style.display = 'none';
+                            btn.disabled = false;
+                        } else {
+                            document.getElementById('load-more-wrap').remove();
+                        }
+
+                        // Update count
+                        var countEl = document.getElementById('vehicle-count');
+                        if (countEl && data.total) countEl.innerText = data.total;
+
+                        updateUrl(nextPage);
+                    }
+                });
+            });
+        }
+
+        // ── URL Sync ───────────────────────────────────────────────────────
+        function updateUrl(page) {
+            var form = document.getElementById('vehicle-filter-form');
+            var params = new URLSearchParams();
+
+            $(form).find('input[name], select[name]').each(function () {
+                var name = this.name;
+                var value = $(this).val();
+                var type = this.type;
+                if (!name || !value) return;
+                if ((type === 'checkbox' || type === 'radio') && !this.checked) return;
+                params.append(name, value);
+            });
+
+            if (page && page > 1) params.set('page', page);
+
+            var qs = params.toString();
+            var url = window.location.pathname + (qs ? '?' + qs : '');
+            history.pushState({ page: page, qs: qs }, '', url);
+        }
+    })();
+</script>
+
+<style>
+    .pagination-premium .page-link {
+        border: none;
+        color: #555;
+        margin: 0 3px;
+        border-radius: 8px !important;
+        font-weight: 600;
+        padding: 8px 15px;
+        transition: background 0.15s;
+    }
+
+    .pagination-premium .page-item.active .page-link {
+        background: #111;
+        color: #fff;
+    }
+
+    .pagination-premium .page-link:hover {
+        background: #f0f0f0;
+        color: #000;
+    }
+
+    #load-more-btn {
+        border-radius: 50px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+</style>

@@ -1,0 +1,23 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: Name
+        span: auto
+        required: true
+
+    logo_file:
+        label: Brand Logo
+        type: fileupload
+        mode: image
+        imageWidth: 200
+        imageHeight: 200
+        span: right
+
+    description:
+        label: Description
+        type: textarea
+        size: small
+        span: full

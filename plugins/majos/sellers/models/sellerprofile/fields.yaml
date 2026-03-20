@@ -1,0 +1,54 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    company_name:
+        label: Company Name
+        span: auto
+    phone_number:
+        label: Phone Number
+        span: auto
+    identification_type:
+        label: ID Type
+        type: dropdown
+        options:
+            national_id: National ID
+            passport: Passport
+            dl: Driving License
+        span: auto
+    identification_number:
+        label: ID Number
+        span: auto
+    tax_id:
+        label: Tax ID
+        span: auto
+    address:
+        label: Address
+        type: textarea
+        size: small
+
+    country:
+        label: Country
+        type: relation
+        nameFrom: name
+        span: auto
+        emptyOption: '-- Select Country --'
+    province_id:
+        label: Province / State
+        type: dropdown
+        span: auto
+        dependsOn: country
+        emptyOption: '-- Select Province --'
+    city_id:
+        label: City
+        type: dropdown
+        span: auto
+        dependsOn: province_id
+        emptyOption: '-- Select City --'
+
+    is_verified_seller:
+        label: Verified Seller
+        type: switch
+        default: false
+        span: auto

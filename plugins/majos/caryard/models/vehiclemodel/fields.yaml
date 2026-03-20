@@ -1,0 +1,18 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: Name
+        span: auto
+        required: true
+    brand:
+        label: Brand
+        type: relation
+        span: auto
+        required: true
+    description:
+        label: Description
+        type: textarea
+        span: full

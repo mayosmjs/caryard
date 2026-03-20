@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Engine Capacity
+
+# Model Form Field configuration
+form: $/majos/caryard/models/enginecapacity/fields.yaml
+
+# Model Class name
+modelClass: Majos\Caryard\Models\EngineCapacity
+
+# Default redirect location
+defaultRedirect: majos/caryard/enginecapacities
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/caryard/enginecapacities/update/:id
+    redirectClose: majos/caryard/enginecapacities
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/caryard/enginecapacities
+    redirectClose: majos/caryard/enginecapacities
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

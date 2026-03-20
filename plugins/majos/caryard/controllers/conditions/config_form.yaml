@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Condition
+
+# Model Form Field configuration
+form: $/majos/caryard/models/condition/fields.yaml
+
+# Model Class name
+modelClass: Majos\Caryard\Models\Condition
+
+# Default redirect location
+defaultRedirect: majos/caryard/conditions
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/caryard/conditions/update/:id
+    redirectClose: majos/caryard/conditions
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/caryard/conditions
+    redirectClose: majos/caryard/conditions
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

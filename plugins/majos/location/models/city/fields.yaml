@@ -1,0 +1,15 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: Name
+        span: auto
+        required: true
+    province:
+        label: Province
+        type: relation
+        span: auto
+        required: true
+        emptyOption: '-- Select Province --'

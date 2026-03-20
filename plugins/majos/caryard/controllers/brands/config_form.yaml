@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Brand
+
+# Model Form Field configuration
+form: $/majos/caryard/models/brand/fields.yaml
+
+# Model Class name
+modelClass: Majos\Caryard\Models\Brand
+
+# Default redirect location
+defaultRedirect: majos/caryard/brands
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/caryard/brands/update/:id
+    redirectClose: majos/caryard/brands
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/caryard/brands
+    redirectClose: majos/caryard/brands
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

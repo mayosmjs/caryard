@@ -1,0 +1,14 @@
+HTTrack3.49-2+libhtsjava.so.2 launched on Tue, 17 Mar 2026 21:48:05 at https://zairent.webflow.io/service/airport-transfer
+(httrack https://zairent.webflow.io/service/airport-transfer )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+21:48:10	Warning: 	Retry after error 502 (Bad Gateway) at link https://zairent.webflow.io/service/roadside-assistance (from https://zairent.webflow.io/service/airport-transfer)
+21:48:10	Warning: 	Retry after error 502 () at link https://zairent.webflow.io/service/roadside-assistance (from https://zairent.webflow.io/service/airport-transfer)
+21:48:10	Error: 	"" (502) after 2 retries at link https://zairent.webflow.io/service/roadside-assistance (from https://zairent.webflow.io/service/airport-transfer)
+
+HTTrack Website Copier/3.49-2 mirror complete in 5 seconds : 6 links scanned, 2 files written (93887 bytes overall) [32065 bytes received at 6413 bytes/sec], 93907 bytes transferred using HTTP compression in 3 files, ratio 24%, 1.3 requests per connection
+(1 errors, 2 warnings, 0 messages)

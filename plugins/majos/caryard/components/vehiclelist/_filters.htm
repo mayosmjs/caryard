@@ -1,0 +1,478 @@
+<form id="vehicle-filter-form" data-request="{{ __SELF__ }}::onFilter"
+    data-request-update="'{{ __SELF__ }}::_list': '#vehicle-list'" data-request-loading="#filtering-loader"
+    data-request-progress-bar="true" class="p-4">
+    <input type="hidden" name="page" value="1" id="form-page-input">
+
+    <!-- Vehicle Selection -->
+    <div class="mb-4 pb-3 border-bottom">
+        <h6 class="text-uppercase fs-xs fw-bold text-muted mb-3">Vehicle Selection</h6>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Condition</label>
+                <div class="btn-group w-100" role="group">
+                    <input type="radio" class="btn-check" name="condition" id="cond-all" value="" {{ not
+                        component.conditionSlug ? 'checked' }}>
+                    <label class="btn btn-outline-secondary btn-sm" for="cond-all">All</label>
+                    {% for c in filterOptions.conditions %}
+                    <input type="radio" class="btn-check" id="cond-{{ c.slug }}" name="condition" value="{{ c.slug }}"
+                        {{ component.checked('conditionSlug', c.slug) }}>
+                    <label class="btn btn-outline-secondary btn-sm" for="cond-{{ c.slug }}">{{ c.name }}</label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Brand</label>
+                <select name="brand" class="form-select" id="filter-brand">
+                    <option value="">All Brands</option>
+                    {% for brand in filterOptions.brands %}
+                    <option value="{{ brand.slug }}" {{ component.selected('brandSlug', brand.slug) }}>{{ brand.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold d-flex justify-content-between">
+                    Model <span id="model-loading" class="spinner-border spinner-border-sm"
+                        style="display:none;"></span>
+                </label>
+                <select name="model" class="form-select" id="filter-model" {{ not component.brandSlug ? 'disabled' }}>
+                    <option value="">{{ component.brandSlug ? 'All Models' : 'Select brand first' }}</option>
+                    {% for model in filterOptions.models %}
+                    <option value="{{ model.slug }}" {{ component.selected('modelSlug', model.slug) }}>{{ model.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Specifications & Budget -->
+    <div class="mb-4 pb-3 border-bottom">
+        <h6 class="text-uppercase fs-xs fw-bold text-muted mb-3">Specifications & Budget</h6>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Price Range</label>
+                <div class="input-group">
+                    <input type="number" name="price_min" class="form-control" placeholder="Min"
+                        value="{{ component.minPrice }}">
+                    <span class="input-group-text bg-light">-</span>
+                    <input type="number" name="price_max" class="form-control" placeholder="Max"
+                        value="{{ component.maxPrice }}">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Year Range</label>
+                <div class="input-group">
+                    <select name="year_min" class="form-select">
+                        <option value="">From</option>
+                        {% for year in 2024..2000 %}
+                        <option value="{{ year }}" {{ component.selected('yearMin', year) }}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="year_max" class="form-select">
+                        <option value="">To</option>
+                        {% for year in 2024..2000 %}
+                        <option value="{{ year }}" {{ component.selected('yearMax', year) }}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Transmission</label>
+                <select name="transmission" class="form-select">
+                    <option value="">Any Transmission</option>
+                    {% for t in filterOptions.transmissions %}
+                    <option value="{{ t.slug }}" {{ component.selected('transmissionSlug', t.slug) }}>{{ t.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Engine Size (cc)</label>
+                <div class="input-group">
+                    <input type="number" name="engine_min" class="form-control" placeholder="Min" step="100"
+                        value="{{ component.engineMin }}">
+                    <input type="number" name="engine_max" class="form-control" placeholder="Max" step="100"
+                        value="{{ component.engineMax }}">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Fuel Type</label>
+                <select name="fuel_type" class="form-select">
+                    <option value="">Any Fuel Type</option>
+                    {% for f in filterOptions.fuelTypes %}
+                    <option value="{{ f.slug }}" {{ component.selected('fuelTypeSlug', f.slug) }}>{{ f.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Exterior Color</label>
+                <div class="d-flex flex-wrap gap-2 py-1">
+                    <label class="color-dot-label">
+                        <input type="radio" name="color" value="" class="d-none color-radio" {{ not component.colorSlug
+                            ? 'checked' }}>
+                        <span class="color-dot color-dot-clear {{ not component.colorSlug ? 'active' }}"
+                            title="Any Color">✕</span>
+                    </label>
+                    {% for color in filterOptions.colors %}
+                    <label class="color-dot-label">
+                        <input type="radio" name="color" value="{{ color.slug }}" class="d-none color-radio" {{
+                            component.checked('colorSlug', color.slug) }}>
+                        <span class="color-dot {{ component.activeClass('colorSlug', color.slug) }}"
+                            style="background-color: {{ color.hex_code ?: '#ccc' }};" title="{{ color.name }}"></span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location & Sorting -->
+    <div class="mb-4">
+        <h6 class="text-uppercase fs-xs fw-bold text-muted mb-3">Location & Sorting</h6>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Country</label>
+                <select name="country" class="form-select shadow-none" id="filter-country">
+                    <option value="">All Countries</option>
+                    {% for country in filterOptions.countries %}
+                    <option value="{{ country.slug }}" {{ component.selected('countrySlug', country.slug) }}>{{
+                        country.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3" id="province-wrap">
+                <label class="form-label fw-semibold">Province <span id="province-loading"
+                        class="spinner-border spinner-border-sm" style="display:none;"></span></label>
+                <select name="province" class="form-select" id="filter-province" {{ not component.countrySlug
+                    ? 'disabled' }}>
+                    <option value="">All Provinces</option>
+                    {% for province in filterOptions.provinces %}
+                    <option value="{{ province.slug }}" {{ component.selected('provinceSlug', province.slug) }}>{{
+                        province.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3" id="city-wrap">
+                <label class="form-label fw-semibold">City <span id="city-loading"
+                        class="spinner-border spinner-border-sm" style="display:none;"></span></label>
+                <select name="city" class="form-select" id="filter-city" {{ not component.provinceSlug ? 'disabled' }}>
+                    <option value="">All Cities</option>
+                    {% for city in filterOptions.cities %}
+                    <option value="{{ city.slug }}" {{ component.selected('citySlug', city.slug) }}>{{ city.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Sort By</label>
+                <select name="order_by" class="form-select border-primary-subtle">
+                    <option value="latest" {{ component.selected('orderBy', 'latest' ) }}>Newest First</option>
+                    <option value="price_asc" {{ component.selected('orderBy', 'price_asc' ) }}>Price: Low → High
+                    </option>
+                    <option value="price_desc" {{ component.selected('orderBy', 'price_desc' ) }}>Price: High → Low
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="sticky-bottom bg-white pt-3 border-top mt-4 d-none d-md-block">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-8">
+                <div id="filtering-loader" style="display:none;">
+                    <div class="progress" style="height:4px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary w-100"></div>
+                    </div>
+                    <small class="text-muted">Updating results...</small>
+                </div>
+            </div>
+            <button type="button" id="reset-filters" class="btn btn-link text-decoration-none text-muted w-100">
+                Reset
+            </button>
+            <button type="submit" id="search-btn"
+                class="md:flex-none bg-black text-white px-10 py-3 rounded-xl font-bold hover:bg-gray-800 hover:shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Show Results
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating search button for small screens -->
+    <div id="float-search-btn-mobile" class="d-md-none">
+        <button type="submit" id="search-btn-mobile"
+            class="btn btn-dark btn-lg w-100 rounded-0 position-fixed bottom-0 start-0 end-0 shadow-lg"
+            style="z-index:1050;">
+            <i class="fas fa-search me-2"></i> Show Results
+        </button>
+    </div>
+</form>
+<style>
+    @media (max-width: 767.98px) {
+        #float-search-btn-mobile {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            z-index: 1050;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        #float-search-btn-mobile button {
+            pointer-events: auto;
+        }
+    }
+</style>
+{% put scripts %}
+<script>
+    $(function () {
+        var $form = $('#vehicle-filter-form');
+        var alias = '{{ __SELF__ }}';
+
+        // ── Cascade helper ─────────────────────────────────────────────────
+        function cascade(handler, data, $target, $spinner, emptyLabel) {
+            $spinner.show();
+            $target.prop('disabled', true).html('<option value="">Loading...</option>');
+
+            $.request(alias + '::' + handler, {
+                data: data,
+                success: function (data) {
+                    this.success(data);
+                    if (data.html) {
+                        $target.html(data.html).prop('disabled', false);
+                    } else {
+                        $target.html('<option value="">' + emptyLabel + '</option>').prop('disabled', true);
+                    }
+                },
+                complete: function () {
+                    $spinner.hide();
+                }
+            });
+        }
+
+        // ── Brand → Model ──────────────────────────────────────────────────
+        $('#filter-brand').on('change', function () {
+            var brandSlug = $(this).val();
+            $('#filter-model').html('<option value="">← Select a brand first</option>').prop('disabled', true);
+            if (!brandSlug) return;
+            cascade('onGetModels', { brand_slug: brandSlug }, $('#filter-model'), $('#model-loading'), 'No models found');
+        });
+
+        // ── Country → Province ────────────────────────────────────────────
+        $('#filter-country').on('change', function () {
+            var countrySlug = $(this).val();
+            // Reset province + city
+            $('#filter-province').html('<option value="">← Select a country first</option>').prop('disabled', true);
+            $('#filter-city').html('<option value="">← Select a province first</option>').prop('disabled', true);
+
+            if (!countrySlug) return;
+            cascade('onGetProvinces', { country_slug: countrySlug }, $('#filter-province'), $('#province-loading'), 'No provinces found');
+        });
+
+        // ── Province → City ───────────────────────────────────────────────
+        $('#filter-province').on('change', function () {
+            var provinceSlug = $(this).val();
+            $('#filter-city').html('<option value="">← Select a province first</option>').prop('disabled', true);
+
+            if (!provinceSlug) return;
+            cascade('onGetCities', { province_slug: provinceSlug }, $('#filter-city'), $('#city-loading'), 'No cities found');
+        });
+
+        // ── Color dot visual state ─────────────────────────────────────────
+        $form.on('change', '.color-radio', function () {
+            $('.color-dot').removeClass('active');
+            $(this).siblings('.color-dot').addClass('active');
+        });
+
+        // ── URL Sync ───────────────────────────────────────────────────────
+        function syncUrl() {
+            var params = new URLSearchParams();
+            $form.find('input[name], select[name]').each(function () {
+                var name = this.name, value = $(this).val(), type = this.type;
+                if (!name || value === null || value === '') return;
+                if ((type === 'checkbox' || type === 'radio') && !this.checked) return;
+                if (name === 'page' && value == '1') return;
+                params.append(name, value);
+            });
+            var qs = params.toString();
+            var url = window.location.pathname + (qs ? '?' + qs : '');
+            history.pushState({ qs: qs }, '', url);
+        }
+
+        // Hook into OctoberCMS AJAX success to sync URL after filter
+        $form.on('ajaxSuccess', function () {
+            syncUrl();
+            $('#filtering-loader').hide();
+            // Close Bootstrap offcanvas if open (for advanced filters sidebar)
+            var $offcanvas = $(this).closest('.offcanvas');
+            if ($offcanvas.length && window.bootstrap && bootstrap.Offcanvas) {
+                var bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance($offcanvas[0]);
+                bsOffcanvas.hide();
+            }
+            // Also close Bootstrap modal if open (for advancedSearchModal), with debounce to prevent flicker
+            var $modal = $('#advancedSearchModal');
+            if ($modal.length && $modal.hasClass('show') && window.bootstrap && bootstrap.Modal) {
+                setTimeout(function () {
+                    if ($modal.hasClass('show')) {
+                        var bsModal = bootstrap.Modal.getOrCreateInstance($modal[0]);
+                        bsModal.hide();
+                    }
+                }, 100); // Delay to avoid race with button
+            }
+        });
+
+        // ── Reset ──────────────────────────────────────────────────────────
+        $('#reset-filters').on('click', function () {
+            $form[0].reset();
+            // Clear all selects and radio buttons manually to be safe
+            $form.find('select').val('');
+            $form.find('input[type="text"], input[type="number"]').val('');
+            $form.find('input[type="radio"]').prop('checked', false);
+            $('#cond-all').prop('checked', true); // Default condition
+
+            $('#filter-model').html('<option value="">← Select a brand first</option>').prop('disabled', true);
+            $('#filter-province').html('<option value="">← Select a country first</option>').prop('disabled', true);
+            $('#filter-city').html('<option value="">← Select a province first</option>').prop('disabled', true);
+
+            $('.color-dot').removeClass('active');
+            $('.color-dot-clear').addClass('active');
+            $('#form-page-input').val(1);
+
+            // Submit form with empty values so backend clears component state
+            $form.request(alias + '::onFilter', {
+                success: function (data) {
+                    this.success(data);
+                    history.replaceState({}, '', window.location.pathname);
+                }
+            });
+        });
+
+        // ── Back/forward restore ───────────────────────────────────────────
+        window.addEventListener('popstate', function () {
+            var params = new URLSearchParams(window.location.search);
+            $form.find('input[name], select[name]').each(function () {
+                var name = this.name, val = params.get(name);
+                if ($(this).is('select')) $(this).val(val || '');
+                else if (this.type === 'checkbox') this.checked = params.getAll(name).includes($(this).val());
+                else if (this.type === 'radio') this.checked = $(this).val() === val;
+                else $(this).val(val || '');
+            });
+            $form.submit();
+        });
+
+        // ── Floating Search Button ─────────────────────────────────────────
+        var $floatBtn = $('#float-search-btn');
+        var $filterCard = $('#vehicle-filter-form').closest('.card');
+
+        $floatBtn.find('button').on('click', function () {
+            $form.submit();
+        });
+
+        $(window).on('scroll', function () {
+            if ($filterCard.length) {
+                var bottom = $filterCard.offset().top + $filterCard.outerHeight();
+                if ($(window).scrollTop() > bottom - 80) {
+                    $floatBtn.fadeIn(200);
+                } else {
+                    $floatBtn.fadeOut(200);
+                }
+            }
+        });
+    });
+</script>
+{% endput %}
+
+<style>
+    /* Floating search button */
+    #float-search-btn {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050;
+    }
+
+    #float-search-btn .btn {
+        border-radius: 50px;
+        padding: 12px 32px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25) !important;
+        transition: transform 0.2s;
+    }
+
+    #float-search-btn .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Filter form styles */
+    .btn-search {
+        border-radius: 10px;
+        padding: 10px;
+        font-weight: 600;
+    }
+
+    .form-label.fw-semibold {
+        font-size: 0.875rem;
+        color: #333;
+    }
+
+    .form-select,
+    .form-control {
+        border-radius: 8px;
+        border-color: #e5e5e5;
+    }
+
+    .form-select:disabled {
+        background-color: #f8f9fa;
+        opacity: 0.6;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+        border-color: #000;
+        box-shadow: none;
+    }
+
+    #filtering-loader .progress {
+        border-radius: 0;
+    }
+
+    /* Color dots */
+    .color-dot-label {
+        cursor: pointer;
+    }
+
+    .color-dot {
+        display: inline-block;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 2px solid #e0e0e0;
+        transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .color-dot:hover {
+        transform: scale(1.15);
+    }
+
+    .color-dot.active {
+        border-color: #000 !important;
+        box-shadow: 0 0 0 2px #000;
+        transform: scale(1.1);
+    }
+
+    .color-dot-clear {
+        background: #f8f9fa !important;
+        color: #aaa;
+        font-size: 11px;
+        line-height: 22px;
+        text-align: center;
+    }
+</style>

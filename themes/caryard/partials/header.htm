@@ -1,0 +1,36 @@
+description = "Site Header"
+==
+<div class="" style="">
+    <div class="fixed z-40 left-1/2 transform -translate-x-1/2 mx-auto w-full max-w-7xl px-4" style="top:10px;">
+      <header class="flex items-center justify-between rounded-full bg-white/90 px-6 md:px-8 py-3 md:py-4 shadow-lg backdrop-blur-md">
+        <!-- Brand (links to home) -->
+        <a href="{{ 'home'|page }}" class="flex items-center gap-2 text-lg md:text-2xl font-bold text-gray-900">
+          <span class="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-yellow-400 text-white shadow-sm">Z</span>
+          <span class="hidden md:inline">Caryard</span>
+        </a>
+
+        <!-- Center navigation: includes the previous nav items (Home, Buy Vehicle, etc.) -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-800">
+          <a href="{{ 'home'|page }}" class="{{ this.page.id == 'home' ? 'text-yellow-600' : 'transition hover:text-yellow-600' }}">Home</a>
+          <a href="{{ 'buy'|page }}" class="{{ this.page.id == 'buy' ? 'text-yellow-600' : 'transition hover:text-yellow-600' }}">Buy Vehicle</a>
+          <a href="#" class="transition hover:text-yellow-600">About Us</a>
+          <a href="#" class="transition hover:text-yellow-600">Service</a>
+          <a href="#" class="transition hover:text-yellow-600">Pages ▾</a>
+          <a href="#" class="transition hover:text-yellow-600">Blogs</a>
+        </nav>
+
+        <!-- Right side: tenant dropdown (keeps original dropdown links and flags) -->
+        <div class="relative">
+          <a class="inline-flex items-center text-sm font-medium text-gray-800 hover:text-yellow-600 focus:outline-none" href="#" id="tenantDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-globe-africa me-1"></i>
+            <span class="hidden md:inline">Market:</span>
+            <span class="ms-1"> {{ tenant.name|default('Select Country') }}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="tenantDropdown">
+            <li><a class="dropdown-item" href="{{ 'buy'|page({ tenant: 'ke' }) }}"><img src="https://flagcdn.com/16x12/ke.png" class="me-2"> Kenya</a></li>
+            <li><a class="dropdown-item" href="{{ 'buy'|page({ tenant: 'ug' }) }}"><img src="https://flagcdn.com/16x12/ug.png" class="me-2"> Uganda</a></li>
+          </ul>
+        </div>
+      </header>
+    </div>
+</div>

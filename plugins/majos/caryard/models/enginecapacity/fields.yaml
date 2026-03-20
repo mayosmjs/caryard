@@ -1,0 +1,17 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    size:
+        label: Size (cc)
+        span: auto
+        required: true
+    slug:
+        label: Slug
+        span: auto
+        required: true
+    description:
+        label: Description
+        type: textarea
+        span: full

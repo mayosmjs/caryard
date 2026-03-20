@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Fuel Type
+
+# Model Form Field configuration
+form: $/majos/caryard/models/fueltype/fields.yaml
+
+# Model Class name
+modelClass: Majos\Caryard\Models\FuelType
+
+# Default redirect location
+defaultRedirect: majos/caryard/fueltypes
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/caryard/fueltypes/update/:id
+    redirectClose: majos/caryard/fueltypes
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/caryard/fueltypes
+    redirectClose: majos/caryard/fueltypes
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

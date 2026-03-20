@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Vehicle Model
+
+# Model Form Field configuration
+form: $/majos/caryard/models/vehiclemodel/fields.yaml
+
+# Model Class name
+modelClass: Majos\Caryard\Models\VehicleModel
+
+# Default redirect location
+defaultRedirect: majos/caryard/vehiclemodels
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/caryard/vehiclemodels/update/:id
+    redirectClose: majos/caryard/vehiclemodels
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/caryard/vehiclemodels
+    redirectClose: majos/caryard/vehiclemodels
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

@@ -1,0 +1,32 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+        searchable: true
+    title:
+        label: Title
+        searchable: true
+    brand:
+        label: Brand
+        relation: brand
+        select: name
+        searchable: true
+    vehicle_model:
+        label: Model
+        relation: vehicle_model
+        select: name
+        searchable: true
+    year:
+        label: Year
+        type: date
+        format: Y
+        searchable: true
+    price:
+        label: Price
+        searchable: true
+    created_at:
+        label: Created
+        type: datetime

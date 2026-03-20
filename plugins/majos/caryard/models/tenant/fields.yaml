@@ -1,0 +1,32 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: Name
+        span: auto
+        required: true
+    country_code:
+        label: Country Code
+        span: auto
+        required: true
+    currency:
+        label: Currency
+        span: auto
+        required: true
+    locale:
+        label: Locale
+        span: auto
+    is_active:
+        label: Active
+        type: switch
+        default: true
+        span: auto
+    logo:
+        label: Country Flag / Logo
+        type: fileupload
+        mode: image
+        imageWidth: 200
+        imageHeight: 200
+        span: full

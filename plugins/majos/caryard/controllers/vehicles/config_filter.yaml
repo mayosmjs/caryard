@@ -1,0 +1,15 @@
+# ===================================
+# Filter Scope Definitions
+# ===================================
+
+scopes:
+    is_active:
+        label: Status
+        type: switch
+        conditions: is_active = 1
+    tenant:
+        label: Tenant
+        modelClass: Majos\Caryard\Models\Tenant
+        nameFrom: name
+        conditions: tenant_id in (:filtered)
+

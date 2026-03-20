@@ -1,0 +1,82 @@
+<div class="container mx-auto px-6 py-12">
+
+    <!-- Compact Filter Bar (main view) -->
+    <div class="mb-12">
+        {% partial __SELF__ ~ '::_filters_bar' %}
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-12">
+                <div>
+                    <h2 class="text-3xl font-black text-gray-900 md:text-4xl">
+                        Vehicles {% if tenant %}in {{ tenant.name }}{% endif %}
+                    </h2>
+                    <div class="mt-2 h-1.5 w-12 rounded-full bg-yellow-400"></div>
+                </div>
+                <div class="text-muted small font-bold uppercase tracking-widest">
+                    <span id="vehicle-count">{{ results.total }}</span> listings found
+                </div>
+            </div>
+
+            <div id="vehicle-list">
+                {% partial __SELF__ ~ '::_list' %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Advanced Search Modal -->
+<div class="modal fade" id="advancedSearchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content overflow-hidden border-0 rounded-2xl shadow-2xl">
+            <div class="modal-header bg-slate-900 text-white border-0 py-4 px-6">
+                <h5 class="modal-title font-black uppercase tracking-widest text-sm">Advanced Search</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                {% partial __SELF__ ~ '::_filters' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-lg {
+        border-radius: 12px;
+    }
+
+    .btn-premium {
+        background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        transition: transform 0.2s;
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-2px);
+        color: #f8f9fa;
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #444;
+    }
+
+    .form-select,
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #eee;
+        padding: 10px;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+        border-color: #000;
+        box-shadow: none;
+    }
+</style>

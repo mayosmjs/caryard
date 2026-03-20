@@ -1,0 +1,23 @@
+{% for image in gallery.images %}
+<a class="thumbnail" data-fancybox="gallery">
+    <img src="{{ image.path }}" class="img-fluid" alt="">
+</a>
+{% endfor %}
+
+
+
+
+<script>
+    Fancybox.bind("[data-fancybox]", {
+    });
+
+</script>
+
+<script>
+    var anchors = document.querySelectorAll('a.thumbnail');
+    anchors.forEach(function (anchor) {
+        var img = anchor.querySelector('img');
+        var src = img.getAttribute('src');
+        anchor.setAttribute('href', src);
+    });
+</script>

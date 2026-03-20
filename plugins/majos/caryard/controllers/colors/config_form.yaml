@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Color
+
+# Model Form Field configuration
+form: $/majos/caryard/models/color/fields.yaml
+
+# Model Class name
+modelClass: Majos\Caryard\Models\Color
+
+# Default redirect location
+defaultRedirect: majos/caryard/colors
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/caryard/colors/update/:id
+    redirectClose: majos/caryard/colors
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/caryard/colors
+    redirectClose: majos/caryard/colors
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

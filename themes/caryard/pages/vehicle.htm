@@ -1,0 +1,148 @@
+title = "Vehicle Details"
+url = "/:tenant?/vehicle/:slug"
+layout = "default"
+description = "Full details for a vehicle listing."
+
+[vehicleDetail]
+tenant = "{{ :tenant }}"
+slug = "{{ :slug }}"
+==
+{% if not vehicle %}
+    <div class="container py-5 text-center">
+        <h2>Vehicle not found</h2>
+        <a href="javascript:history.back()" class="btn btn-dark mt-3">← Go Back</a>
+    </div>
+{% else %}
+<div class="container py-5">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/{{ tenant.country_code }}/buy-car">Buy a Car</a></li>
+            {% if vehicle.brand %}<li class="breadcrumb-item"><a href="/{{ tenant.country_code }}/buy-car/{{ vehicle.brand.slug }}">{{ vehicle.brand.name }}</a></li>{% endif %}
+            {% if vehicle.vehicle_model %}<li class="breadcrumb-item"><a href="/{{ tenant.country_code }}/buy-car/{{ vehicle.brand.slug }}/{{ vehicle.vehicle_model.slug }}">{{ vehicle.vehicle_model.name }}</a></li>{% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ vehicle.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+
+        <!-- Gallery -->
+        <div class="col-lg-7">
+            {% if vehicle.images.count %}
+                <div id="vehicleCarousel" class="carousel slide rounded-3 overflow-hidden shadow" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in vehicle.images %}
+                            <div class="carousel-item {{ loop.first ? 'active' }}">
+                                <img src="{{ image.path }}" class="d-block w-100" alt="{{ vehicle.title }}" style="height:420px;object-fit:cover;">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if vehicle.images.count > 1 %}
+                        <button class="carousel-control-prev" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    {% endif %}
+                </div>
+            {% else %}
+                <img src="https://placehold.co/800x500/1a1a1a/ffffff?text={{ vehicle.title|url_encode }}"
+                     class="img-fluid rounded-3 shadow" alt="{{ vehicle.title }}" style="height:420px;object-fit:cover;width:100%;">
+            {% endif %}
+        </div>
+
+        <!-- Details -->
+        <div class="col-lg-5">
+            <div class="d-flex align-items-start gap-2 mb-1">
+                <span class="badge bg-dark">{{ vehicle.condition.name }}</span>
+                {% if vehicle.is_active %}<span class="badge bg-success">Active</span>{% endif %}
+            </div>
+
+            <h1 class="fw-bold mb-1 h2">{{ vehicle.title }}</h1>
+            <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-1"></i>{{ vehicle.location.name }}</p>
+
+            <div class="price-block bg-dark text-white rounded-3 p-4 mb-4">
+                <div class="small opacity-75 mb-1">Asking Price</div>
+                <div class="display-6 fw-bold">{{ tenant.currency }} {{ vehicle.price|number_format }}</div>
+            </div>
+
+            <!-- Quick Specs -->
+            <div class="row g-3 mb-4">
+                {% if vehicle.year %}
+                <div class="col-6">
+                    <div class="spec-badge"><i class="fas fa-calendar me-2 text-muted"></i>{{ vehicle.year|date('Y') }}</div>
+                </div>
+                {% endif %}
+                {% if vehicle.mileage %}
+                <div class="col-6">
+                    <div class="spec-badge"><i class="fas fa-tachometer-alt me-2 text-muted"></i>{{ vehicle.mileage|number_format }} km</div>
+                </div>
+                {% endif %}
+                {% if vehicle.transmission %}
+                <div class="col-6">
+                    <div class="spec-badge"><i class="fas fa-cogs me-2 text-muted"></i>{{ vehicle.transmission.name }}</div>
+                </div>
+                {% endif %}
+                {% if vehicle.fuel_type %}
+                <div class="col-6">
+                    <div class="spec-badge"><i class="fas fa-gas-pump me-2 text-muted"></i>{{ vehicle.fuel_type.name }}</div>
+                </div>
+                {% endif %}
+                {% if vehicle.body_type %}
+                <div class="col-6">
+                    <div class="spec-badge"><i class="fas fa-car me-2 text-muted"></i>{{ vehicle.body_type.name }}</div>
+                </div>
+                {% endif %}
+                {% if vehicle.drive_type %}
+                <div class="col-6">
+                    <div class="spec-badge"><i class="fas fa-road me-2 text-muted"></i>{{ vehicle.drive_type.name }}</div>
+                </div>
+                {% endif %}
+            </div>
+
+            <a href="mailto:?subject=Enquiry: {{ vehicle.title }}" class="btn btn-dark w-100 mb-2 py-3">
+                <i class="fas fa-envelope me-2"></i> Enquire Now
+            </a>
+            <a href="/{{ tenant.country_code }}/buy-car" class="btn btn-outline-dark w-100">
+                ← Back to Listings
+            </a>
+        </div>
+    </div>
+
+    <!-- Full Specs -->
+    <div class="mt-5">
+        <h2 class="h4 fw-bold mb-4">Full Specifications</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    {% if vehicle.brand %}<tr><th width="30%">Brand</th><td>{{ vehicle.brand.name }}</td></tr>{% endif %}
+                    {% if vehicle.vehicle_model %}<tr><th>Model</th><td>{{ vehicle.vehicle_model.name }}</td></tr>{% endif %}
+                    {% if vehicle.color %}<tr><th>Color</th><td>{{ vehicle.color.name }}</td></tr>{% endif %}
+                    {% if vehicle.vin_id %}<tr><th>VIN</th><td><code>{{ vehicle.vin_id }}</code></td></tr>{% endif %}
+                    {% if vehicle.vehicleid %}<tr><th>Stock ID</th><td><code>{{ vehicle.vehicleid }}</code></td></tr>{% endif %}
+                    {% if vehicle.engine_capacity %}<tr><th>Engine</th><td>{{ vehicle.engine_capacity }}</td></tr>{% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endif %}
+
+{% put styles %}
+<style>
+    .spec-badge {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+    .price-block { border-radius: 12px; }
+    .breadcrumb-item a { color: #555; text-decoration: none; }
+    .breadcrumb-item a:hover { color: #000; }
+</style>
+{% endput %}

@@ -1,0 +1,19 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+        searchable: true
+    name:
+        label: Name
+        searchable: true
+    brand:
+        label: Brand
+        relation: brand
+        select: name
+        searchable: true
+    created_at:
+        label: Created
+        type: datetime

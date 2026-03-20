@@ -1,0 +1,228 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+tabs:
+    fields:
+        # 1. Basic Info Tab
+        title:
+            label: Listing Title
+            span: auto
+            required: true
+            tab: Basic Info
+            comment: The public name of the vehicle listing (e.g., "M-Benz C200 AMG 2022")
+            placeholder: Enter a descriptive title...
+
+        brand_id:
+            label: Brand
+            type: dropdown
+            span: auto
+            required: true
+            tab: Basic Info
+            emptyOption: "-- Select Brand --"
+            comment: Select the vehicle manufacturer or brand.
+
+        model_id:
+            label: Model
+            type: dropdown
+            span: auto
+            required: true
+            tab: Basic Info
+            dependsOn: brand_id
+            emptyOption: "-- Select Brand First --"
+            comment: The specific model associated with the selected brand.
+
+        year:
+            label: Model Year
+            type: datepicker
+            mode: date
+            span: auto
+            required: true
+            tab: Basic Info
+            comment: The official manufacturing or registration year of the vehicle.
+
+        price:
+            label: Listing Price
+            type: number
+            span: auto
+            required: true
+            tab: Basic Info
+            comment: The asking price for this vehicle in your default currency.
+            placeholder: e.g. 50000
+
+        is_active:
+            label: Active Listing
+            type: switch
+            default: false
+            span: auto
+            tab: Basic Info
+            comment: Toggle off to hide this vehicle from the public frontend.
+
+        # 2. Specifications Tab
+        condition:
+            label: Vehicle Condition
+            type: relation
+            span: auto
+            tab: Specifications
+            required: true
+            emptyOption: "-- Select Condition --"
+            comment: The physical and mechanical status (e.g. Brand New, Foreign Used).
+
+        body_type:
+            label: Body Type
+            type: relation
+            span: auto
+            tab: Specifications
+            required: true
+            emptyOption: "-- Select Body Type --"
+            comment: Classification by chassis design (e.g. SUV, Hatchback, Sedan).
+
+        color:
+            label: Exterior Color
+            type: relation
+            span: auto
+            tab: Specifications
+            required: true
+            emptyOption: "-- Select Color --"
+            comment: The primary paint color of the vehicle's body.
+
+        fuel_type:
+            label: Fuel Type
+            type: relation
+            span: auto
+            tab: Specifications
+            required: true
+            emptyOption: "-- Select Fuel Type --"
+            comment: The type of energy used by the engine (Petrol, Diesel, Hybrid).
+
+        transmission:
+            label: Transmission
+            type: relation
+            span: auto
+            tab: Specifications
+            required: true
+            emptyOption: "-- Select Transmission --"
+            comment: Specify the gearbox type (Automatic, Manual, Tiptronic).
+
+        engine_capacity:
+            label: Engine Capacity (cc)
+            type: relation
+            span: auto
+            tab: Specifications
+            required: true
+            emptyOption: "-- Select Engine Capacity --"
+            comment: The engine displacement volume in cubic centimeters.
+
+        drive_type:
+            label: Drive System
+            type: relation
+            span: auto
+            tab: Specifications
+            required: true
+            emptyOption: "-- Select Drive Type --"
+            comment: Power distribution mechanism (e.g. 4WD, AWD, Front Wheel Drive).
+
+        options:
+            label: Extra Features & Options
+            type: partial
+            path: $/majos/caryard/models/vehicle/_options_field.htm
+            tab: Features
+            span: full
+            required: true
+            comment: Select all premium features, safety systems, and comfort options available.
+
+        # 3. Inventory Details Tab
+        mileage:
+            label: Mileage (km)
+            type: number
+            span: auto
+            required: true
+            tab: Inventory Details
+            comment: The current odometer reading in kilometers.
+            placeholder: e.g. 15000
+
+        vin_id:
+            label: VIN / Chassis Number
+            span: auto
+            required: true
+            tab: Inventory Details
+            comment: The unique 17-character vehicle identification number.
+            placeholder: Enter chassis number...
+
+        vehicleid:
+            label: Internal Stock ID
+            span: auto
+            required: true
+            tab: Inventory Details
+            comment: Your company's internal code or serial for this specific unit.
+            placeholder: e.g. STK-501
+
+        slug:
+            label: URL Slug
+            span: auto
+            required: true
+            preset:
+                field: title
+                type: slug
+            tab: Inventory Details
+            comment: The search-engine friendly URL fragment, generated automatically from the title.
+
+        # 4. Seller & Location Tab
+        tenant:
+            label: Organization / Tenant
+            type: relation
+            span: auto
+            required: true
+            tab: Seller & Location
+            emptyOption: "-- Select Tenant --"
+            comment: The branch or organization that owns this vehicle listing.
+
+        seller:
+            label: Assigned Seller (KYC)
+            type: relation
+            nameFrom: email
+            span: auto
+            required: true
+            tab: Seller & Location
+            emptyOption: "-- Select Seller --"
+            comment: The verified seller profile responsible for managing this unit.
+
+        country:
+            label: Current Country
+            type: dropdown
+            span: auto
+            required: true
+            tab: Seller & Location
+            emptyOption: "-- Select Country --"
+            comment: Select the country where the vehicle is currently located.
+
+        province:
+            label: State / Province
+            type: dropdown
+            span: auto
+            required: true
+            tab: Seller & Location
+            dependsOn: country
+            emptyOption: "-- Select Province --"
+            comment: Filters based on the selected country above.
+
+        location_id:
+            label: City / Area
+            type: dropdown
+            span: auto
+            required: true
+            tab: Seller & Location
+            dependsOn: province
+            emptyOption: "-- Select City / Location --"
+            comment: The specific city or yard where the vehicle can be inspected.
+
+        # 5. Gallery Tab
+        images:
+            label: Vehicle Gallery
+            type: fileupload
+            mode: image
+            imageWidth: 200
+            imageHeight: 200
+            required: true
+            tab: Gallery
+            comment: Upload high-quality exterior and interior photos (JPG, PNG).

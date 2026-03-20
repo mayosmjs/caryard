@@ -1,0 +1,6 @@
+plugin:
+    name: 'majos.lawfirm::lang.plugin.name'
+    description: 'majos.lawfirm::lang.plugin.description'
+    author: majos
+    icon: oc-icon-building
+    homepage: ''

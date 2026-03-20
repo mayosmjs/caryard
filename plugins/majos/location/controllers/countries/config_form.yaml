@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Country
+
+# Model Form Field configuration
+form: $/majos/location/models/country/fields.yaml
+
+# Model Class name
+modelClass: Majos\Location\Models\Country
+
+# Default redirect location
+defaultRedirect: majos/location/countries
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/location/countries/update/:id
+    redirectClose: majos/location/countries
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/location/countries
+    redirectClose: majos/location/countries
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

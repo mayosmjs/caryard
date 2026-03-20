@@ -1,0 +1,11 @@
+1.0.1:
+    - 'Initialize Location plugin'
+    - create_countries_table.php
+    - create_provinces_table.php
+    - create_cities_table.php
+1.0.2:
+    - 'Seed initial locations'
+    - seed_locations_table.php
+1.0.3:
+    - 'Add slugs to location tables'
+    - add_slugs_to_location_tables.php
