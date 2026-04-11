@@ -1,148 +1,748 @@
-title = "Vehicle Details"
 url = "/:tenant?/vehicle/:slug"
 layout = "default"
+title = "Vehicle Details"
 description = "Full details for a vehicle listing."
 
 [vehicleDetail]
-tenant = "{{ :tenant }}"
 slug = "{{ :slug }}"
+tenant = "{{ :tenant }}"
+
+[loan]
+carValue = 4515000
+annualRate = 10
+minDownPaymentPercent = 10
+maxDownPaymentPercent = 70
+terms = "6,12,24,36,48"
+defaultTerm = 24
 ==
 {% if not vehicle %}
-    <div class="container py-5 text-center">
-        <h2>Vehicle not found</h2>
-        <a href="javascript:history.back()" class="btn btn-dark mt-3">← Go Back</a>
+<div class="min-h-[60vh] flex flex-col items-center justify-center px-6">
+    <div class="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+        <i class="fas fa-car text-gray-300 text-3xl"></i>
     </div>
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">Vehicle not found</h2>
+    <p class="text-gray-500 mb-6">The listing may have been removed or the link is incorrect.</p>
+    <a href="javascript:history.back()"
+        class="px-6 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition shadow-lg shadow-gray-900/20">&larr;
+        Go Back</a>
+</div>
+
 {% else %}
-<div class="container py-5">
 
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/{{ tenant.country_code }}/buy-car">Buy a Car</a></li>
-            {% if vehicle.brand %}<li class="breadcrumb-item"><a href="/{{ tenant.country_code }}/buy-car/{{ vehicle.brand.slug }}">{{ vehicle.brand.name }}</a></li>{% endif %}
-            {% if vehicle.vehicle_model %}<li class="breadcrumb-item"><a href="/{{ tenant.country_code }}/buy-car/{{ vehicle.brand.slug }}/{{ vehicle.vehicle_model.slug }}">{{ vehicle.vehicle_model.name }}</a></li>{% endif %}
-            <li class="breadcrumb-item active" aria-current="page">{{ vehicle.title }}</li>
-        </ol>
-    </nav>
+<!-- Breadcrumb -->
+<div>
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <nav class="flex items-center text-sm text-gray-500 space-x-2 overflow-x-auto">
+            <a href="/" class="hover:text-gray-900 transition whitespace-nowrap flex items-center gap-1.5">
+                <i class="fas fa-home text-xs"></i> Home
+            </a>
+            <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+            <a href="/{{ tenant.country_code }}/buy-car" class="hover:text-gray-900 transition whitespace-nowrap">Buy a
+                Car</a>
+            {% if vehicle.brand %}
+            <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+            <a href="/{{ tenant.country_code }}/buy-car?brand={{ vehicle.brand.slug }}"
+                class="hover:text-gray-900 transition whitespace-nowrap">{{ vehicle.brand.name }}</a>
+            {% endif %}
+            {% if vehicle.vehicle_model %}
+            <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+            <span class="text-gray-900 font-medium whitespace-nowrap">{{ vehicle.vehicle_model.name }}</span>
+            {% endif %}
+        </nav>
+    </div>
+</div>
 
-    <div class="row g-5">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
 
-        <!-- Gallery -->
-        <div class="col-lg-7">
-            {% if vehicle.images.count %}
-                <div id="vehicleCarousel" class="carousel slide rounded-3 overflow-hidden shadow" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        {% for image in vehicle.images %}
-                            <div class="carousel-item {{ loop.first ? 'active' }}">
-                                <img src="{{ image.path }}" class="d-block w-100" alt="{{ vehicle.title }}" style="height:420px;object-fit:cover;">
+        <!-- ═══ Left Column ═══ -->
+        <div class="lg:col-span-2 space-y-8">
+
+            <!-- ── Embla Image Carousel ── -->
+            <div id="vehicle-gallery"
+                class="bg-white rounded-2xl shadow-lg shadow-gray-200/60 border border-gray-100 overflow-hidden">
+
+                <!-- Main Carousel -->
+                <div class="embla relative" id="embla-main">
+                    <div class="embla__viewport overflow-hidden">
+                        <div class="embla__container flex">
+                            {% for image in vehicle.images %}
+                            <div class="embla__slide" style="flex: 0 0 100%; min-width: 0;">
+                                <div class="relative aspect-[16/9] bg-gray-900 overflow-hidden cursor-pointer"
+                                    data-lightbox-index="{{ loop.index0 }}">
+                                    <img src="{{ image.path }}" alt="{{ vehicle.title }} - Image {{ loop.index }}"
+                                        class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                                </div>
                             </div>
-                        {% endfor %}
+                            {% endfor %}
+                            {% if not vehicle.images or vehicle.images|length == 0 %}
+                            <div class="embla__slide" style="flex: 0 0 100%; min-width: 0;">
+                                <div class="aspect-[16/9] flex flex-col items-center justify-center bg-gray-100">
+                                    <i class="fas fa-image text-gray-300 text-5xl mb-3"></i>
+                                    <p class="text-sm text-gray-400">No images available</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
-                    {% if vehicle.images.count > 1 %}
-                        <button class="carousel-control-prev" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
+
+                    <!-- Nav Arrows -->
+                    {% if vehicle.images|length > 1 %}
+                    <button
+                        class="embla-prev absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-black/30 hover:bg-black/60 rounded-full flex items-center justify-center shadow-xl transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm z-10"
+                        style="opacity: 0;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0">
+                        <i class="fas fa-chevron-left text-white text-sm"></i>
+                    </button>
+                    <button
+                        class="embla-next absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-black/30 hover:bg-black/60 rounded-full flex items-center justify-center shadow-xl transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm z-10"
+                        style="opacity: 0;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0">
+                        <i class="fas fa-chevron-right text-white text-sm"></i>
+                    </button>
+                    {% endif %}
+
+                    <!-- Counter Badge -->
+                    <div class="absolute bottom-4 left-4 flex items-center gap-2 z-10">
+                        <div
+                            class="bg-black/50 text-white text-xs px-3 py-1.5 rounded-lg font-semibold backdrop-blur-sm">
+                            <i class="far fa-image mr-1"></i>
+                            <span id="embla-counter">1</span>/<span>{{ vehicle.images|length }}</span>
+                        </div>
+                        <button id="embla-fullscreen-btn"
+                            class="bg-black/50 hover:bg-black/70 text-white text-xs px-3 py-1.5 rounded-lg backdrop-blur-sm transition">
+                            <i class="fas fa-expand"></i>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
+                    </div>
+
+                    {% if vehicle.condition %}
+                    <div class="absolute top-4 left-4 z-10">
+                        <span
+                            class="bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-md uppercase tracking-wide">{{
+                            vehicle.condition.name }}</span>
+                    </div>
                     {% endif %}
                 </div>
-            {% else %}
-                <img src="https://placehold.co/800x500/1a1a1a/ffffff?text={{ vehicle.title|url_encode }}"
-                     class="img-fluid rounded-3 shadow" alt="{{ vehicle.title }}" style="height:420px;object-fit:cover;width:100%;">
+
+                <!-- Thumbnail Carousel -->
+                {% if vehicle.images|length > 1 %}
+                <div class="embla-thumbs border-t border-gray-100 bg-gray-50 px-2 py-3" id="embla-thumbs">
+                    <div class="embla-thumbs__viewport overflow-hidden">
+                        <div class="embla-thumbs__container flex gap-2">
+                            {% for image in vehicle.images %}
+                            <div class="embla-thumbs__slide" style="flex: 0 0 80px; min-width: 0;">
+                                <button type="button"
+                                    class="embla-thumbs__slide__btn w-20 h-14 rounded-lg overflow-hidden transition-all duration-200 opacity-50 hover:opacity-80 border-2 border-transparent"
+                                    data-thumb-index="{{ loop.index0 }}">
+                                    <img src="{{ image.path }}" alt="Thumb {{ loop.index }}"
+                                        class="w-full h-full object-cover" loading="lazy" />
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Show arrows on gallery hover -->
+            <style>
+                #vehicle-gallery:hover .embla-prev,
+                #vehicle-gallery:hover .embla-next {
+                    opacity: 1 !important;
+                }
+
+                .embla-thumbs__slide__btn.is-selected {
+                    opacity: 1 !important;
+                    border-color: #111827 !important;
+                }
+            </style>
+
+            <!-- ── Title + Tags (Mobile) ── -->
+            <div class="lg:hidden space-y-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 leading-tight">{{ vehicle.title }}</h1>
+                    <p class="text-sm text-gray-500 mt-1.5">
+                        <span class="font-mono text-xs bg-gray-100 px-2 py-0.5 rounded">{{ vehicle.vehicleid }}</span>
+                        {% if vehicle.division %}<span class="ml-2"><i class="fas fa-map-marker-alt text-xs"></i> {{
+                            vehicle.division.name }}</span>{% endif %}
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    {% if vehicle.condition %}<span
+                        class="px-3 py-1.5 bg-gray-900 text-white rounded-lg text-xs font-semibold">{{
+                        vehicle.condition.name }}</span>{% endif %}
+                    {% if vehicle.transmission %}<span
+                        class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">{{
+                        vehicle.transmission.name }}</span>{% endif %}
+                    {% if vehicle.fuel_type %}<span
+                        class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">{{
+                        vehicle.fuel_type.name }}</span>{% endif %}
+                    {% if vehicle.body_type %}<span
+                        class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">{{
+                        vehicle.body_type.name }}</span>{% endif %}
+                </div>
+                <div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-5 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase font-semibold tracking-wide">Price</p>
+                    <p class="text-3xl font-bold text-white mt-1">{{ tenant.currency }} {{ vehicle.price|number_format
+                        }}</p>
+                </div>
+            </div>
+
+            <!-- ── Quick Specs ── -->
+            <div>
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-1.5 h-7 bg-gray-900 rounded-full"></div>
+                    <h2 class="text-lg font-semibold text-gray-900">Quick Overview</h2>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {% if vehicle.year %}
+                    <div
+                        class="bg-white border border-gray-100 rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-calendar text-gray-500"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-500 uppercase font-medium tracking-wide">Year</p>
+                        <p class="text-sm font-bold text-gray-900 mt-0.5">{{ vehicle.year }}</p>
+                    </div>
+                    {% endif %}
+                    {% if vehicle.mileage %}
+                    <div
+                        class="bg-white border border-gray-100 rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-tachometer-alt text-gray-500"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-500 uppercase font-medium tracking-wide">Mileage</p>
+                        <p class="text-sm font-bold text-gray-900 mt-0.5">{{ vehicle.mileage|number_format }} km</p>
+                    </div>
+                    {% endif %}
+                    {% if vehicle.transmission %}
+                    <div
+                        class="bg-white border border-gray-100 rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-cog text-gray-500"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-500 uppercase font-medium tracking-wide">Transmission</p>
+                        <p class="text-sm font-bold text-gray-900 mt-0.5">{{ vehicle.transmission.name }}</p>
+                    </div>
+                    {% endif %}
+                    {% if vehicle.fuel_type %}
+                    <div
+                        class="bg-white border border-gray-100 rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-gas-pump text-gray-500"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-500 uppercase font-medium tracking-wide">Fuel</p>
+                        <p class="text-sm font-bold text-gray-900 mt-0.5">{{ vehicle.fuel_type.name }}</p>
+                    </div>
+                    {% endif %}
+                    {% if vehicle.engine_capacity %}
+                    <div
+                        class="bg-white border border-gray-100 rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-bolt text-gray-500"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-500 uppercase font-medium tracking-wide">Engine</p>
+                        <p class="text-sm font-bold text-gray-900 mt-0.5">{{ vehicle.engine_capacity.size }}L</p>
+                    </div>
+                    {% endif %}
+                    {% if vehicle.drive_type %}
+                    <div
+                        class="bg-white border border-gray-100 rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-road text-gray-500"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-500 uppercase font-medium tracking-wide">Drive</p>
+                        <p class="text-sm font-bold text-gray-900 mt-0.5">{{ vehicle.drive_type.name }}</p>
+                    </div>
+                    {% endif %}
+                    {% if vehicle.color %}
+                    <div
+                        class="bg-white border border-gray-100 rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-palette text-gray-500"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-500 uppercase font-medium tracking-wide">Color</p>
+                        <p class="text-sm font-bold text-gray-900 mt-0.5">{{ vehicle.color.name }}</p>
+                    </div>
+                    {% endif %}
+                    {% if vehicle.body_type %}
+                    <div
+                        class="bg-white border border-gray-100 rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-car text-gray-500"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-500 uppercase font-medium tracking-wide">Body</p>
+                        <p class="text-sm font-bold text-gray-900 mt-0.5">{{ vehicle.body_type.name }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- ── Description ── -->
+            {% if vehicle.description %}
+            <div>
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-1.5 h-7 bg-gray-900 rounded-full"></div>
+                    <h2 class="text-lg font-semibold text-gray-900">Description</h2>
+                </div>
+                <div
+                    class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm text-sm text-gray-700 leading-relaxed prose prose-sm max-w-none">
+                    {{ vehicle.description|raw }}
+                </div>
+            </div>
             {% endif %}
+
+            <!-- ── Full Specifications ── -->
+            <div>
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-1.5 h-7 bg-gray-900 rounded-full"></div>
+                    <h2 class="text-lg font-semibold text-gray-900">Full Specifications</h2>
+                </div>
+                <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                    {% set specs = [] %}
+                    {% if vehicle.brand %}{% set specs = specs|merge([{label: 'Brand', value: vehicle.brand.name}]) %}{%
+                    endif %}
+                    {% if vehicle.vehicle_model %}{% set specs = specs|merge([{label: 'Model', value:
+                    vehicle.vehicle_model.name}]) %}{% endif %}
+                    {% if vehicle.year %}{% set specs = specs|merge([{label: 'Year', value: vehicle.year}]) %}{% endif
+                    %}
+                    {% if vehicle.condition %}{% set specs = specs|merge([{label: 'Condition', value:
+                    vehicle.condition.name}]) %}{% endif %}
+                    {% if vehicle.transmission %}{% set specs = specs|merge([{label: 'Transmission', value:
+                    vehicle.transmission.name}]) %}{% endif %}
+                    {% if vehicle.fuel_type %}{% set specs = specs|merge([{label: 'Fuel Type', value:
+                    vehicle.fuel_type.name}]) %}{% endif %}
+                    {% if vehicle.engine_capacity %}{% set specs = specs|merge([{label: 'Engine', value:
+                    vehicle.engine_capacity.size ~ 'L'}]) %}{% endif %}
+                    {% if vehicle.mileage %}{% set specs = specs|merge([{label: 'Mileage', value:
+                    vehicle.mileage|number_format ~ ' km'}]) %}{% endif %}
+                    {% if vehicle.color %}{% set specs = specs|merge([{label: 'Color', value: vehicle.color.name}]) %}{%
+                    endif %}
+                    {% if vehicle.body_type %}{% set specs = specs|merge([{label: 'Body Type', value:
+                    vehicle.body_type.name}]) %}{% endif %}
+                    {% if vehicle.drive_type %}{% set specs = specs|merge([{label: 'Drive Type', value:
+                    vehicle.drive_type.name}]) %}{% endif %}
+                    {% if vehicle.division %}{% set specs = specs|merge([{label: 'Location', value:
+                    vehicle.division_path}]) %}{% endif %}
+                    {% if vehicle.vin_id %}{% set specs = specs|merge([{label: 'VIN', value: vehicle.masked_vin, mono:
+                    true}]) %}{% endif %}
+                    {% if vehicle.vehicleid %}{% set specs = specs|merge([{label: 'Stock ID', value: vehicle.vehicleid,
+                    mono: true}]) %}{% endif %}
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2">
+                        {% for spec in specs %}
+                        <div
+                            class="flex items-center justify-between px-5 py-3.5 border-b border-gray-50 {{ loop.index is odd and not loop.last ? 'sm:border-r' : '' }}">
+                            <span class="text-sm text-gray-500">{{ spec.label }}</span>
+                            <span
+                                class="text-sm font-semibold text-gray-900 {{ spec.mono is defined and spec.mono ? 'font-mono' : '' }}">{{
+                                spec.value }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <!-- ── Features & Options ── -->
+            {% set categorized = vehicle.categorizedOptions %}
+            {% if categorized is not empty %}
+            <div>
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-1.5 h-7 bg-gray-900 rounded-full"></div>
+                    <h2 class="text-lg font-semibold text-gray-900">Features &amp; Options</h2>
+                </div>
+                <div
+                    class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden divide-y divide-gray-100">
+                    {% for category, items in categorized %}
+                    <div class="px-6 py-5">
+                        <div class="flex items-center gap-2.5 mb-4">
+                            {% if category|lower starts with 'safety' %}
+                            <div class="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center"><i
+                                    class="fas fa-shield-alt text-red-500 text-sm"></i></div>
+                            {% elseif category|lower starts with 'comfort' %}
+                            <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center"><i
+                                    class="fas fa-couch text-blue-500 text-sm"></i></div>
+                            {% elseif category|lower starts with 'technology' or category|lower starts with
+                            'entertainment' %}
+                            <div class="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center"><i
+                                    class="fas fa-music text-purple-500 text-sm"></i></div>
+                            {% elseif category|lower starts with 'interior' or category|lower starts with 'exterior' %}
+                            <div class="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center"><i
+                                    class="fas fa-car text-green-500 text-sm"></i></div>
+                            {% elseif category|lower starts with 'history' %}
+                            <div class="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center"><i
+                                    class="fas fa-history text-orange-500 text-sm"></i></div>
+                            {% else %}
+                            <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center"><i
+                                    class="fas fa-cog text-gray-500 text-sm"></i></div>
+                            {% endif %}
+                            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide">{{ category }}</h3>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            {% for item in items %}
+                            {% if item.enabled %}
+                            <div
+                                class="flex items-center gap-2 px-3 py-2.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                <i class="fas fa-check text-emerald-600 text-[10px] flex-shrink-0"></i>
+                                <span class="text-sm text-emerald-900 font-medium">{{ item.label }}</span>
+                            </div>
+                            {% else %}
+                            <div class="px-3 py-2.5 rounded-lg bg-slate-50 border border-slate-200">
+                                <i class="fas fa-times text-red-600 text-[10px] flex-shrink-0"></i>
+                                <span class="text-sm text-gray-400">{{ item.label }}</span>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+         {% if vehicle.isFinancingEnabled %}
+            {% component 'loan' %}
+        {% endif %}
+
         </div>
 
-        <!-- Details -->
-        <div class="col-lg-5">
-            <div class="d-flex align-items-start gap-2 mb-1">
-                <span class="badge bg-dark">{{ vehicle.condition.name }}</span>
-                {% if vehicle.is_active %}<span class="badge bg-success">Active</span>{% endif %}
+        <!-- ═══ Right Column: Sidebar ═══ -->
+        <div class="space-y-6">
+            <div class="hidden lg:block sticky top-6 space-y-5">
+
+                <!-- Title -->
+                <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+                    <h1 class="text-xl font-bold text-gray-900 leading-tight">{{ vehicle.title }}</h1>
+                    <p class="text-sm text-gray-500 mt-2">
+                        <span class="font-mono text-xs bg-gray-100 px-2 py-0.5 rounded">{{ vehicle.vehicleid }}</span>
+                        {% if vehicle.division %}<span class="ml-2"><i
+                                class="fas fa-map-marker-alt text-xs text-gray-400"></i> {{ vehicle.division.name
+                            }}</span>{% endif %}
+                    </p>
+                    <div class="flex flex-wrap gap-1.5 mt-3">
+                        {% if vehicle.condition %}<span
+                            class="px-2.5 py-1 bg-gray-900 text-white rounded-lg text-[11px] font-semibold">{{
+                            vehicle.condition.name }}</span>{% endif %}
+                        {% if vehicle.year %}<span
+                            class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg text-[11px] font-medium">{{
+                            vehicle.year }}</span>{% endif %}
+                        {% if vehicle.transmission %}<span
+                            class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg text-[11px] font-medium">{{
+                            vehicle.transmission.name }}</span>{% endif %}
+                        {% if vehicle.fuel_type %}<span
+                            class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg text-[11px] font-medium">{{
+                            vehicle.fuel_type.name }}</span>{% endif %}
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 shadow-lg shadow-gray-900/20">
+                    <p class="text-xs text-gray-400 uppercase font-semibold tracking-wide">Price</p>
+                    <p class="text-3xl font-bold text-white mt-1">{{ tenant.currency }} {{ vehicle.price|number_format
+                        }}</p>
+                    {% if vehicle.mileage %}
+                    <p class="text-xs text-gray-500 mt-2">{{ vehicle.mileage|number_format }} km &middot; {{
+                        vehicle.year }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Contact Seller -->
+                <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-5"
+                    x-data="{ showContact: false }">
+                    {% set seller = vehicle.seller.seller_profile ?? tenant %}
+                    <div class="flex items-center gap-4">
+                        {% if seller.logo %}
+                        <div
+                            class="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center border border-gray-200">
+                            <img src="{{ seller.logo.path }}" alt="{{ seller.company_name|default(seller.name) }} Logo"
+                                class="object-contain w-full h-full">
+                        </div>
+                        {% else %}
+                        <div class="w-14 h-14 rounded-xl bg-gray-900 flex items-center justify-center">
+                            <i class="fas fa-building text-white text-2xl"></i>
+                        </div>
+                        {% endif %}
+                        <div class="flex-1 min-w-0">
+                            <p class="text-base font-bold text-gray-900 truncate">
+                                {{ seller.company_name|default(seller.name|default('Dealer')) }}</p>
+                            {% if seller.name and seller.company_name and vehicle.seller.name != seller.company_name %}
+                            <p class="text-xs text-gray-500 truncate">Contact: {{ vehicle.seller.name }}</p>
+                            {% endif %}
+                            {% if seller.address or seller.city %}
+                            <p class="text-xs text-gray-500 truncate mt-1"><i
+                                    class="fas fa-map-marker-alt text-blue-400 mr-1"></i>{{ seller.address }}{% if
+                                seller.address and seller.city %}, {% endif %}{{ seller.city }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 mt-2">
+
+                       <button @click="showContact = true" :disabled="showContact"
+                            class="w-full py-3 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-600/10 active:scale-[0.98] disabled:opacity-70 disabled:cursor-default">
+                            <i class="fas fa-phone text-base"></i>
+                            <span>
+                                <template x-if="!showContact">Show Phone Number</template>
+                                <template x-if="showContact">{{ seller.phone_number ?? seller.phone_number ?? 'N/A' }}</template>
+                            </span>
+                        </button>
+
+                        {% if seller.phone_number %}
+                        <a href="https://wa.me/{{ (seller.phone_number)|replace({' ': '', '-': '', '+': ''}) }}"
+                            target="_blank"
+                            class="w-full py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-all flex items-center justify-center gap-2 shadow-md shadow-green-500/20 active:scale-[0.98]">
+                            <i class="fab fa-whatsapp text-lg"></i>
+                            Chat on WhatsApp
+                        </a>
+                        {% endif %}
+                        {% if seller.seller.email %}
+                        <a href="mailto:{{ seller.email }}"
+                            class="w-full py-3 border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-gray-900 hover:text-gray-900 transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
+                            <i class="fas fa-envelope text-base"></i>
+                            Send Email
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Location -->
+                {% if vehicle.division %}
+                <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt text-blue-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-gray-500 uppercase font-medium tracking-wide">Location</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ vehicle.division_path }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Safety Tips -->
+                <div class="bg-amber-50 border border-amber-200/60 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div
+                            class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i class="fas fa-shield-alt text-amber-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-amber-900">Safety Tips</p>
+                            <ul class="text-xs text-amber-800 mt-2 space-y-1.5">
+                                <li class="flex items-start gap-1.5"><i
+                                        class="fas fa-check-circle text-amber-500 mt-0.5 text-[10px]"></i> Meet in a
+                                    safe public place</li>
+                                <li class="flex items-start gap-1.5"><i
+                                        class="fas fa-check-circle text-amber-500 mt-0.5 text-[10px]"></i> Don't pay in
+                                    advance</li>
+                                <li class="flex items-start gap-1.5"><i
+                                        class="fas fa-check-circle text-amber-500 mt-0.5 text-[10px]"></i> Inspect the
+                                    vehicle before purchase</li>
+                                <li class="flex items-start gap-1.5"><i
+                                        class="fas fa-check-circle text-amber-500 mt-0.5 text-[10px]"></i> Check all
+                                    documents carefully</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
-            <h1 class="fw-bold mb-1 h2">{{ vehicle.title }}</h1>
-            <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-1"></i>{{ vehicle.location.name }}</p>
-
-            <div class="price-block bg-dark text-white rounded-3 p-4 mb-4">
-                <div class="small opacity-75 mb-1">Asking Price</div>
-                <div class="display-6 fw-bold">{{ tenant.currency }} {{ vehicle.price|number_format }}</div>
-            </div>
-
-            <!-- Quick Specs -->
-            <div class="row g-3 mb-4">
-                {% if vehicle.year %}
-                <div class="col-6">
-                    <div class="spec-badge"><i class="fas fa-calendar me-2 text-muted"></i>{{ vehicle.year|date('Y') }}</div>
-                </div>
-                {% endif %}
-                {% if vehicle.mileage %}
-                <div class="col-6">
-                    <div class="spec-badge"><i class="fas fa-tachometer-alt me-2 text-muted"></i>{{ vehicle.mileage|number_format }} km</div>
-                </div>
-                {% endif %}
-                {% if vehicle.transmission %}
-                <div class="col-6">
-                    <div class="spec-badge"><i class="fas fa-cogs me-2 text-muted"></i>{{ vehicle.transmission.name }}</div>
-                </div>
-                {% endif %}
-                {% if vehicle.fuel_type %}
-                <div class="col-6">
-                    <div class="spec-badge"><i class="fas fa-gas-pump me-2 text-muted"></i>{{ vehicle.fuel_type.name }}</div>
-                </div>
-                {% endif %}
-                {% if vehicle.body_type %}
-                <div class="col-6">
-                    <div class="spec-badge"><i class="fas fa-car me-2 text-muted"></i>{{ vehicle.body_type.name }}</div>
-                </div>
-                {% endif %}
-                {% if vehicle.drive_type %}
-                <div class="col-6">
-                    <div class="spec-badge"><i class="fas fa-road me-2 text-muted"></i>{{ vehicle.drive_type.name }}</div>
-                </div>
-                {% endif %}
-            </div>
-
-            <a href="mailto:?subject=Enquiry: {{ vehicle.title }}" class="btn btn-dark w-100 mb-2 py-3">
-                <i class="fas fa-envelope me-2"></i> Enquire Now
-            </a>
-            <a href="/{{ tenant.country_code }}/buy-car" class="btn btn-outline-dark w-100">
-                ← Back to Listings
-            </a>
         </div>
+
     </div>
-
-    <!-- Full Specs -->
-    <div class="mt-5">
-        <h2 class="h4 fw-bold mb-4">Full Specifications</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <tbody>
-                    {% if vehicle.brand %}<tr><th width="30%">Brand</th><td>{{ vehicle.brand.name }}</td></tr>{% endif %}
-                    {% if vehicle.vehicle_model %}<tr><th>Model</th><td>{{ vehicle.vehicle_model.name }}</td></tr>{% endif %}
-                    {% if vehicle.color %}<tr><th>Color</th><td>{{ vehicle.color.name }}</td></tr>{% endif %}
-                    {% if vehicle.vin_id %}<tr><th>VIN</th><td><code>{{ vehicle.vin_id }}</code></td></tr>{% endif %}
-                    {% if vehicle.vehicleid %}<tr><th>Stock ID</th><td><code>{{ vehicle.vehicleid }}</code></td></tr>{% endif %}
-                    {% if vehicle.engine_capacity %}<tr><th>Engine</th><td>{{ vehicle.engine_capacity }}</td></tr>{% endif %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
 </div>
-{% endif %}
 
-{% put styles %}
-<style>
-    .spec-badge {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 10px 12px;
-        font-weight: 600;
-        font-size: 0.875rem;
+<!-- Mobile Sticky Footer -->
+<div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 p-4 z-40 flex items-center gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
+    x-data="{ showContact: false }">
+    <div class="flex-1 min-w-0">
+        <p class="text-[10px] text-gray-500 uppercase font-semibold tracking-wide">Price</p>
+        <p class="text-lg font-bold text-gray-900 truncate">{{ tenant.currency }} {{ vehicle.price|number_format }}</p>
+    </div>
+    <button @click="showContact = !showContact"
+        class="px-5 py-3 bg-gray-900 text-white rounded-xl font-semibold text-sm shadow-md active:scale-95 transition-all">
+        <template x-if="!showContact"><span><i class="fas fa-phone mr-1.5"></i> Call</span></template>
+        <template x-if="showContact"><span>{{ vehicle.seller_phone ?? tenant.phone ?? 'N/A' }}</span></template>
+    </button>
+    {% if vehicle.seller_phone or tenant.phone %}
+    <a href="https://wa.me/{{ (vehicle.seller_phone ?? tenant.phone)|replace({' ': '', '-': '', '+': ''}) }}"
+        class="px-4 py-3 bg-green-500 text-white rounded-xl font-semibold text-sm shadow-md active:scale-95 transition-all">
+        <i class="fab fa-whatsapp text-lg"></i>
+    </a>
+    {% endif %}
+</div>
+
+<!-- Fullscreen Lightbox -->
+<div id="vehicle-lightbox" class="fixed inset-0 z-50 bg-black hidden flex-col">
+    <div class="flex items-center justify-between p-4">
+        <span class="text-white text-sm font-medium"><span id="lightbox-counter">1</span> / {{ vehicle.images|length
+            }}</span>
+        <button id="lightbox-close"
+            class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white text-xl transition">&times;</button>
+    </div>
+    <div class="flex-1 flex items-center justify-center px-4 relative">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[80vh] object-contain rounded-lg" />
+        <button id="lightbox-prev"
+            class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="lightbox-next"
+            class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+    <div id="lightbox-thumbs" class="flex justify-center gap-2 p-4 overflow-x-auto">
+        {% for image in vehicle.images %}
+        <div class="w-16 h-11 rounded-lg overflow-hidden cursor-pointer transition-all flex-shrink-0 opacity-40 hover:opacity-70"
+            data-lb-index="{{ loop.index0 }}">
+            <img src="{{ image.path }}" class="w-full h-full object-cover" />
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="lg:hidden h-20"></div>
+
+{% put scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof EmblaCarousel === 'undefined') return;
+
+        var images = [{% for image in vehicle.images %}'{{ image.path }}'{% if not loop.last %}, {% endif %} {% endfor %}];
+    if (!images.length) return;
+
+    // ── Main Carousel ──
+    var mainNode = document.getElementById('embla-main');
+    if (!mainNode) return;
+    var mainViewport = mainNode.querySelector('.embla__viewport');
+    var emblaMain = EmblaCarousel(mainViewport, { loop: true, containScroll: false });
+
+    // ── Thumbnail Carousel ──
+    var thumbsNode = document.getElementById('embla-thumbs');
+    var emblaThumb = null;
+    if (thumbsNode) {
+        var thumbViewport = thumbsNode.querySelector('.embla-thumbs__viewport');
+        emblaThumb = EmblaCarousel(thumbViewport, {
+            containScroll: 'keepSnaps',
+            dragFree: true
+        });
     }
-    .price-block { border-radius: 12px; }
-    .breadcrumb-item a { color: #555; text-decoration: none; }
-    .breadcrumb-item a:hover { color: #000; }
-</style>
+
+    var thumbButtons = thumbsNode ? thumbsNode.querySelectorAll('.embla-thumbs__slide__btn') : [];
+    var counter = document.getElementById('embla-counter');
+
+    function updateSelected() {
+        var idx = emblaMain.selectedScrollSnap();
+        if (counter) counter.textContent = idx + 1;
+
+        thumbButtons.forEach(function (btn, i) {
+            btn.classList.toggle('is-selected', i === idx);
+        });
+
+        if (emblaThumb) emblaThumb.scrollTo(idx);
+    }
+
+    emblaMain.on('select', updateSelected);
+    updateSelected();
+
+    // Click thumbs to navigate
+    thumbButtons.forEach(function (btn, i) {
+        btn.addEventListener('click', function () {
+            emblaMain.scrollTo(i);
+        });
+    });
+
+    // Prev/Next buttons
+    var prevBtn = mainNode.querySelector('.embla-prev');
+    var nextBtn = mainNode.querySelector('.embla-next');
+    if (prevBtn) prevBtn.addEventListener('click', function () { emblaMain.scrollPrev(); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { emblaMain.scrollNext(); });
+
+    // ── Fullscreen Lightbox ──
+    var lightbox = document.getElementById('vehicle-lightbox');
+    var lightboxImg = document.getElementById('lightbox-img');
+    var lightboxCounter = document.getElementById('lightbox-counter');
+    var lightboxThumbs = lightbox ? lightbox.querySelectorAll('[data-lb-index]') : [];
+    var lbIndex = 0;
+
+    function openLightbox(idx) {
+        lbIndex = idx;
+        updateLightbox();
+        lightbox.classList.remove('hidden');
+        lightbox.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+        lightbox.classList.add('hidden');
+        lightbox.style.display = '';
+    }
+
+    function updateLightbox() {
+        if (!images[lbIndex]) return;
+        lightboxImg.src = images[lbIndex];
+        if (lightboxCounter) lightboxCounter.textContent = lbIndex + 1;
+        lightboxThumbs.forEach(function (t, i) {
+            t.style.opacity = i === lbIndex ? '1' : '';
+            t.style.borderColor = i === lbIndex ? 'white' : '';
+            t.classList.toggle('ring-2', i === lbIndex);
+            t.classList.toggle('ring-white', i === lbIndex);
+        });
+    }
+
+    // Open from main slides
+    mainNode.querySelectorAll('[data-lightbox-index]').forEach(function (slide) {
+        slide.addEventListener('click', function () {
+            openLightbox(parseInt(slide.dataset.lightboxIndex));
+        });
+    });
+
+    // Open from fullscreen button
+    var fsBtn = document.getElementById('embla-fullscreen-btn');
+    if (fsBtn) fsBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openLightbox(emblaMain.selectedScrollSnap());
+    });
+
+    // Lightbox controls
+    var lbClose = document.getElementById('lightbox-close');
+    var lbPrev = document.getElementById('lightbox-prev');
+    var lbNext = document.getElementById('lightbox-next');
+    if (lbClose) lbClose.addEventListener('click', closeLightbox);
+    if (lbPrev) lbPrev.addEventListener('click', function () {
+        lbIndex = (lbIndex - 1 + images.length) % images.length;
+        updateLightbox();
+    });
+    if (lbNext) lbNext.addEventListener('click', function () {
+        lbIndex = (lbIndex + 1) % images.length;
+        updateLightbox();
+    });
+
+    lightboxThumbs.forEach(function (t) {
+        t.addEventListener('click', function () {
+            lbIndex = parseInt(t.dataset.lbIndex);
+            updateLightbox();
+        });
+    });
+
+    // Close on escape
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeLightbox();
+        if (!lightbox.classList.contains('hidden')) {
+            if (e.key === 'ArrowLeft') { lbIndex = (lbIndex - 1 + images.length) % images.length; updateLightbox(); }
+            if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % images.length; updateLightbox(); }
+        }
+    });
+
+    // Close on backdrop click
+    lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox) closeLightbox();
+    });
+});
+</script>
 {% endput %}
+
+{% endif %}

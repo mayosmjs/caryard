@@ -9,10 +9,11 @@ class BuilderTableCreateMajosCaryardModels extends Migration
     {
         Schema::create('majos_caryard_models', function($table)
         {
-            $table->uuid('id')->primary();
+            $table->increments('id');
             $table->string('name');
-            $table->string('brand_id', 36);
-            $table->text('description');
+            $table->string('slug')->nullable()->index();
+            $table->integer('brand_id');
+            $table->text('description')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();

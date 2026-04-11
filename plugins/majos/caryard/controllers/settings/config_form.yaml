@@ -1,0 +1,19 @@
+# =============================================
+#  Form Configuration
+# =============================================
+
+name: Caryard Settings
+modelClass: Majos\Caryard\Models\Settings
+form: ~/plugins/majos/caryard/models/settings/fields.yaml
+
+defaultRedirect: majos/caryard/settings
+
+create:
+    title: Create Settings
+    redirect: majos/caryard/settings
+    redirectClose: majos/caryard/settings
+
+update:
+    title: Edit Settings
+    redirect: majos/caryard/settings
+    redirectClose: majos/caryard/settings

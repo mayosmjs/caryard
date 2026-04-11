@@ -1,14 +1,28 @@
 # ===================================
-#  Form Field Definitions
+#  Form Field Definitions for SellerProfile
 # ===================================
 
 fields:
+    user_id:
+        label: User
+        type: relation
+        required: true
+        span: auto
+    tenant_id:
+        label: Tenant
+        type: relation
+        nameFrom: name
+        span: auto
     company_name:
         label: Company Name
         span: auto
     phone_number:
         label: Phone Number
         span: auto
+    address:
+        label: Address
+        type: textarea
+        span: full
     identification_type:
         label: ID Type
         type: dropdown
@@ -23,32 +37,18 @@ fields:
     tax_id:
         label: Tax ID
         span: auto
-    address:
-        label: Address
-        type: textarea
-        size: small
-
-    country:
-        label: Country
-        type: relation
-        nameFrom: name
+    is_seller:
+        label: Is Seller
+        type: switch
         span: auto
-        emptyOption: '-- Select Country --'
-    province_id:
-        label: Province / State
-        type: dropdown
-        span: auto
-        dependsOn: country
-        emptyOption: '-- Select Province --'
-    city_id:
-        label: City
-        type: dropdown
-        span: auto
-        dependsOn: province_id
-        emptyOption: '-- Select City --'
-
     is_verified_seller:
         label: Verified Seller
         type: switch
-        default: false
         span: auto
+    division_id:
+        label: Location (Division)
+        type: dropdown
+        span: auto
+        dependsOn:
+            - tenant_id
+        emptyOption: -- Select Tenant First --

@@ -1,0 +1,17 @@
+url = "/account/subscription"
+layout = "default"
+title = "Subscription"
+meta_title = "My Subscription - Caryard"
+
+[session]
+security = "user"
+redirect = "account/login"
+checkToken = 0
+
+[SubscriptionManager]
+initialPeriodDays = 30
+providers = "{\"stripe\":\"Credit Card (Stripe)\",\"mpesa\":\"M-Pesa\",\"paypal\":\"PayPal\"}"
+==
+<div class="container">
+    {% component 'SubscriptionManager' %}
+</div>

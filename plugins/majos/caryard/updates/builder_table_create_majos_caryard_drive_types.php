@@ -9,7 +9,7 @@ class BuilderTableCreateMajosCaryardDriveTypes extends Migration
     {
         Schema::create('majos_caryard_drive_types', function($table)
         {
-            $table->uuid('id')->primary();
+            $table->increments('id');
             $table->string('name');
             $table->string('slug');
             $table->text('description');

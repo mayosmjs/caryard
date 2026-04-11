@@ -2,6 +2,8 @@
     data-request-update="'{{ __SELF__ }}::_list': '#vehicle-list'" data-request-loading="#filtering-loader"
     data-request-progress-bar="true"
     class="bg-white border border-slate-200 shadow-2xl p-2 grid grid-cols-1 md:grid-cols-4 items-center mb-6">
+    <input type="hidden" name="page" value="1">
+    <input type="hidden" name="order_by" value="latest">
     <!-- Brand -->
     <div class="px-6 py-4 border-r border-slate-100">
         <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Make / Model</label>
@@ -40,7 +42,7 @@
             class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-900 font-black uppercase tracking-widest text-xs py-6 transition">
             Find Availability
         </button>
-        <button type="button" data-bs-toggle="modal" data-bs-target="#advancedSearchModal"
+        <button type="button" onclick="openFilterDrawer()"
             class="px-4 bg-slate-900 text-white hover:bg-slate-800 transition">
             <i class="fas fa-sliders-h"></i>
         </button>

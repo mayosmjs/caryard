@@ -1,0 +1,25 @@
+# =============================================
+# Reorder Configuration for Subscription Plans
+# =============================================
+
+title: Reorder Plans
+modelClass: Majos\Sellers\Models\SubscriptionPlan
+
+toolbar:
+    buttons: reorder_toolbar
+
+columns:
+    name:
+        label: Plan Name
+        type: text
+        searchable: true
+    
+    tier:
+        label: Tier
+        type: text
+    
+    sort_order:
+        label: Order
+        type: number
+
+showSorting: false

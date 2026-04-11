@@ -110,6 +110,7 @@ tabs:
             span: auto
             tab: Specifications
             required: true
+            nameFrom: size
             emptyOption: "-- Select Engine Capacity --"
             comment: The engine displacement volume in cubic centimeters.
 
@@ -187,34 +188,14 @@ tabs:
             emptyOption: "-- Select Seller --"
             comment: The verified seller profile responsible for managing this unit.
 
-        country:
-            label: Current Country
+        division_id:
+            label: Location (Division)
             type: dropdown
             span: auto
-            required: true
             tab: Seller & Location
-            emptyOption: "-- Select Country --"
-            comment: Select the country where the vehicle is currently located.
-
-        province:
-            label: State / Province
-            type: dropdown
-            span: auto
-            required: true
-            tab: Seller & Location
-            dependsOn: country
-            emptyOption: "-- Select Province --"
-            comment: Filters based on the selected country above.
-
-        location_id:
-            label: City / Area
-            type: dropdown
-            span: auto
-            required: true
-            tab: Seller & Location
-            dependsOn: province
-            emptyOption: "-- Select City / Location --"
-            comment: The specific city or yard where the vehicle can be inspected.
+            dependsOn: tenant
+            emptyOption: "-- Select Location --"
+            comment: The administrative division where the vehicle is located (e.g. County → Town).
 
         # 5. Gallery Tab
         images:

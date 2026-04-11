@@ -1,0 +1,13 @@
+# =================================== Relations
+#  Seller profile relation tabs configuration
+# ===================================
+
+transactions:
+    label: Transactions
+    view:
+        list: $/majos/sellers/models/subscriptiontransaction/columns.yaml
+        toolbarButtons: null
+    model: Majos\Sellers\Models\SubscriptionTransaction
+    scope: forSeller
+    emptyMessage: No transactions found for this seller
+    readOnly: true

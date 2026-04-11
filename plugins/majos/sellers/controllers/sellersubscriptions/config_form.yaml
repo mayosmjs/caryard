@@ -1,0 +1,8 @@
+# =============================================
+# Form Configuration for Seller Subscriptions
+# =============================================
+
+form: $/majos/sellers/models/sellersubscription/fields.yaml
+
+title: Seller Subscription
+modelClass: Majos\Sellers\Models\SellerSubscription

@@ -1,0 +1,31 @@
+# =============================================
+# List Configuration for Subscription Plans
+# =============================================
+
+list: $/majos/sellers/models/subscriptionplan/columns.yaml
+
+title: Subscription Plans
+modelClass: Majos\Sellers\Models\SubscriptionPlan
+
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: backend::lang.list.search_prompt
+
+recordUrl: majos/sellers/subscriptionplans/update/:id
+
+noRecordsMessage: backend::lang.list.no_records
+
+recordsPerPage: 20
+
+showPageNumbers: true
+
+showSetup: true
+
+showSorting: true
+
+showCheckboxes: true
+
+defaultSort:
+    column: sort_order
+    direction: asc

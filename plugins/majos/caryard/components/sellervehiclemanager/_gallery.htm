@@ -1,0 +1,33 @@
+{% if vehicle and vehicle.images.count %}
+<div class="mt-8">
+    <div class="flex items-center justify-between mb-3">
+        <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+            Current gallery · {{ vehicle.images.count }} image(s)
+        </p>
+        <p class="text-[10px] text-slate-300 italic">Drag to reorder</p>
+    </div>
+    <div id="existingGallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        {% for image in vehicle.images %}
+        <div class="relative group cursor-move aspect-square rounded-xl overflow-hidden ring-1 ring-slate-200
+                    hover:ring-amber-400 hover:shadow-md transition-all bg-white" data-id="{{ image.id }}">
+            <img src="{{ image.thumb(300, 300, 'crop') }}" class="w-full h-full object-cover" loading="lazy">
+            <div class="absolute inset-0 flex items-center justify-center gap-2
+                        bg-black/0 group-hover:bg-black/40 transition-all">
+                <button type="button" class="rounded-lg bg-red-500 px-3 py-1.5 text-[10px] font-semibold text-white
+                               opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0
+                               hover:bg-red-600 shadow-sm transition-all duration-200"
+                    onclick="if(window.deleteVehicleImage)deleteVehicleImage('{{ vehicle.id }}', '{{ image.id }}', this)">
+                    Delete
+                </button>
+            </div>
+            <span class="absolute top-1.5 left-1.5 flex h-5 w-5 items-center justify-center rounded
+                         bg-black/40 text-[9px] font-bold text-white pointer-events-none">
+                {{ loop.index }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<p class="mt-4 text-xs text-slate-400 italic">No images uploaded yet.</p>
+{% endif %}

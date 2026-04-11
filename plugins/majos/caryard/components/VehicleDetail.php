@@ -72,7 +72,7 @@ class VehicleDetail extends ComponentBase
         return Vehicle::where('slug', $slug)
             ->where('is_active', true)
             ->with(['brand', 'vehicle_model', 'condition', 'fuel_type', 'transmission',
-                    'body_type', 'color', 'drive_type', 'location', 'images'])
+                    'body_type', 'color', 'drive_type', 'division', 'images'])
             ->first();
     }
 

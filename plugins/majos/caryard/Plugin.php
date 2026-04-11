@@ -1,6 +1,8 @@
 <?php namespace Majos\Caryard;
 
 use System\Classes\PluginBase;
+use RainLab\User\Models\User;
+use Majos\Caryard\Models\SellerLoanSettings as LoanSetting;
 
 /**
  * Plugin class
@@ -12,6 +14,8 @@ class Plugin extends PluginBase
      */
     public function register()
     {
+        $this->registerConsoleCommand('caryard_resettables', \Majos\Caryard\Console\ResetCaryardTables::class);
+        $this->registerConsoleCommand('caryard_clearhistory', \Majos\Caryard\Console\ClearMigrationHistory::class);
     }
 
     /**
@@ -19,6 +23,7 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
+        
     }
 
     /**
@@ -30,8 +35,12 @@ class Plugin extends PluginBase
             'Majos\Caryard\Components\VehicleList'     => 'vehicleList',
             'Majos\Caryard\Components\VehicleDetail'   => 'vehicleDetail',
             'Majos\Caryard\Components\TenantRedirect'  => 'tenantRedirect',
+            'Majos\Caryard\Components\SellerVehicleManager' => 'sellerVehicleManager',
+            'Majos\Caryard\Components\Loan' => 'loan',
         ];
     }
+
+    public $require = ['RainLab.User','Majos.Sellers'];
 
     /**
      * registerNavigation for the backend
@@ -51,6 +60,12 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-car',
                         'url'         => \Backend::url('majos/caryard/vehicles'),
                         'permissions' => ['majos.caryard.access_vehicles'],
+                    ],
+                    'advertisements' => [
+                        'label'       => 'Advertisements',
+                        'icon'        => 'icon-picture-o',
+                        'url'         => \Backend::url('majos/caryard/advertisements'),
+                        'permissions' => ['majos.caryard.access_advertisements'],
                     ],
                     'brands' => [
                         'label'       => 'Brands',
@@ -111,16 +126,75 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-building',
                         'url'         => \Backend::url('majos/caryard/tenants'),
                         'permissions' => ['majos.caryard.access_tenants'],
-                    ]
-                ]
-            ]
+                    ],
+                    'divisions' => [
+                        'label'       => 'Administrative Divisions',
+                        'icon'        => 'icon-sitemap',
+                        'url'         => \Backend::url('majos/caryard/administrativedivisions'),
+                        'permissions' => ['majos.caryard.access_divisions'],
+                    ],
+                    'divisiontypes' => [
+                        'label'       => 'Division Types',
+                        'icon'        => 'icon-list-ol',
+                        'url'         => \Backend::url('majos/caryard/divisiontypes'),
+                        'permissions' => ['majos.caryard.access_divisions'],
+                    ],
+                    'settings' => [
+                        'label'       => 'Site Settings',
+                        'icon'        => 'icon-cog',
+                        'url'         => \Backend::url('majos/caryard/settings'),
+                        'permissions' => ['majos.caryard.settings'],
+                    ],
+                    'subscriptionplans' => [
+                        'label'       => 'Subscription Plans',
+                        'icon'        => 'icon-tags',
+                        'url'         => \Backend::url('majos/sellers/subscriptionplans'),
+                        'permissions' => ['majos.sellers.manage_plans'],
+                    ],
+                    'sellersubscriptions' => [
+                        'label'       => 'Subscriptions',
+                        'icon'        => 'icon-credit-card',
+                        'url'         => \Backend::url('majos/sellers/sellersubscriptions'),
+                        'permissions' => ['majos.sellers.manage_subscriptions'],
+                    ],
+                    'subscriptiontransactions' => [
+                        'label'       => 'Transactions',
+                        'icon'        => 'icon-history',
+                        'url'         => \Backend::url('majos/sellers/subscriptiontransactions'),
+                        'permissions' => ['majos.sellers.view_transactions'],
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
-     * registerSettings used by the backend.
+     * registerSettings for the backend - Native OctoberCMS Settings
      */
     public function registerSettings()
     {
+        return [
+            'settings' => [
+                'label'       => 'Site Settings',
+                'description' => 'Manage global site settings including contact info, social links, and maintenance mode.',
+                'icon'        => 'icon-cog',
+                'url'         => \Backend::url('majos/caryard/settings'),
+                'order'       => 500,
+                'permissions' => ['majos.caryard.settings'],
+            ],
+        ];
+    }
+
+    /**
+     * registerPermissions for the backend
+     */
+    public function registerPermissions()
+    {
+        return [
+            'majos.caryard.access_advertisements' => [
+                'tab'   => 'Caryard',
+                'label' => 'Access Advertisements'
+            ],
+        ];
     }
 }

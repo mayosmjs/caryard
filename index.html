@@ -1,144 +1,302 @@
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="description" content="HTTrack is an easy-to-use website mirror utility. It allows you to download a World Wide website from the Internet to a local directory,building recursively all structures, getting html, images, and other files from the server to your computer. Links are rebuiltrelatively so that you can freely browse to the local site (works with any browser). You can mirror several sites together so that you can jump from one toanother. You can, also, update an existing mirror site, or resume an interrupted download. The robot is fully configurable, with an integrated help" />
-	<meta name="keywords" content="httrack, HTTRACK, HTTrack, winhttrack, WINHTTRACK, WinHTTrack, offline browser, web mirror utility, aspirateur web, surf offline, web capture, www mirror utility, browse offline, local  site builder, website mirroring, aspirateur www, internet grabber, capture de site web, internet tool, hors connexion, unix, dos, windows 95, windows 98, solaris, ibm580, AIX 4.0, HTS, HTGet, web aspirator, web aspirateur, libre, GPL, GNU, free software" />
-	<title>Local index - HTTrack Website Copier</title>
-  <!-- Mirror and index made by HTTrack Website Copier/3.49-2 [XR&CO'2014] -->
-	<style type="text/css">
-	<!--
+<div class="mx-auto max-w-4xl" data-loan-component>
+    
+    <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+        
+        <!-- Header -->
+        <div class="border-b border-gray-100 bg-gray-50/50 px-6 py-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-900">Loan Calculator</h2>
+                    <p class="mt-1 text-sm text-gray-500">Estimate your monthly payments</p>
+                </div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
+                    <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
 
-body {
-	margin: 0;  padding: 0;  margin-bottom: 15px;  margin-top: 8px;
-	background: #77b;
-}
-body, td {
-	font: 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-	}
+        <div class="flex flex-col lg:flex-row">
+            
+            <!-- Left Side - Inputs -->
+            <div class="flex-1 p-6 lg:p-8">
+                <div class="space-y-8">
+                    
+                    <!-- Car Value Display -->
+                    <div class="rounded-xl bg-gradient-to-r from-gray-50 to-gray-50/50 p-5">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
+                                    <svg class="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Vehicle Price</p>
+                                    <p class="text-2xl font-bold text-gray-900">{{ currencySymbol|default('$ ') }}{{ carValue|number_format(0, '.', ',') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-#subTitle {
-	background: #000;  color: #fff;  padding: 4px;  font-weight: bold; 
-	}
+                    <!-- Loan Term Selection -->
+                    <div>
+                        <label class="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Loan Term
+                        </label>
+                        <div class="grid grid-cols-5 gap-2">
+                            {% for term in terms %}
+                            <button type="button" 
+                                    class="term-btn rounded-lg border py-3 text-sm font-medium transition-all duration-200
+                                           {% if term == page.term %}
+                                           border-amber-600 bg-amber-600 text-white shadow-sm shadow-amber-200
+                                           {% else %}
+                                           border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50
+                                           {% endif %}"
+                                    data-term="{{ term }}">
+                                {{ term }}
+                            </button>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" name="term" value="{{ page.term }}" id="loan-term">
+                    </div>
 
-#siteNavigation a, #siteNavigation .current {
-	font-weight: bold;  color: #448;
-	}
-#siteNavigation a:link    { text-decoration: none; }
-#siteNavigation a:visited { text-decoration: none; }
+                    <!-- Down Payment Slider -->
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                Down Payment
+                            </label>
+                            <span class="text-lg font-bold text-blue-600">{{ currencySymbol|default('$ ') }}<span id="downpayment-display">{{ downPayment|number_format(0, '.', ',') }}</span></span>
+                        </div>
+                        
+                        <div class="relative">
+                            <input type="range" 
+                                   id="downpayment-slider"
+                                   name="downPayment" 
+                                   class="h-2 w-full cursor-pointer appearance-none rounded-full bg-amber-200 accent-amber-600"
+                                   min="{{ minDownPayment }}" 
+                                   max="{{ maxDownPayment }}" 
+                                   value="{{ downPayment }}">
+                            <div class="mt-3 flex justify-between text-xs text-gray-400">
+                                <span>Min: {{ (minDownPayment/carValue*100)|round }}%</span>
+                                <span>Max: {{ (maxDownPayment/carValue*100)|round }}%</span>
+                            </div>
+                        </div>
+                    </div>
 
-#siteNavigation .current { background-color: #ccd; }
+                    <!-- Calculate Button -->
+                    <button type="button" id="calculate-btn"
+                            class="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-6 py-4 text-sm font-semibold text-white 
+                            shadow-lg shadow-amber-200/50 
+                            transition-all duration-200 hover:bg-amber-700 hover:shadow-xl active:scale-[0.98]">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                        Calculate Loan
+                    </button>
+                </div>
+            </div>
 
-#siteNavigation a:hover   { text-decoration: none;  background-color: #fff;  color: #000; }
-#siteNavigation a:active  { text-decoration: none;  background-color: #ccc; }
+            <!-- Right Side - Results -->
+            <div class="border-t border-gray-100 bg-gradient-to-br from-gray-900 to-gray-800 lg:border-t-0 lg:border-l lg:w-80">
+                <div class="p-6 lg:p-8">
+                    
+                    <!-- Monthly Payment -->
+                    <div class="mb-8 text-center">
+                        <p class="text-xs font-medium uppercase tracking-wider text-gray-400">Monthly Payment</p>
+                        <h3 class="mt-2 text-4xl font-black text-white">{{ currencySymbol|default('$ ') }}<span id="emi-display">{{ emi|number_format(0, '.', ',') }}</span></h3>
+                        <p class="mt-1 text-sm text-gray-500">per month</p>
+                    </div>
 
+                    <!-- Details List -->
+                    <div class="space-y-4 border-t border-white/10 pt-6">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">Car Price</span>
+                            <span class="font-semibold text-white">{{ currencySymbol|default('$ ') }}{{ carValue|number_format(0, '.', ',') }}</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">Down Payment</span>
+                            <span class="font-semibold text-white" id="downpayment-result">{{ currencySymbol|default('$ ') }}{{ downPayment|number_format(0, '.', ',') }}</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">Loan Amount</span>
+                            <span class="font-semibold text-white" id="loanamount-result">{{ currencySymbol|default('$ ') }}{{ (carValue - downPayment)|number_format(0, '.', ',') }}</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">Loan Tenure</span>
+                            <span class="font-semibold text-white" id="tenure-result">{{ term }} Months</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">Interest Rate</span>
+                            <span class="font-semibold text-white">{{ (annualRate * 100)|number_format(1, '.', ',') }}% p.a.</span>
+                        </div>
+                    </div>
 
-a:link    { text-decoration: underline;  color: #00f; }
-a:visited { text-decoration: underline;  color: #000; }
-a:hover   { text-decoration: underline;  color: #c00; }
-a:active  { text-decoration: underline; }
+                    <!-- Apply Button -->
+                    <div class="mt-8 pt-6">
+                        <button type="button" class="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-6 py-4 text-sm font-semibold text-gray-900 shadow-lg transition-all duration-200 hover:bg-amber-400 active:scale-[0.98]">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Apply For Loan
+                        </button>
+                        <p class="mt-4 text-center text-xs text-gray-500">
+                            Interest rate subject to credit assessment
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-#pageContent {
-	clear: both;
-	border-bottom: 6px solid #000;
-	padding: 10px;  padding-top: 20px;
-	line-height: 1.65em;
-	background-image: url(backblue.gif);
-	background-repeat: no-repeat;
-	background-position: top right;
-	}
+        </div>
+    </div>
+</div>
 
-#pageContent, #siteNavigation {
-	background-color: #ccd;
-	}
-
-
-.imgLeft  { float: left;   margin-right: 10px;  margin-bottom: 10px; }
-.imgRight { float: right;  margin-left: 10px;   margin-bottom: 10px; }
-
-hr { height: 1px;  color: #000;  background-color: #000;  margin-bottom: 15px; }
-
-h1 { margin: 0;  font-weight: bold;  font-size: 2em; }
-h2 { margin: 0;  font-weight: bold;  font-size: 1.6em; }
-h3 { margin: 0;  font-weight: bold;  font-size: 1.3em; }
-h4 { margin: 0;  font-weight: bold;  font-size: 1.18em; }
-
-.blak { background-color: #000; }
-.hide { display: none; }
-.tableWidth { min-width: 400px; }
-
-.tblRegular       { border-collapse: collapse; }
-.tblRegular td    { padding: 6px;  background-image: url(fade.gif);  border: 2px solid #99c; }
-.tblHeaderColor, .tblHeaderColor td { background: #99c; }
-.tblNoBorder td   { border: 0; }
-
-
-// -->
-</style>
-
-</head>
-
-<table width="76%" border="0" align="center" cellspacing="0" cellpadding="3" class="tableWidth">
-	<tr>
-	<td id="subTitle">HTTrack Website Copier - Open Source offline browser</td>
-	</tr>
-</table>
-<table width="76%" border="0" align="center" cellspacing="0" cellpadding="0" class="tableWidth">
-<tr class="blak">
-<td>
-	<table width="100%" border="0" align="center" cellspacing="1" cellpadding="0">
-	<tr>
-	<td colspan="6"> 
-		<table width="100%" border="0" align="center" cellspacing="0" cellpadding="10">
-		<tr> 
-		<td id="pageContent"> 
-<!-- ==================== End prologue ==================== -->
-
-	<meta name="generator" content="HTTrack Website Copier/3.x">
-	<TITLE>Local index - HTTrack</TITLE>
-</HEAD>
-<BODY>
-<H1 ALIGN=Center>Index of locally available sites:</H1>
-	<TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="0">
-		<TR>
-			<TD BACKGROUND="fade.gif">
-				&middot;
-					<A HREF="zairent.webflow.io/service/airport-transfer.html">
-						Zairent - Webflow Ecommerce Website Templateairport-transfer
-					</A>		
-			</TD>
-		</TR>
-	</TABLE>
-	<BR>
-	<BR>
-	<BR>
-  	<H6 ALIGN="RIGHT">
-	<I>Mirror and index made by HTTrack Website Copier [XR&amp;CO'2008]</I>
-	</H6>
-	<!-- Mirror and index made by HTTrack Website Copier/3.49-2 [XR&CO'2014] -->
-	<!-- Thanks for using HTTrack Website Copier! -->
-	<meta HTTP-EQUIV="Refresh" CONTENT="0; URL=zairent.webflow.io/service/airport-transfer.html">
-
-
-<!-- ==================== Start epilogue ==================== -->
-		</td>
-		</tr>
-		</table>
-	</td>
-	</tr>
-	</table>
-</td>
-</tr>
-</table>
-
-<table width="76%" border="0" align="center" valign="bottom" cellspacing="0" cellpadding="0">
-	<tr>
-	<td id="footer"><small>&copy; 2008 Xavier Roche & other contributors - Web Design: Leto Kauler.</small></td>
-	</tr>
-</table>
-
-</body>
-
-</html>
-
-
+{% put scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var termBtns = document.querySelectorAll('.term-btn');
+    var termInput = document.getElementById('loan-term');
+    var slider = document.getElementById('downpayment-slider');
+    var sliderDisplay = document.getElementById('downpayment-display');
+    var calculateBtn = document.getElementById('calculate-btn');
+    var emiDisplay = document.getElementById('emi-display');
+    var downpaymentResult = document.getElementById('downpayment-result');
+    var loanamountResult = document.getElementById('loanamount-result');
+    var tenureResult = document.getElementById('tenure-result');
+    
+    // Update term buttons
+    function updateTermBtns(selectedTerm) {
+        termBtns.forEach(function(btn) {
+            var term = parseInt(btn.getAttribute('data-term'));
+            if (term === selectedTerm) {
+                btn.className = 'term-btn rounded-lg border border-blue-600 bg-blue-600 py-3 text-sm font-medium text-white shadow-sm shadow-blue-200 transition-all duration-200';
+            } else {
+                btn.className = 'term-btn rounded-lg border border-gray-200 py-3 text-sm font-medium text-gray-600 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50';
+            }
+        });
+    }
+    
+    // Format number
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    
+    // Calculate using October CMS AJAX
+    function calculate() {
+        var term = parseInt(termInput.value);
+        var downPayment = parseInt(slider.value);
+        
+        // Use October CMS's oc.request for AJAX
+        oc.request('{{ __SELF__ }}', 'onCalculate', {
+            data: {
+                term: term,
+                downPayment: downPayment
+            },
+            success: function(data) {
+                if (data.emi !== undefined) {
+                    emiDisplay.textContent = formatNumber(data.emi);
+                }
+                if (data.downPayment !== undefined) {
+                    slider.value = data.downPayment;
+                    sliderDisplay.textContent = formatNumber(data.downPayment);
+                    downpaymentResult.textContent = formatNumber(data.downPayment);
+                }
+                if (data.loanAmount !== undefined) {
+                    loanamountResult.textContent = formatNumber(data.loanAmount);
+                }
+                if (data.term !== undefined) {
+                    termInput.value = data.term;
+                    tenureResult.textContent = data.term + ' Months';
+                    updateTermBtns(data.term);
+                }
+                // Update slider min/max if provided
+                if (data.minDownPayment !== undefined && data.maxDownPayment !== undefined) {
+                    slider.min = data.minDownPayment;
+                    slider.max = data.maxDownPayment;
+                    // Ensure downPayment is within bounds
+                    if (parseInt(slider.value) < data.minDownPayment) {
+                        slider.value = data.minDownPayment;
+                    } else if (parseInt(slider.value) > data.maxDownPayment) {
+                        slider.value = data.maxDownPayment;
+                    }
+                }
+            }
+        });
+    }
+    
+    // Update term only (when clicking term buttons)
+    function updateTerm(term) {
+        // Use October CMS's oc.request for AJAX
+        oc.request('{{ __SELF__ }}', 'onUpdateTerm', {
+            data: {
+                term: term,
+                downPayment: parseInt(slider.value)
+            },
+            success: function(data) {
+                if (data.emi !== undefined) {
+                    emiDisplay.textContent = formatNumber(data.emi);
+                }
+                if (data.downPayment !== undefined) {
+                    slider.value = data.downPayment;
+                    sliderDisplay.textContent = formatNumber(data.downPayment);
+                    downpaymentResult.textContent = formatNumber(data.downPayment);
+                }
+                if (data.loanAmount !== undefined) {
+                    loanamountResult.textContent = formatNumber(data.loanAmount);
+                }
+                if (data.term !== undefined) {
+                    termInput.value = data.term;
+                    tenureResult.textContent = data.term + ' Months';
+                    updateTermBtns(data.term);
+                }
+                // Update slider min/max if provided
+                if (data.minDownPayment !== undefined && data.maxDownPayment !== undefined) {
+                    slider.min = data.minDownPayment;
+                    slider.max = data.maxDownPayment;
+                    // Ensure downPayment is within bounds
+                    if (parseInt(slider.value) < data.minDownPayment) {
+                        slider.value = data.minDownPayment;
+                    } else if (parseInt(slider.value) > data.maxDownPayment) {
+                        slider.value = data.maxDownPayment;
+                    }
+                }
+            }
+        });
+    }
+    
+    // Term button clicks
+    termBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var term = parseInt(this.getAttribute('data-term'));
+            termInput.value = term;
+            updateTermBtns(term);
+            updateTerm(term);
+        });
+    });
+    
+    // Slider input
+    slider.addEventListener('input', function() {
+        sliderDisplay.textContent = formatNumber(parseInt(this.value));
+    });
+    
+    // Calculate button
+    calculateBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        calculate();
+    });
+});
+</script>
+{% endput %}

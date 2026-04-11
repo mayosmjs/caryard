@@ -1,0 +1,47 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+        searchable: true
+        invisible: true
+
+    tenant:
+        label: Tenant (Country)
+        relation: tenant
+        select: name
+        sortable: true
+        width: 150px
+
+    level:
+        label: Level
+        sortable: true
+        width: 60px
+
+    name:
+        label: Name
+        searchable: true
+        sortable: true
+
+    parent:
+        label: Parent
+        relation: parent
+        select: name
+        sortable: false
+
+    code:
+        label: Code
+        searchable: true
+        width: 100px
+
+    is_active:
+        label: Active
+        type: switch
+        width: 80px
+
+    sort_order:
+        label: Order
+        sortable: true
+        width: 60px

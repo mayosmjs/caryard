@@ -1,0 +1,86 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: Plan Name
+        type: text
+        required: true
+        span: left
+    
+    tier:
+        label: Tier
+        type: radio
+        required: true
+        options:
+            trial: Trial (Free)
+            basic: Basic
+            premium: Premium
+        default: basic
+        span: right
+    
+    vehicle_limit:
+        label: Vehicle Limit
+        type: number
+        required: true
+        min: 0
+        default: 2
+        comment: Enter 0 for unlimited vehicles
+        span: left
+    
+    is_active:
+        label: Active
+        type: switch
+        default: true
+        span: right
+    
+    price_monthly:
+        label: Monthly Price
+        type: number
+        step: 0.01
+        min: 0
+        default: 0
+        comment: Leave as 0 for free
+        span: left
+    
+    price_annual:
+        label: Annual Price
+        type: number
+        step: 0.01
+        min: 0
+        default: 0
+        comment: Leave as 0 for free
+        span: right
+    
+    trial_duration_days:
+        label: Trial Duration (Days)
+        type: number
+        min: 0
+        max: 90
+        default: 0
+        comment: Days for trial period (0 = no trial)
+        span: left
+    
+    sort_order:
+        label: Sort Order
+        type: number
+        default: 0
+        span: right
+    
+    features:
+        label: Features
+        type: repeater
+        comment: List of features included in this plan
+        form:
+            fields:
+                feature:
+                    label: Feature
+                    type: text
+                    span: full
+    
+    description:
+        label: Description
+        type: textarea
+        size: large
+        span: full

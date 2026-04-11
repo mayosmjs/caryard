@@ -11,8 +11,8 @@ class BodyType extends Model
 
     public $table = 'majos_caryard_body_types';
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = ['name', 'slug'];
 
@@ -23,11 +23,5 @@ class BodyType extends Model
     public $hasMany = [
         'vehicles' => ['Majos\Caryard\Models\Vehicle']
     ];
-
-    public function beforeCreate()
-    {
-        if (empty($this->id)) {
-            $this->id = (string) \Str::uuid();
-        }
-    }
 }
+

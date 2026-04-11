@@ -9,8 +9,9 @@ class BuilderTableCreateMajosCaryardBrands extends Migration
     {
         Schema::create('majos_caryard_brands', function($table)
         {
-            $table->uuid('id')->primary();
+            $table->increments('id');
             $table->string('name');
+            $table->string('slug')->unique();
             $table->text('description');
             $table->text('logo');
             $table->timestamp('created_at')->nullable();

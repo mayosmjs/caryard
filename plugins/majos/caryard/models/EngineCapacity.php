@@ -11,8 +11,8 @@ class EngineCapacity extends Model
 
     public $table = 'majos_caryard_engine_capacities';
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = ['size', 'slug', 'description'];
 
@@ -20,16 +20,4 @@ class EngineCapacity extends Model
         'size' => 'required|numeric',
         'slug' => 'required|unique:majos_caryard_engine_capacities',
     ];
-
-    public function beforeCreate()
-    {
-        if (empty($this->id)) {
-            $this->id = (string) \Str::uuid();
-        }
-    }
-
-    public function __toString()
-    {
-        return $this->size . 'cc';
-    }
 }

@@ -9,7 +9,7 @@ class BuilderTableCreateMajosCaryardEngineCapacities extends Migration
     {
         Schema::create('majos_caryard_engine_capacities', function($table)
         {
-            $table->uuid('id')->primary();
+            $table->increments('id');
             $table->integer('size')->index();
             $table->string('slug')->index();
             $table->text('description')->nullable();

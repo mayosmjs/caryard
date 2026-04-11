@@ -1,0 +1,8 @@
+# =============================================
+# Form Configuration for Subscription Transactions
+# =============================================
+
+form: $/majos/sellers/models/subscriptiontransaction/fields.yaml
+
+title: Subscription Transaction
+modelClass: Majos\Sellers\Models\SubscriptionTransaction

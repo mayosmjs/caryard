@@ -6,12 +6,22 @@ columns:
     id:
         label: ID
         searchable: true
+        invisible: true
     name:
         label: Name
         searchable: true
-    country_code:
-        label: Country Code
+    slug:
+        label: Slug
         searchable: true
+    country_code:
+        label: Primary Country
+        searchable: true
+        width: 120px
     currency:
         label: Currency
         searchable: true
+        width: 100px
+    is_active:
+        label: Active
+        type: switch
+        width: 80px

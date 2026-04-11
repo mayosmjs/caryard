@@ -1,0 +1,64 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    seller_id:
+        label: Seller
+        type: dropdown
+        required: true
+        span: auto
+        options: getSellerIdOptions
+    plan_id:
+        label: Plan
+        type: dropdown
+        required: true
+        span: auto
+        options: getPlanIdOptions
+    duration_days:
+        label: Duration (Days)
+        type: number
+        required: true
+        span: auto
+        default: 30
+    status:
+        label: Status
+        type: dropdown
+        options:
+            trialing: Trialing
+            active: Active
+            expired: Expired
+            cancelled: Cancelled
+        required: true
+        span: auto
+    started_at:
+        label: Started At
+        type: datepicker
+        required: true
+        span: auto
+    expires_at:
+        label: Expires At
+        type: datepicker
+        required: true
+        span: auto
+    auto_renew:
+        label: Auto Renew
+        type: switch
+        span: auto
+    amount:
+        label: Amount
+        type: number
+        span: auto
+    currency:
+        label: Currency
+        type: text
+        span: auto
+        default: USD
+    transaction_id:
+        label: Transaction ID
+        type: text
+        span: auto
+    notes:
+        label: Notes
+        type: textarea
+        span: full

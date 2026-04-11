@@ -1,0 +1,40 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    title:
+        label: Title
+        span: left
+        placeholder: e.g. Summer Sale 2024
+
+    tenant:
+        label: Tenant
+        span: right
+        type: dropdown
+        comment: Select the tenant this advertisement belongs to.
+
+    description:
+        label: Description
+        span: full
+        type: textarea
+        size: small
+
+    link_url:
+        label: Link URL
+        span: left
+        placeholder: e.g. https://example.com/promo or /vehicles
+
+    is_active:
+        label: Active
+        type: switch
+        span: right
+        default: true
+        comment: Hide or show this advertisement on the site.
+
+    image:
+        label: Advertisement Image
+        type: mediafinder
+        mode: image
+        span: full
+        comment: Recommended aspect ratio2:1 (e.g., 1200x600px).

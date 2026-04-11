@@ -1,0 +1,25 @@
+tenantCountries:
+    label: Operating Countries
+    view:
+        list:
+            columns:
+                country_code:
+                    label: Country Code
+                is_primary:
+                    label: Primary
+                    type: switch
+        toolbarButtons: create|delete
+    manage:
+        form:
+            fields:
+                country_code:
+                    label: Country Code
+                    comment: "ISO alpha-2 (e.g. KE, US, GB)"
+                    span: left
+                    required: true
+                    cssClass: text-uppercase
+                is_primary:
+                    label: Primary Country
+                    type: switch
+                    span: right
+                    default: false

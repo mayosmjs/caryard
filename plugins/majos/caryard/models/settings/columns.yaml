@@ -1,0 +1,21 @@
+# =============================================
+#  Column Definitions
+# =============================================
+
+columns:
+    id:
+        label: ID
+        type: number
+        searchable: true
+        sortable: true
+
+    item:
+        label: Item
+        type: text
+        searchable: true
+        sortable: true
+
+    value:
+        label: Value
+        type: text
+        searchable: true

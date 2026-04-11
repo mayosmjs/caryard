@@ -1,0 +1,207 @@
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body { font-family: 'Inter', sans-serif; }
+    .glass {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+</style>
+
+<div class="glass rounded-2xl border border-white shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] p-4 sm:p-6 mb-6">
+    <form data-request="{{ __SELF__ }}::onFilterVehicles" data-request-update id="filterForm">
+        <div class="relative mb-4">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86868B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" name="filter[search]" value="{{ filters.search }}"
+                placeholder="Search vehicles..."
+                class="w-full rounded-2xl border border-gray-200 bg-white pl-12 pr-4 py-3 text-sm text-[#1D1D1F] placeholder-[#86868B] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all">
+        </div>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+            <select name="filter[brand_id]" class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#1D1D1F] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2386868B%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_10px_center] bg-no-repeat">
+                <option value="">All Brands</option>
+                {% for key, name in filterBrands %}
+                <option value="{{ key }}" {% if filters.brand_id == key %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+            <select name="filter[condition_id]" class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#1D1D1F] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2386868B%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_10px_center] bg-no-repeat">
+                <option value="">Condition</option>
+                {% for key, name in filterConditions %}
+                <option value="{{ key }}" {% if filters.condition_id == key %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+            <select name="filter[is_active]" class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#1D1D1F] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2386868B%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_10px_center] bg-no-repeat">
+                <option value="">Status</option>
+                {% for key, name in filterStatuses %}
+                <option value="{{ key }}" {% if filters.is_active is defined and filters.is_active == key %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="filter[price_min]" value="{{ filters.price_min }}" placeholder="Min Price"
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#1D1D1F] placeholder-[#86868B] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all">
+        </div>
+        
+        <div class="flex gap-2">
+            <button type="submit"
+                class="flex-1 inline-flex items-center justify-center rounded-full bg-[#0071E3] py-2.5 text-sm font-medium text-white hover:bg-[#0077ED] transition-colors"
+                data-attach-loading>
+                Apply Filters
+            </button>
+            <button type="button"
+                class="px-5 py-2.5 rounded-full border border-gray-200 bg-white text-sm font-medium text-[#86868B] hover:bg-gray-50 transition-colors"
+                onclick="this.closest('form').reset(); this.closest('form').querySelectorAll('input, select').forEach(el => el.value = ''); $(this).closest('form').request('{{ __SELF__ }}::onFilterVehicles');">
+                Clear
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="glass overflow-hidden rounded-[24px] border border-white shadow-[0_8px_32px_0_rgba(0,0,0,0.05)]">
+    <div class="flex items-center justify-between border-b border-gray-200/50 bg-white/40 px-4 sm:px-6 py-4">
+        <div class="flex items-center gap-3">
+            <input type="checkbox" class="select-all-vehicles h-5 w-5 rounded-md border-gray-300 text-[#0071E3] focus:ring-[#0071E3]"
+                   data-selector=".vehicle-checkbox">
+            <span class="text-sm font-medium text-[#1D1D1F]" id="selected-count">0 selected</span>
+        </div>
+        
+        <div class="flex gap-2">
+            <button type="button" class="rounded-lg px-3 py-1.5 text-xs font-medium text-red-500 hover:bg-red-50"
+                    id="bulk-delete-btn" onclick="handleBulkDelete()" style="display: none;">
+                Delete
+            </button>
+            <button type="button" class="rounded-lg px-3 py-1.5 text-xs font-medium text-[#0071E3] hover:bg-[#0071E3]/5"
+                    id="bulk-draft-btn" onclick="handleBulkStatusChange(0)" style="display: none;">
+                Mark Draft
+            </button>
+            <button type="button" class="rounded-lg px-3 py-1.5 text-xs font-medium text-emerald-600 hover:bg-emerald-50"
+                    id="bulk-active-btn" onclick="handleBulkStatusChange(1)" style="display: none;">
+                Mark Active
+            </button>
+        </div>
+    </div>
+    
+    <div id="vehicle-card-list" class="lg:hidden divide-y divide-gray-100">
+        {% partial __SELF__ ~ '::_list_cards' vehicles=vehicles %}
+    </div>
+    
+    <div class="hidden lg:block overflow-x-auto">
+        <table class="w-full border-collapse text-left">
+            <thead class="bg-white/30 text-[11px] font-semibold uppercase tracking-wider text-[#86868B]">
+                <tr>
+                    <th class="px-6 py-4 w-12"></th>
+                    <th class="px-6 py-4">Vehicle</th>
+                    <th class="px-6 py-4">Price</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="vehicle-table-body" class="divide-y divide-gray-100">
+                {% partial __SELF__ ~ '::_list_rows' vehicles=vehicles %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex items-center justify-between border-t border-gray-100 bg-white/20 px-4 sm:px-6 py-4">
+        <span class="text-xs text-[#86868B]">{{ vehicles|length }} Vehicles</span>
+        <div class="flex gap-1">
+            {% partial __SELF__ ~ '::_load_more_button'
+                currentPage=currentPage
+                perPage=perPage
+                hasMore=hasMore
+                filters=filters
+            %}
+        </div>
+    </div>
+</div>
+
+<div id="deleted-vehicles-section" class="mt-6 sm:mt-8">
+    {% partial __SELF__ ~ '::_deleted_vehicles' deletedVehicles=deletedVehicles %}
+</div>
+
+<script>
+window.getSelectedVehicleIds = function() {
+    var checkboxes = document.querySelectorAll('.vehicle-checkbox:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+};
+
+window.handleBulkDelete = function() {
+    var ids = window.getSelectedVehicleIds();
+    if (ids.length === 0) {
+        alert('Please select at least one vehicle to delete.');
+        return;
+    }
+    
+    if (!confirm('Are you sure you want to delete the selected vehicle(s)? They will be moved to trash and can be restored.')) {
+        return;
+    }
+    
+    if (typeof $ === 'undefined' || typeof $.request === 'undefined') {
+        alert('AJAX not available. Please refresh the page and try again.');
+        return;
+    }
+    
+    $.request('{{ __SELF__ }}::onDeleteMultipleVehicles', {
+        data: { vehicle_ids: ids },
+        success: function() {
+            window.location.reload();
+        }
+    });
+};
+
+window.updateSelectedCount = function() {
+    var checkboxes = document.querySelectorAll('.vehicle-checkbox:checked');
+    var count = checkboxes.length;
+    var countEl = document.getElementById('selected-count');
+    var bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+    var bulkDraftBtn = document.getElementById('bulk-draft-btn');
+    var bulkActiveBtn = document.getElementById('bulk-active-btn');
+    if (countEl) countEl.textContent = count + ' selected';
+    if (bulkDeleteBtn) bulkDeleteBtn.style.display = count > 0 ? 'block' : 'none';
+    if (bulkDraftBtn) bulkDraftBtn.style.display = count > 0 ? 'block' : 'none';
+    if (bulkActiveBtn) bulkActiveBtn.style.display = count > 0 ? 'block' : 'none';
+};
+
+window.handleBulkStatusChange = function(status) {
+    var ids = window.getSelectedVehicleIds();
+    if (ids.length === 0) {
+        alert('Please select at least one vehicle to change status.');
+        return;
+    }
+    
+    var statusText = status === '1' ? 'active' : 'inactive/draft';
+    if (!confirm('Mark selected vehicle(s) as ' + statusText + '?')) {
+        return;
+    }
+    
+    if (typeof $ === 'undefined' || typeof $.request === 'undefined') {
+        alert('AJAX not available. Please refresh the page and try again.');
+        return;
+    }
+    
+    $.request('{{ __SELF__ }}::onChangeMultipleVehicleStatus', {
+        data: { vehicle_ids: ids, status: status },
+        success: function() {
+            window.location.reload();
+        }
+    });
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    var selectAll = document.querySelector('.select-all-vehicles');
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            var checkboxes = document.querySelectorAll('.vehicle-checkbox');
+            checkboxes.forEach(function(cb) { cb.checked = this.checked; }, this);
+            window.updateSelectedCount();
+        });
+    }
+    
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('vehicle-checkbox')) {
+            window.updateSelectedCount();
+        }
+    });
+});
+</script>

@@ -11,10 +11,10 @@ class Transmission extends Model
 
     public $table = 'majos_caryard_transmissions';
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $keyType = 'int';
+    public $incrementing = true;
 
-    protected $fillable = ['name', 'slug'];
+    protected $fillable = ['name', 'slug', 'description'];
 
     public $rules = [
         'name' => 'required'
@@ -23,11 +23,4 @@ class Transmission extends Model
     public $hasMany = [
         'vehicles' => ['Majos\Caryard\Models\Vehicle']
     ];
-
-    public function beforeCreate()
-    {
-        if (empty($this->id)) {
-            $this->id = (string) \Str::uuid();
-        }
-    }
 }

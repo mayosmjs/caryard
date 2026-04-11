@@ -1,0 +1,10 @@
+<?php Block::put('breadcrumb') ?>
+    <ul>
+        <li><a href="<?= Backend::url('majos/caryard/divisiontypes') ?>">Division Types</a></li>
+        <li><?= e($this->pageTitle) ?></li>
+    </ul>
+<?php Block::endPut() ?>
+
+<div class="form-preview">
+    <?= $this->formRenderPreview() ?>
+</div>

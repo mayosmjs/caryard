@@ -1,0 +1,21 @@
+columns:
+    tenant:
+        label: Tenant (Country)
+        relation: tenant
+        select: name
+        sortable: true
+        width: 200px
+
+    level:
+        label: Level
+        sortable: true
+        width: 60px
+
+    label:
+        label: Label
+        searchable: true
+        sortable: true
+
+    label_plural:
+        label: Plural
+        searchable: true

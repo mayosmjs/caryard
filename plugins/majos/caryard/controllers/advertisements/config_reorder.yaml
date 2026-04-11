@@ -1,0 +1,13 @@
+# ===================================
+#  Reorder Behavior Config
+# ===================================
+
+# Model Class name
+modelClass: Majos\Caryard\Models\Advertisement
+
+# Reorder page title
+title: Reorder Advertisements
+
+# Attribute name to use for display
+toolbar:
+    buttons: reorder_toolbar

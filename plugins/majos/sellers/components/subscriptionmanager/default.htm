@@ -1,0 +1,299 @@
+<script>
+    window.stripePubKey = '{{ stripePubKey }}';
+    window.sellerName = '{{ seller.fullName }}';
+</script>
+
+<div class="subscription-body py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    
+    <!-- Header Section -->
+    <div class="text-center mb-12">
+        <h2 class="pricing-header text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+            Plans that grow with your business
+        </h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+            Choose the perfect plan for your dealership. Upgrade or downgrade at any time.
+        </p>
+        {% if tenantName %}
+        <p class="text-sm text-slate-500 mt-2">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                {{ tenantName }}
+            </span>
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- Current Subscription Link/Status -->
+    {% if subscription %}
+    <div class="mb-12">
+        <div class="modern-card p-6 border-l-4 border-l-amber-500 bg-slate-50/50">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <span class="text-xs font-bold uppercase tracking-widest text-amber-600">Current Subscription</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tighter 
+                        {% if subscription.status == 'active' %}bg-green-100 text-green-700
+                        {% elseif subscription.status == 'failed' or subscription.status == 'cancelled' %}bg-red-100 text-red-700
+                        {% else %}bg-slate-100 text-slate-600{% endif %}">
+                        {{ subscription.status }}
+                    </span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900">{{ currentPlan.name|default('Standard Plan') }}</h3>
+                    <p class="text-sm text-slate-500 mt-1">
+                        Expires on <span class="font-semibold text-slate-700">{{ subscription.expires_at|date('M d, Y') }}</span> 
+                        ({{ subscription.getRemainingDays() }} days remaining)
+                    </p>
+                </div>
+                
+                <div class="flex flex-wrap gap-3">
+                    <div class="bg-white px-4 py-2 rounded-lg border border-slate-200 text-center min-w-[100px]">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Vehicle Limit</p>
+                        <p class="text-sm font-bold text-slate-900">
+                            {{ subscription.hasUnlimitedVehicles() ? 'Unlimited' : (subscription.getVehicleLimit() ~ ' Vehicles') }}
+                        </p>
+                    </div>
+                    {% if subscription.isActive() %}
+                    <button type="button" 
+                            class="btn-modern btn-outline text-red-600 border-red-100 hover:bg-red-50 hover:border-red-200" 
+                            data-request="onCancelSubscription" 
+                            data-request-confirm="Are you sure you want to cancel?">
+                        Cancel Plan
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="mb-12 text-center">
+        <div class="inline-flex items-center gap-4 p-2 pl-4 pr-2 bg-amber-50 rounded-full border border-amber-100 shadow-sm">
+            <span class="text-sm font-medium text-amber-800">Ready to start selling?</span>
+            {% if trialUsed %}
+                <button class="btn-modern btn-amber py-2 px-6 rounded-full opacity-60 cursor-not-allowed" disabled>
+                    Trial Already Used
+                </button>
+            {% else %}
+                <button class="btn-modern btn-amber py-2 px-6 rounded-full" data-request="onStartTrial">
+                    Start 14-day Free Trial
+                </button>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Transaction History Section -->
+    {% if transactions and transactions|length > 0 %}
+    <div class="mb-12">
+        <h3 class="text-xl font-bold text-slate-900 mb-4">Transaction History</h3>
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
+            <table class="min-w-full divide-y divide-slate-200">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Provider</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Transaction ID</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-slate-200">
+                    {% for txn in transactions %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                            {{ txn.created_at|date('M d, Y H:i') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                                {{ txn.providerDisplayName }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                            {{ txn.formattedAmount }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if txn.status == 'completed' %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Completed
+                            </span>
+                            {% elseif txn.status == 'pending' %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                Pending
+                            </span>
+                            {% elseif txn.status == 'failed' %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                Failed
+                            </span>
+                            {% elseif txn.status == 'refunded' %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                                Refunded
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-500 font-mono">
+                            {{ txn.transaction_id|default('-') }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Billing Toggle -->
+    <div class="billing-toggle-container">
+        <span class="billing-label-monthly text-slate-900 font-bold transition-colors">Monthly</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="billing-cycle-toggle">
+            <span class="slider"></span>
+        </label>
+        <span class="billing-label-annual text-slate-400 transition-colors">
+            Annual 
+            <span class="ml-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full">Save up to 20%</span>
+        </span>
+    </div>
+
+    <!-- Show subscription options only if no active subscription -->
+    {% if not hasActiveSubscription %}
+    <!-- Pricing Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for plan in availablePlans %}
+        <div class="modern-card flex flex-col p-8 {{ currentPlan.id == plan.id ? 'featured ring-2 ring-amber-500' : '' }}">
+            
+            <div class="mb-8">
+                <h4 class="text-lg font-bold text-slate-900 mb-2">{{ plan.name }}</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">{{ plan.description|default('Perfect for growing dealerships.') }}</p>
+            </div>
+
+            <div class="mb-8 min-h-[60px]">
+                <!-- Monthly Price -->
+                <div class="price-monthly items-baseline">
+                    <span class="text-4xl font-extrabold text-slate-900 tracking-tight">
+                        {{ plan.price_monthly == 0 ? 'Free' : ('KES ' ~ plan.price_monthly|number_format(0)) }}
+                    </span>
+                    {% if plan.price_monthly > 0 %}
+                    <span class="text-slate-500 font-medium ml-1">/mo</span>
+                    {% endif %}
+                </div>
+                
+                <!-- Annual Price (Hidden by default) -->
+                <div class="price-annual hidden items-baseline">
+                    <span class="text-4xl font-extrabold text-slate-900 tracking-tight">
+                        {{ plan.price_annual == 0 ? 'Free' : ('KES ' ~ plan.price_annual|number_format(0)) }}
+                    </span>
+                    {% if plan.price_annual > 0 %}
+                    <span class="text-slate-500 font-medium ml-1">/yr</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="flex-grow space-y-4 mb-8">
+                <div class="feature-item">
+                    <div class="feature-tick">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg>
+                    </div>
+                    <span class="text-sm text-slate-600">
+                        <strong>{{ plan.vehicle_limit == 0 ? 'Unlimited' : plan.vehicle_limit }}</strong> active vehicle listings
+                    </span>
+                </div>
+                
+                {% for feature in plan.features %}
+                <div class="feature-item">
+                    <div class="feature-tick">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg>
+                    </div>
+                    <span class="text-sm text-slate-600">{{ feature }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="pt-6 border-t border-slate-100">
+                {% if currentPlan and currentPlan.id == plan.id %}
+                    <button class="w-full btn-modern btn-outline opacity-60 cursor-not-allowed" disabled>
+                        Current Plan
+                    </button>
+                {% elseif plan.tier == 'trial' and (subscription or trialUsed) %}
+                    <button class="w-full btn-modern btn-outline opacity-60 cursor-not-allowed" disabled>
+                        Trial Already Used
+                    </button>
+                {% elseif plan.price_monthly == 0 and freeUsed %}
+                    <button class="w-full btn-modern btn-outline opacity-60 cursor-not-allowed" disabled>
+                        Free Plan Already Used
+                    </button>
+                {% else %}
+                    <form method="POST" class="subscription-checkout-form{% if plan.price_monthly == 0 %} free-plan-form{% endif %}" {% if plan.price_monthly == 0 %}data-free="1"{% endif %}>
+                        <input type="hidden" name="plan_id" value="{{ plan.id }}">
+                        <input type="hidden" name="billing_cycle" value="monthly">
+                        <input type="hidden" name="provider" id="selected-provider" value="">
+                        {% if plan.price_monthly == 0 %}<input type="hidden" name="_free" value="1">{% endif %}
+                        
+                        {% if plan.price_monthly > 0 %}
+                        <div class="mb-4">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Select Payment Method</label>
+                            
+                            {% if providerLogos|length > 0 %}
+                            <!-- Logo Selection Grid -->
+                            <div class="grid grid-cols-3 gap-3">
+                                {% for key, label in providers %}
+                                {% set hasLogo = providerLogos[key] is defined %}
+                                <label class="payment-provider-option cursor-pointer relative block" onclick="var cards = document.querySelectorAll('.payment-option'); cards.forEach(function(c) { c.style.borderColor = ''; c.classList.remove('border-amber-500', 'bg-amber-50'); }); this.querySelector('.payment-option').style.borderColor = '#f59e0b'; this.querySelector('.payment-option').classList.add('border-amber-500', 'bg-amber-50'); document.getElementById('selected-provider').value = '{{ key }}';">
+                                    <input type="radio" name="provider" value="{{ key }}" class="absolute w-0 h-0 opacity-0" id="provider_{{ key }}">
+                                    <div class="payment-option p-2 border-2 border-slate-200 rounded-lg text-center transition-all hover:border-slate-300">
+                                        <div class="h-10 w-10 mx-auto flex items-center justify-center mb-1">
+                                        {% if hasLogo %}
+                                        <img src="{{ providerLogos[key] }}" alt="{{ label }}" class="h-6 object-contain">
+                                        {% else %}
+                                            <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                            </svg>
+                                        {% endif %}
+                                        </div>
+                                        <!-- <span class="text-xs font-medium text-slate-600">{{ label }}</span> -->
+                                    </div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <!-- Fallback to dropdown if no logos -->
+                            <select name="provider" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 appearance-none cursor-pointer">
+                                {% for key, label in providers %}
+                                    <option value="{{ key }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <button type="submit" class="w-full btn-modern btn-amber">
+                            {{ plan.price_monthly == 0 ? 'Get Started' : 'Upgrade Now' }}
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Already has subscription - show status -->
+    <div class="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+        <h3 class="text-xl font-bold text-green-800 mb-2">You have an active subscription</h3>
+        <p class="text-green-700 mb-4">Your {{ subscription.plan.name|default('subscription') }} is active until {{ subscription.expires_at|date('M d, Y') }}</p>
+        <a href="/account/subscription" class="inline-block btn-modern btn-green">
+            Manage Subscription
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- FAQs or Help Section -->
+    <div class="mt-20 text-center pb-12">
+        <p class="text-slate-500 text-sm">
+            Questions? Contact our support team at <a href="mailto:support@example.com" class="text-amber-600 font-semibold hover:underline">support@example.com</a>
+        </p>
+    </div>
+</div>

@@ -11,8 +11,8 @@ class DriveType extends Model
 
     public $table = 'majos_caryard_drive_types';
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = ['name', 'slug', 'description'];
 
@@ -24,10 +24,5 @@ class DriveType extends Model
         'vehicles' => ['Majos\Caryard\Models\Vehicle']
     ];
 
-    public function beforeCreate()
-    {
-        if (empty($this->id)) {
-            $this->id = (string) \Str::uuid();
-        }
-    }
+
 }

@@ -6,7 +6,7 @@ class Favorite extends Model
 {
     public $table = 'majos_caryard_favorites';
     public $timestamps = false;
-    public $incrementing = false;
+    public $incrementing = true;
 
     protected $fillable = ['vehicle_id', 'user_id'];
 

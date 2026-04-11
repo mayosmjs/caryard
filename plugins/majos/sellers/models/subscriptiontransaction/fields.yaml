@@ -1,0 +1,60 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    subscription_id:
+        label: Subscription
+        type: dropdown
+        required: true
+        span: auto
+    provider:
+        label: Provider
+        type: dropdown
+        options:
+            mpesa: M-Pesa
+            paypal: PayPal
+            stripe: Stripe
+        span: auto
+    transaction_id:
+        label: Transaction ID
+        type: text
+        span: auto
+    amount:
+        label: Amount
+        type: number
+        span: auto
+    currency:
+        label: Currency
+        type: text
+        span: auto
+    status:
+        label: Status
+        type: dropdown
+        options:
+            pending: Pending
+            completed: Completed
+            failed: Failed
+            refunded: Refunded
+        span: auto
+    payment_type:
+        label: Payment Type
+        type: text
+        span: auto
+    initiated_by:
+        label: Initiated By
+        type: dropdown
+        options:
+            admin: Admin
+            system: System
+            frontend: Frontend
+        span: auto
+    failure_reason:
+        label: Failure Reason
+        type: textarea
+        span: full
+    metadata:
+        label: Transaction Meta & Raw API Payloads
+        type: partial
+        path: ~/plugins/majos/sellers/controllers/subscriptiontransactions/_data.htm
+        span: full

@@ -1,0 +1,4 @@
+<option value="">-- SELECT {{ label|upper }} --</option>
+{% for id, name in options %}
+    <option value="{{ id }}" {% if selectedId == id %}selected{% endif %}>{{ name }}</option>
+{% endfor %}

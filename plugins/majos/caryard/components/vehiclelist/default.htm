@@ -27,21 +27,72 @@
 
 </div>
 
-<!-- Advanced Search Modal -->
-<div class="modal fade" id="advancedSearchModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content overflow-hidden border-0 rounded-2xl shadow-2xl">
-            <div class="modal-header bg-slate-900 text-white border-0 py-4 px-6">
-                <h5 class="modal-title font-black uppercase tracking-widest text-sm">Advanced Search</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0">
-                {% partial __SELF__ ~ '::_filters' %}
-            </div>
+<!-- ═══ Advanced Search Drawer (left slide-in) ═══ -->
+<div id="filterDrawerBackdrop"
+     class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998] hidden transition-opacity duration-300 opacity-0"
+     onclick="closeFilterDrawer()"></div>
+
+<aside id="filterDrawer"
+       class="fixed top-0 left-0 h-full w-full max-w-md bg-white z-[9999] shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto">
+
+    <!-- Drawer Header -->
+    <div class="sticky top-0 bg-slate-900 text-white px-6 py-4 flex items-center justify-between z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-1.5 h-5 bg-amber-500"></div>
+            <h5 class="font-black uppercase tracking-widest text-sm m-0">Advanced Search</h5>
         </div>
+        <button type="button" onclick="closeFilterDrawer()"
+                class="text-white/60 hover:text-white transition text-xl leading-none">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
-</div>
+
+    <!-- Drawer Body -->
+    <div class="p-0">
+        {% partial __SELF__ ~ '::_filters' %}
+    </div>
+</aside>
+
+<script>
+function openFilterDrawer() {
+    var drawer = document.getElementById('filterDrawer');
+    var backdrop = document.getElementById('filterDrawerBackdrop');
+    if (drawer) {
+        backdrop.classList.remove('hidden');
+        setTimeout(function() {
+            backdrop.classList.remove('opacity-0');
+            backdrop.classList.add('opacity-100');
+            drawer.classList.remove('-translate-x-full');
+            drawer.classList.add('translate-x-0');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
+}
+function closeFilterDrawer() {
+    var drawer = document.getElementById('filterDrawer');
+    var backdrop = document.getElementById('filterDrawerBackdrop');
+    if (drawer) {
+        drawer.classList.remove('translate-x-0');
+        drawer.classList.add('-translate-x-full');
+        backdrop.classList.remove('opacity-100');
+        backdrop.classList.add('opacity-0');
+        setTimeout(function() { 
+            backdrop.classList.add('hidden'); 
+            
+            // Auto scroll to results count
+            const target = document.getElementById('vehicle-count');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 300);
+        document.body.style.overflow = '';
+    }
+}
+// Close drawer on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeFilterDrawer();
+});
+</script>
 
 <style>
     .rounded-lg {

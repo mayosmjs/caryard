@@ -8,33 +8,10 @@ tenant = "{{ :tenant }}"
 brand = "{{ :brand }}"
 model = "{{ :model }}"
 location = "{{ :location }}"
-resultsPerPage = 5
-detailPage = "vehicle/detail"
+resultsPerPage = 15
+detailPage = 404
 ==
-
-<header
-  class="relative bg-gradient-to-b  bg-gradient-to-b from-[#FFD700] via-[#FFD700]/80 to-white subtle-grid  border-slate-100 pt-12 pb-12 lg:pt-[150px] lg:pb-20">
-  <div class="mx-auto max-w-7xl px-6 text-center lg:text-left grid lg:grid-cols-2 gap-12 items-center">
-
-    <div>
-      <div class="inline-flex items-center gap-2 bg-white border border-slate-200 px-3 py-1 mb-6">
-        <span class="w-2 h-2 bg-amber-500"></span>
-        <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">2026 Fleet Available</span>
-      </div>
-      <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 tracking-tight leading-[0.95] mb-6">
-        Premium <br />Automotive <br /><span class="text-slate-400">Marketplace.</span>
-      </h1>
-      <p class="text-slate-500 text-lg max-w-md leading-relaxed">
-        The most trusted destination for luxury vehicle rentals and expert maintenance in Accra.
-      </p>
-    </div>
-
-    <div class="relative">
-      <img src="https://cdn.prod.website-files.com/6774d17666ee15be4e7c09be/67765714c20bacd2c9440e61_Banner%20Image.png"
-        class="w-full grayscale brightness-110 drop-shadow-2xl" alt="Luxury SUV">
-    </div>
-  </div>
-</header>
+{% partial 'banner' %}
 
 
 {% component 'vehicleList' %}

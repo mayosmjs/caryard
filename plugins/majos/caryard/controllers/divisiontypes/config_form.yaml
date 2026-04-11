@@ -1,0 +1,17 @@
+name: Division Type
+form: $/majos/caryard/models/divisiontype/fields.yaml
+modelClass: Majos\Caryard\Models\DivisionType
+defaultRedirect: majos/caryard/divisiontypes
+
+create:
+    title: Create Division Type
+    redirect: majos/caryard/divisiontypes/update/:id
+    redirectClose: majos/caryard/divisiontypes
+
+update:
+    title: Edit Division Type
+    redirect: majos/caryard/divisiontypes
+    redirectClose: majos/caryard/divisiontypes
+
+preview:
+    title: Preview Division Type

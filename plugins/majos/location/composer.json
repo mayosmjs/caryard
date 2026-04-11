@@ -1,8 +1,0 @@
-{
-    "name": "majos/location-plugin",
-    "type": "october-plugin",
-    "description": "No description provided yet...",
-    "require": {
-        "composer/installers": "~1.0"
-    }
-}

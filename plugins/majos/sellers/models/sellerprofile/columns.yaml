@@ -1,8 +1,36 @@
 # ===================================
-#  List Column Definitions
+#  List Column Definitions for SellerProfile
 # ===================================
 
 columns:
     id:
         label: ID
-        searchable: true
+    user_id:
+        label: User
+        valueFrom: fullName
+    tenant_id:
+        label: Tenant
+        relation: tenant
+        select: name
+    company_name:
+        label: Company Name
+    phone_number:
+        label: Phone
+    is_seller:
+        label: Is Seller
+        type: switch
+    is_verified_seller:
+        label: Verified
+        type: switch
+    identification_type:
+        label: ID Type
+    identification_number:
+        label: ID Number
+    tax_id:
+        label: Tax ID
+    created_at:
+        label: Created
+        type: datetime
+    updated_at:
+        label: Updated
+        type: datetime

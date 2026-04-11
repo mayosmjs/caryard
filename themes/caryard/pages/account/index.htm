@@ -1,0 +1,51 @@
+url = "/account"
+layout = "default"
+title = "Account Dashboard"
+description = "Your account dashboard."
+
+[session]
+security = "user"
+redirect = "account/login"
+checkToken = 0
+
+[resources]
+vars[activeNavLink] = "account"
+==
+<div class="min-h-[80vh] flex items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-12">
+    <div class="max-w-2xl w-full flex flex-col items-center text-center space-y-6">
+        <div class="w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-400 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+            {{ user.name|first|upper }}
+        </div>
+        <div>
+            <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Welcome, {{ user.name }}!</h1>
+            <p class="mt-2 text-gray-500">Manage your account and settings.</p>
+            {% if tenant %}
+            <p class="mt-2 text-sm text-amber-600 font-medium">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                    {{ tenant.name }}
+                </span>
+            </p>
+            {% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full mt-8">
+            <a href="{{ 'account/profile'|page }}" class="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md border border-amber-100 hover:shadow-lg hover:border-amber-200 transition-all duration-200">
+                <svg class="w-8 h-8 text-amber-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span class="font-medium text-gray-900 text-lg">Edit Profile</span>
+                <span class="text-sm text-gray-500 mt-1">Update personal details</span>
+            </a>
+            
+            <a href="{{ 'account/subscription'|page }}" class="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md border border-amber-100 hover:shadow-lg hover:border-amber-200 transition-all duration-200">
+                <svg class="w-8 h-8 text-amber-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                <span class="font-medium text-gray-900 text-lg">Subscription</span>
+                <span class="text-sm text-gray-500 mt-1">Manage your subscription</span>
+            </a>
+            
+            <a href="#" data-request="onLogout" data-request-data="redirect: '/'" class="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md border border-red-50 hover:shadow-lg hover:border-red-100 transition-all duration-200">
+                <svg class="w-8 h-8 text-red-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <span class="font-medium text-gray-900 text-lg">Sign Out</span>
+                <span class="text-sm text-gray-500 mt-1">Securely end session</span>
+            </a>
+        </div>
+    </div>
+</div>

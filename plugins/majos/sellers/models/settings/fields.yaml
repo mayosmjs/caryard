@@ -1,0 +1,255 @@
+# =============================================
+# Settings Fields for Seller Subscription
+# =============================================
+
+tabs:
+  fields:
+    # General Settings Tab
+    enable_trial:
+      label: Enable Trial
+      type: switch
+      default: 1
+      tab: General
+      comment: Allow new sellers to start with a free trial
+    
+    default_trial_days:
+      label: Trial Duration (Days)
+      type: number
+      min: 1
+      max: 90
+      default: 14
+      tab: General
+      comment: Number of days for trial period
+    
+    default_vehicle_limit:
+      label: Default Vehicle Limit
+      type: number
+      min: 1
+      max: 1000
+      default: 2
+      tab: General
+      comment: Default number of vehicles allowed
+    
+    currency:
+      label: Currency
+      type: dropdown
+      options:
+        USD: USD - US Dollar
+        EUR: EUR - Euro
+        GBP: GBP - British Pound
+        KES: KES - Kenyan Shilling
+      default: USD
+      tab: General
+
+    # M-Pesa Tab
+    mpesa_enabled:
+      label: Enable M-Pesa
+      type: switch
+      default: 0
+      tab: M-Pesa
+      comment: Enable M-Pesa as a payment method
+    
+    mpesa_logo:
+      label: M-Pesa Logo
+      type: fileupload
+      mode: image
+      tab: M-Pesa
+      visible: mpesa_enabled
+      comment: 'Upload M-Pesa logo (recommended size: 120x40px)'
+      span: left
+    
+    mpesa_environment:
+      label: Environment
+      type: radio
+      options:
+        sandbox: Sandbox (Testing)
+        production: Production (Live)
+      default: sandbox
+      tab: M-Pesa
+      visible: mpesa_enabled
+    
+    mpesa_consumer_key:
+      label: Consumer Key
+      type: text
+      tab: M-Pesa
+      visible: mpesa_enabled
+      comment: M-Pesa API consumer key
+    
+    mpesa_consumer_secret:
+      label: Consumer Secret
+      type: text
+      tab: M-Pesa
+      visible: mpesa_enabled
+      comment: M-Pesa API consumer secret
+    
+    mpesa_shortcode:
+      label: Business Short Code
+      type: text
+      tab: M-Pesa
+      visible: mpesa_enabled
+      comment: Your M-Pesa business shortcode
+    
+    mpesa_passkey:
+      label: Passkey
+      type: text
+      tab: M-Pesa
+      visible: mpesa_enabled
+      comment: M-Pesa API passkey
+    
+    mpesa_initiator_name:
+      label: Initiator Name
+      type: text
+      tab: M-Pesa
+      visible: mpesa_enabled
+      comment: M-Pesa initiator/username name
+    
+    mpesa_security_credential:
+      label: Security Credential
+      type: text
+      tab: M-Pesa
+      visible: mpesa_enabled
+      comment: M-Pesa security credential (encrypted password)
+    
+    mpesa_callback_url:
+      label: Callback URL
+      type: text
+      tab: M-Pesa
+      visible: mpesa_enabled
+      default: /api/mpesa/callback
+      comment: URL where M-Pesa will send payment callbacks
+
+    # PayPal Tab
+    paypal_enabled:
+      label: Enable PayPal
+      type: switch
+      default: 0
+      tab: PayPal
+      comment: Enable PayPal as a payment method
+    
+    paypal_logo:
+      label: PayPal Logo
+      type: fileupload
+      mode: image
+      tab: PayPal
+      visible: paypal_enabled
+      comment: 'Upload PayPal logo (recommended size: 120x40px)'
+      span: left
+    
+    paypal_environment:
+      label: Environment
+      type: radio
+      options:
+        sandbox: Sandbox (Testing)
+        production: Production (Live)
+      default: sandbox
+      tab: PayPal
+      visible: paypal_enabled
+    
+    paypal_client_id:
+      label: Client ID
+      type: text
+      tab: PayPal
+      visible: paypal_enabled
+      comment: PayPal application client ID
+    
+    paypal_secret:
+      label: Secret
+      type: text
+      tab: PayPal
+      visible: paypal_enabled
+      comment: PayPal application secret
+    
+    paypal_webhook_id:
+      label: Webhook ID
+      type: text
+      tab: PayPal
+      visible: paypal_enabled
+      comment: PayPal webhook ID for subscription events
+    
+    paypal_return_url:
+      label: Return URL
+      type: text
+      tab: PayPal
+      visible: paypal_enabled
+      default: /subscription/paypal/return
+      comment: URL after successful payment
+    
+    paypal_cancel_url:
+      label: Cancel URL
+      type: text
+      tab: PayPal
+      visible: paypal_enabled
+      default: /subscription/paypal/cancel
+      comment: URL after cancelled payment
+
+    # Stripe Tab
+    stripe_enabled:
+      label: Enable Stripe
+      type: switch
+      default: 0
+      tab: Stripe
+      comment: Enable Stripe as a payment method
+    
+    stripe_logo:
+      label: Stripe Logo
+      type: fileupload
+      mode: image
+      tab: Stripe
+      visible: stripe_enabled
+      comment: 'Upload Stripe logo (recommended size: 120x40px)'
+      span: left
+    
+    stripe_environment:
+      label: Environment
+      type: radio
+      options:
+        test: Test Mode
+        live: Live Mode
+      default: test
+      tab: Stripe
+      visible: stripe_enabled
+    
+    stripe_api_key:
+      label: Secret API Key
+      type: text
+      tab: Stripe
+      visible: stripe_enabled
+      comment: Stripe secret key (sk_...)
+    
+    stripe_publishable_key:
+      label: Publishable API Key
+      type: text
+      tab: Stripe
+      visible: stripe_enabled
+      comment: Stripe publishable key (pk_...)
+    
+    stripe_webhook_secret:
+      label: Webhook Secret
+      type: text
+      tab: Stripe
+      visible: stripe_enabled
+      comment: Stripe webhook signing secret (whsec_...)
+    
+    stripe_connect_enabled:
+      label: Enable Stripe Connect
+      type: switch
+      default: 0
+      tab: Stripe
+      visible: stripe_enabled
+      comment: Enable Stripe Connect for seller payouts
+    
+    stripe_return_url:
+      label: Return URL
+      type: text
+      tab: Stripe
+      visible: stripe_enabled
+      default: /subscription/stripe/return
+      comment: URL after successful payment
+    
+    stripe_cancel_url:
+      label: Cancel URL
+      type: text
+      tab: Stripe
+      visible: stripe_enabled
+      default: /subscription/stripe/cancel
+      comment: URL after cancelled payment

@@ -1,0 +1,9 @@
+# =============================================
+# Form Configuration for Subscription Plans
+# =============================================
+
+form: $/majos/sellers/models/subscriptionplan/fields.yaml
+
+name: Subscription Plan
+modelClass: Majos\Sellers\Models\SubscriptionPlan
+formStore: true

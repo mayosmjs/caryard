@@ -1,0 +1,215 @@
+description = "Banner with dynamic advertisements"
+
+==
+use Majos\Caryard\Models\Advertisement;
+
+function onStart() {
+if ($this['tenant']) {
+$this['featuredAds'] = Advertisement::isActive()
+->where('tenant_id', $this['tenant']->id)
+->orderBy('sort_order', 'asc')
+->limit(10)
+->get();
+} else {
+$this['featuredAds'] = collect();
+}
+}
+==
+{% if tenant and tenant.isBannerEnabled %}
+<header
+    class="relative bg-gradient-to-br from-slate-900 via-slate-800 to-white-600/20 overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 ">
+
+    <!-- Abstract Background Elements -->
+    <div class="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"
+            class="w-full h-full text-amber-500 fill-current translate-x-1/2 -translate-y-1/4">
+            <path
+                d="M45.3,-75.7C59.3,-69.1,71.5,-57.4,80.4,-43.5C89.3,-29.7,94.9,-13.8,93.4,1.8C91.9,17.4,83.3,32.7,73.1,46.3C62.8,59.8,51,71.5,36.5,77.9C21.9,84.3,4.7,85.5,-12.9,82.4C-30.6,79.4,-48.7,72.1,-62.4,59.8C-76.1,47.4,-85.4,30,-88.7,11.5C-92, -7.1, -89.4, -26.9, -80.4, -43.2C-71.3, -59.5, -55.9, -72.4, -39.3, -77.8C-22.7, -83.2, -4.9, -81.1, 10.2, -77.5C25.3, -73.9, -2, -67.5, 45.3, -75.7Z"
+                transform="translate(100 100)" />
+        </svg>
+    </div>
+
+    <div class="mx-auto max-w-7xl px-6 relative z-10 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+        <!-- Left: Content -->
+        <div class="text-center lg:text-left pt-10 lg:pt-0">
+            {% if tenant.getBannerTag %}
+            <div
+                class="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-1.5 mb-6 lg:mb-8 transform transition hover:scale-105">
+                <span class="relative flex h-2 w-2">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                <span class="text-[10px] lg:text-xs font-bold uppercase tracking-[0.2em] text-amber-400">{{
+                    tenant.getBannerTag }}</span>
+            </div>
+            {% endif %}
+
+            <h1 class="text-4xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9] mb-6 lg:mb-8">
+                {{ tenant.getBannerTitle|raw }}
+            </h1>
+
+            {% if tenant.getBannerSubtitle %}
+            <p
+                class="text-2xl lg:text-5xl font-extrabold text-slate-400 tracking-tight leading-[0.95] mb-6 lg:mb-8 mix-blend-lighten">
+                {{ tenant.getBannerSubtitle|raw }}
+            </p>
+            {% endif %}
+
+            {% if tenant.getBannerDescription %}
+            <p class="text-slate-300 text-base lg:text-xl max-w-xl leading-relaxed mb-8 lg:mb-10 mx-auto lg:mx-0">
+                {{ tenant.getBannerDescription }}
+            </p>
+            {% endif %}
+
+            {% if tenant.getBannerButtonText %}
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-4 lg:mb-0">
+                <a href="{{ tenant.getBannerButtonUrl }}"
+                    class="group relative inline-flex items-center gap-3 px-8 lg:px-10 py-4 lg:py-5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-black rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(245,158,11,0.3)]">
+                    <span class="uppercase tracking-widest text-xs lg:text-sm">{{ tenant.getBannerButtonText }}</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right: Advertisement Carousel -->
+        <div class="relative w-full h-[450px] sm:h-[500px] lg:h-[600px] flex items-center justify-center">
+            {% if featuredAds|length > 0 %}
+
+            <!-- Side Navigation Buttons -->
+            <button
+                class="banner-embla-prev absolute -left-4 lg:-left-12 top-1/2 -translate-y-1/2 w-10 lg:w-14 h-10 lg:h-14 rounded-full border border-white/10 bg-slate-900/40 backdrop-blur-xl flex items-center justify-center text-white hover:bg-amber-500 hover:text-slate-900 transition-all z-30 shadow-2xl group focus:outline-none">
+                <i
+                    class="fas fa-chevron-left text-xs lg:text-lg transform group-hover:-translate-x-0.5 transition-transform"></i>
+            </button>
+            <button
+                class="banner-embla-next absolute -right-4 lg:-right-12 top-1/2 -translate-y-1/2 w-10 lg:w-14 h-10 lg:h-14 rounded-full border border-white/10 bg-slate-900/40 backdrop-blur-xl flex items-center justify-center text-white hover:bg-amber-500 hover:text-slate-900 transition-all z-30 shadow-2xl group focus:outline-none">
+                <i
+                    class="fas fa-chevron-right text-xs lg:text-lg transform group-hover:translate-x-0.5 transition-transform"></i>
+            </button>
+
+            <div class="embla overflow-hidden w-full h-full max-w-[550px]" id="bannerAdsCarousel">
+                <div class="embla__container flex h-full">
+                    {% for ad in featuredAds %}
+                    <div class="embla__slide relative flex-[0_0_100%] min-w-0 h-full p-2 lg:p-4">
+                        <div
+                            class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[2rem] lg:rounded-[2.5rem] overflow-hidden shadow-2xl h-full flex flex-col transition-all duration-500 hover:border-amber-500/50">
+
+                            <!-- Image Container -->
+                            <div class="relative h-full overflow-hidden">
+                                {% if ad.image %}
+                                <img src="{{ ad.image|media }}"
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    alt="{{ ad.title }}">
+                                {% else %}
+                                <div class="w-full h-full bg-slate-800 flex items-center justify-center">
+                                    <i class="fas fa-image text-slate-600 text-4xl lg:text-6xl"></i>
+                                </div>
+                                {% endif %}
+
+                                <!-- Overlay Content -->
+                                <div
+                                    class="absolute inset-x-0 bottom-0 p-6 lg:p-10 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent flex flex-col justify-end">
+                                    <h3
+                                        class="text-xl lg:text-4xl font-black text-white mb-2 leading-tight drop-shadow-lg">
+                                        {{ ad.title }}
+                                    </h3>
+                                    {% if ad.description %}
+                                    <p
+                                        class="text-slate-200 text-xs lg:text-lg line-clamp-2 leading-relaxed mb-6 max-w-md drop-shadow-md">
+                                        {{ ad.description }}
+                                    </p>
+                                    {% endif %}
+
+                                    {% if ad.link_url %}
+                                    <a href="{{ ad.link_url }}"
+                                        class="inline-flex items-center gap-2 w-fit px-6 lg:px-8 py-3 lg:py-4 bg-white/10 hover:bg-amber-500 text-white hover:text-slate-900 text-sm lg:text-base font-bold rounded-xl border border-white/10 backdrop-blur-md transition-all duration-300">
+                                        Discover More
+                                        <i class="fas fa-arrow-right text-[10px] lg:text-xs"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <!-- Fallback Image if no advertisements -->
+            <div class="relative group mt-10 lg:mt-0">
+                <div
+                    class="absolute -inset-1 bg-gradient-to-r from-amber-500 to-orange-600 rounded-[2rem] lg:rounded-[3rem] blur opacity-25 group-hover:opacity-50 transition duration-1000">
+                </div>
+                <img src="{{ tenant.getBannerImageUrl }}"
+                    class="relative w-full max-w-[400px] lg:max-w-[500px] h-auto rounded-[2rem] lg:rounded-[3rem] brightness-110 drop-shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
+                    alt="{{ tenant.getBannerTitle }} - {{ tenant.name }}">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</header>
+{% endif %}
+
+{% put scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const adNode = document.getElementById('bannerAdsCarousel');
+        const rootNode = adNode ? adNode.parentElement : null;
+
+        if (adNode && rootNode) {
+            // EmblaCarousel is global from layouts/default.htm
+            const embla = EmblaCarousel(adNode, {
+                loop: true,
+                draggable: true,
+                align: 'center',
+                containScroll: 'trimSnaps'
+            });
+
+            const prevBtn = rootNode.querySelector('.banner-embla-prev');
+            const nextBtn = rootNode.querySelector('.banner-embla-next');
+
+            if (prevBtn) prevBtn.addEventListener('click', () => embla.scrollPrev());
+            if (nextBtn) nextBtn.addEventListener('click', () => embla.scrollNext());
+
+            // Auto-play logic
+            let interval = setInterval(() => embla.scrollNext(), 3000);
+
+            const stopAutoplay = () => clearInterval(interval);
+            const startAutoplay = () => {
+                clearInterval(interval);
+                interval = setInterval(() => embla.scrollNext(), 3000);
+            };
+
+            rootNode.addEventListener('mouseenter', stopAutoplay);
+            rootNode.addEventListener('mouseleave', startAutoplay);
+        }
+    });
+</script>
+<style>
+    .embla__slide {
+        transform: translate3d(0, 0, 0);
+    }
+
+    #bannerAdsCarousel .embla__container {
+        backface-visibility: hidden;
+        will-change: transform;
+    }
+
+    /* Pulse effect for navigations buttons on mobile if needed */
+    @media (max-width: 1024px) {
+
+        .banner-embla-prev,
+        .banner-embla-next {
+            background-color: rgba(15, 23, 42, 0.6);
+        }
+    }
+</style>
+{% endput %}

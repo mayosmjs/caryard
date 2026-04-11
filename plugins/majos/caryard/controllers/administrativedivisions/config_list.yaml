@@ -1,0 +1,21 @@
+# ===================================
+#  List Behavior Config
+# ===================================
+
+title: Administrative Divisions
+modelClass: Majos\Caryard\Models\AdministrativeDivision
+list: $/majos/caryard/models/administrativedivision/columns.yaml
+recordUrl: majos/caryard/administrativedivisions/update/:id
+recordsPerPage: 50
+showSorting: true
+showCheckboxes: true
+defaultSort:
+    column: country_code
+    direction: asc
+
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: Search divisions...
+
+filter: $/majos/caryard/models/administrativedivision/filter.yaml

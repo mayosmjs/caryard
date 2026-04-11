@@ -9,7 +9,7 @@ class BuilderTableUpdateMajosCaryardVehicles extends Migration
     {
         Schema::table('majos_caryard_vehicles', function($table)
         {
-            $table->boolean('is_active')->default(1);
+            // $table->boolean('is_active')->default(1);
             $table->integer('seller_id')->nullable();
         });
     }
@@ -18,7 +18,7 @@ class BuilderTableUpdateMajosCaryardVehicles extends Migration
     {
         Schema::table('majos_caryard_vehicles', function($table)
         {
-            $table->dropColumn('is_active');
+            // $table->dropColumn('is_active');
             $table->dropColumn('seller_id');
         });
     }

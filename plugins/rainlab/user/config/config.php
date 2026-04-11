@@ -1,15 +1,23 @@
 <?php
 
+use RainLab\User\Models\Settings;
+
 return [
+
     /*
     |--------------------------------------------------------------------------
-    | Force Two-Factor Authentication
+    | Activation mode
     |--------------------------------------------------------------------------
     |
-    | Force enable two-factor authentication when logging in, if the user has it set up.
+    | Select how a user account should be activated.
+    |
+    | ACTIVATE_ADMIN    Administrators must activate users manually.
+    | ACTIVATE_AUTO     Users are activated automatically upon registration.
+    | ACTIVATE_USER     The user activates their own account using a link sent to them via email.
     |
     */
-    'force_two_factor_auth' => null,
+
+    'activateMode' => Settings::ACTIVATE_AUTO,
 
     /*
     |--------------------------------------------------------------------------
@@ -20,7 +28,7 @@ return [
     |
     */
 
-    'allow_registration' => true,
+    'allowRegistration' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -31,7 +39,7 @@ return [
     |
     */
 
-    'block_persistence' => false,
+    'blockPersistence' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -40,69 +48,69 @@ return [
     |
     | Select what primary user detail should be used for signing in.
     |
-    | email       Authenticate users by email.
-    | username    Authenticate users by username.
+    | LOGIN_EMAIL       Authenticate users by email.
+    | LOGIN_USERNAME    Authenticate users by username.
     |
     */
 
-    'login_attribute' => 'email',
+    'loginAttribute' => Settings::LOGIN_EMAIL,
 
     /*
     |--------------------------------------------------------------------------
-    | Password Policy
+    | Minimum Password Length
     |--------------------------------------------------------------------------
     |
-    | Specify the password policy for backend administrators.
-    |
-    | min_length            - Password minimum length between 4 - 128 chars
-    | require_mixed_case    - Require at least one uppercase and lowercase letter
-    | require_uncompromised - Require a password not found in a leaked password database
-    | require_number        - Require at least one number
-    | require_symbol        - Require at least one non-alphanumeric character
+    | The minimum length of characters required for user passwords.
     |
     */
 
-    'password_policy' => [
-        'min_length' => 8,
-        'require_mixed_case' => false,
-        'require_uncompromised' => false,
-        'require_number' => true,
-        'require_symbol' => false,
-    ],
+    'minPasswordLength' => 8,
 
     /*
     |--------------------------------------------------------------------------
-    | Soft Delete Users
+    | Remember login mode
     |--------------------------------------------------------------------------
     |
-    | When enabled, deleted users are soft deleted (deactivated) instead of
-    | being permanently removed. This preserves referential integrity for
-    | plugins that reference user records, such as orders or activity logs.
+    | Select if the user session should be persistent.
+    |
+    | REMEMBER_ALWAYS   Always persist user session.
+    | REMEMBER_ASK      Ask if session should be persistent.
+    | REMEMBER_NEVER    Never persist user session.
     |
     */
 
-    'soft_delete' => true,
+    'rememberLogin' => Settings::REMEMBER_ALWAYS,
 
     /*
     |--------------------------------------------------------------------------
-    | JWT Config
+    | Sign in requires activation
     |--------------------------------------------------------------------------
     |
-    | The token might be consumed in other systems. perhaps we could have a
-    | few variables here and there to have control over the token variables.
-    | Setting the value to null will leave it as the internal default value.
-    |
-    | - algorithm: see https://datatracker.ietf.org/doc/html/draft-ietf-jose-json-web-algorithms-40
-    | - key: to be used instead of the app.key value
-    | - ttl: in minutes
-    | - leeway: in seconds
+    | Users must have an activated account to sign in.
     |
     */
 
-    'bearer_token' => [
-        'algorithm' => null,
-        'key' => null,
-        'ttl' => null,
-        'leeway' => null,
-    ]
+    'requireActivation' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Throttle registration
+    |--------------------------------------------------------------------------
+    |
+    | Prevent multiple registrations from the same IP in short succession.
+    |
+    */
+
+    'useRegisterThrottle' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Throttle attempts
+    |--------------------------------------------------------------------------
+    |
+    | Repeat failed sign in attempts will temporarily suspend the user.
+    |
+    */
+
+    'useThrottle' => true,
 ];

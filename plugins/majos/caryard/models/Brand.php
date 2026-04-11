@@ -14,8 +14,8 @@ class Brand extends Model
 
     public $table = 'majos_caryard_brands';
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = ['name', 'slug', 'description', 'logo'];
 
@@ -32,10 +32,5 @@ class Brand extends Model
         'logo_file' => ['System\Models\File', 'public' => true]
     ];
 
-    public function beforeCreate()
-    {
-        if (empty($this->id)) {
-            $this->id = (string) \Str::uuid();
-        }
-    }
+
 }

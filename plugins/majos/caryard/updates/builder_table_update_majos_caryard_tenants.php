@@ -9,7 +9,7 @@ class BuilderTableUpdateMajosCaryardTenants extends Migration
     {
         Schema::table('majos_caryard_tenants', function($table)
         {
-            $table->boolean('is_active')->default(1);
+            // $table->boolean('is_active')->default(1);
         });
     }
 
@@ -17,7 +17,7 @@ class BuilderTableUpdateMajosCaryardTenants extends Migration
     {
         Schema::table('majos_caryard_tenants', function($table)
         {
-            $table->dropColumn('is_active');
+            // $table->dropColumn('is_active');
         });
     }
 }

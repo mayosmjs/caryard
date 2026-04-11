@@ -1,0 +1,28 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Advertisement
+
+# Model Class name
+modelClass: Majos\Caryard\Models\Advertisement
+
+# Form fields
+form: fields.yaml
+
+# Create page
+create:
+    title: Create Advertisement
+    redirect: majos/caryard/advertisements
+    redirectClose: majos/caryard/advertisements
+
+# Update page
+update:
+    title: Edit Advertisement
+    redirect: majos/caryard/advertisements
+    redirectClose: majos/caryard/advertisements
+
+# Preview page
+preview:
+    title: Preview Advertisement

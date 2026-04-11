@@ -24,6 +24,11 @@ columns:
         type: date
         format: Y
         searchable: true
+    tenant:
+        label: Tenant
+        relation: tenant
+        select: name
+        searchable: true
     price:
         label: Price
         searchable: true

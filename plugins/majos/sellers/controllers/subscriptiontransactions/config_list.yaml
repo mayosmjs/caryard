@@ -1,0 +1,55 @@
+# =============================================
+# List Configuration for Subscription Transactions
+# =============================================
+
+list: $/majos/sellers/models/subscriptiontransaction/columns.yaml
+
+title: Subscription Transactions
+modelClass: Majos\Sellers\Models\SubscriptionTransaction
+
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: backend::lang.list.search_prompt
+
+defaultSort:
+    column: created_at
+    direction: desc
+
+recordUrl: majos/sellers/subscriptiontransactions/update/:id
+
+noRecordsMessage: backend::lang.list.no_records
+
+recordsPerPage: 20
+
+showPageNumbers: true
+
+showSetup: true
+
+showSorting: true
+
+showCheckboxes: true
+
+filters:
+    scopes:
+        provider:
+            label: Provider
+            options:
+                mpesa: M-Pesa
+                paypal: PayPal
+                stripe: Stripe
+        
+        status:
+            label: Status
+            options:
+                pending: Pending
+                completed: Completed
+                failed: Failed
+                refunded: Refunded
+        
+        initiated_by:
+            label: Initiated By
+            options:
+                admin: Admin
+                system: System
+                frontend: Frontend

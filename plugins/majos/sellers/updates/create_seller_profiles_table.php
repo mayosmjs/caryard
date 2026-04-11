@@ -9,23 +9,22 @@ class CreateSellerProfilesTable extends Migration
     {
         Schema::create('majos_sellers_profiles', function($table)
         {
-            $table->uuid('id')->primary();
-            $table->integer('user_id')->unsigned()->index();
-            $table->uuid('tenant_id')->nullable();
-            $table->string('company_name')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->text('address')->nullable();
-            
-            // Geographic Hierarchy
-            $table->uuid('country_id')->nullable();
-            $table->uuid('province_id')->nullable();
-            $table->uuid('city_id')->nullable();
-            
-            $table->string('identification_type')->nullable();
-            $table->string('identification_number')->nullable();
-            $table->string('tax_id')->nullable();
-            $table->boolean('is_verified_seller')->default(0);
-            $table->timestamps();
+                $table->string('id', 36)->primary();
+                $table->unsignedInteger('division_id')->nullable();
+                $table->string('tenant_id', 36)->nullable();
+                $table->boolean('is_seller')->default(0);
+                $table->unsignedInteger('user_id')->default(0);
+                $table->text('company_name')->nullable();
+                $table->string('phone_number')->nullable();
+                $table->text('address')->nullable();
+                $table->text('city')->nullable();
+                $table->text('country')->nullable();
+                $table->text('identification_type')->nullable();
+                $table->text('identification_number')->nullable();
+                $table->text('tax_id')->nullable();
+                $table->boolean('is_verified_seller')->default(0);
+                $table->timestamps();
+
         });
     }
 

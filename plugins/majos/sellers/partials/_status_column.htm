@@ -1,0 +1,27 @@
+<?php
+$status = isset($value) ? strtolower($value) : 'default';
+$label = ucfirst($status);
+
+// Define colors for each status
+$colors = [
+    'completed' => '#28a745', // Green
+    'active' => '#28a745',    // Green
+    'failed' => '#dc3545',    // Red
+    'refunded' => '#ffc107',  // Orange/Amber
+    'cancelled' => '#dc3545', // Red
+    'expired' => '#6c757d',   // Gray
+    'pending' => '#ffc107',   // Orange/Amber
+    'processing' => '#17a2b8',// Blue
+    'trialing' => '#17a2b8',  // Blue
+];
+
+$bgColor = isset($colors[$status]) ? $colors[$status] : '#6c757d';
+$textColor = in_array($status, ['pending', 'refunded', 'processing', 'trialing']) ? '#000' : '#fff';
+?>
+<span style="background-color: <?php echo $bgColor; ?>; 
+color: <?php echo $textColor; ?>; padding: 3px 8px;
+ border-radius: 10px; font-size: 11px; font-weight: 600;
+  display: inline-block; text-transform: uppercase;">
+    <?php echo e(isset($value) ? $value : $label); ?>
+</span>
+

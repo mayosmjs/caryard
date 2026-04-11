@@ -69,6 +69,7 @@ class SeedAfricanTenants extends Seeder
                 'name' => $country['name'],
                 'country_code' => $country['country_code'],
                 'currency' => $country['currency'],
+                'slug' => $country['country_code'],
                 'is_active' => false
             ]);
         }

@@ -1,0 +1,17 @@
+{% if hasMore %}
+<div class="flex justify-center">
+    <button type="button"
+        class="rounded-full bg-white border border-gray-200 px-8 py-3 text-base font-medium text-[#0071E3] hover:bg-[#0071E3]/5 transition-all shadow-sm"
+        data-request="{{ __SELF__ }}::onLoadMore"
+        data-request-data="page: {{ currentPage + 1 }}, filter: {{ filters|json_encode }}"
+        data-attach-loading>
+        Load More Vehicles
+    </button>
+</div>
+{% else %}
+    {% if currentPage > 1 %}
+    <div class="text-center">
+        <span class="text-sm text-[#86868B]">You've reached the end</span>
+    </div>
+    {% endif %}
+{% endif %}

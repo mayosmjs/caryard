@@ -12,14 +12,14 @@ class BuilderTableUpdateUsersModifySeller extends Migration
             {
                 $table->string('tenant_id', 36)->nullable();
                 $table->boolean('is_seller')->default(0);
-                $table->string('company_name')->nullable();
+                $table->text('company_name')->nullable();
                 $table->string('phone_number')->nullable();
                 $table->text('address')->nullable();
-                $table->string('city')->nullable();
-                $table->string('country')->nullable();
-                $table->string('identification_type')->nullable();
-                $table->string('identification_number')->nullable();
-                $table->string('tax_id')->nullable();
+                $table->text('city')->nullable();
+                $table->text('country')->nullable();
+                $table->text('identification_type')->nullable();
+                $table->text('identification_number')->nullable();
+                $table->text('tax_id')->nullable();
                 $table->boolean('is_verified_seller')->default(0);
             });
         }

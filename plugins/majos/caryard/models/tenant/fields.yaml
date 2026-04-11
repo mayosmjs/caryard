@@ -5,24 +5,28 @@
 fields:
     name:
         label: Name
-        span: auto
+        span: left
         required: true
+    slug:
+        label: Slug
+        span: right
+        preset:
+            field: name
+            type: slug
     country_code:
-        label: Country Code
-        span: auto
+        label: Primary Country Code
+        comment: "ISO 3166-1 alpha-2 (e.g. KE, US, GB). Sets the default country for this tenant."
+        span: left
         required: true
+        cssClass: text-uppercase
     currency:
         label: Currency
-        span: auto
+        span: right
         required: true
     locale:
         label: Locale
-        span: auto
-    is_active:
-        label: Active
-        type: switch
-        default: true
-        span: auto
+        span: left
+
     logo:
         label: Country Flag / Logo
         type: fileupload
@@ -30,3 +34,70 @@ fields:
         imageWidth: 200
         imageHeight: 200
         span: full
+
+    # Banner / Hero Section Settings
+    banner_settings:
+        label: Banner / Hero Section
+        type: section
+        comment: Customize the hero banner displayed on the homepage and buy page.
+        span: full
+
+    banner_title:
+        label: Banner Title
+        span: left
+        comment: Main heading text (e.g., "Premium Automotive Marketplace")
+
+    banner_subtitle:
+        label: Banner Subtitle
+        span: right
+        comment: Short tagline below the title
+
+    banner_tag:
+        label: Banner Tag
+        span: left
+        comment: Small text shown in a badge (e.g., "2026 Fleet Available")
+
+    banner_description:
+        label: Banner Description
+        span: full
+        type: textarea
+        comment: Description text shown in the banner
+
+    banner_image:
+        label: Banner Image
+        type: fileupload
+        mode: image
+        imageWidth: 1200
+        imageHeight: 600
+        span: full
+        comment: 'Hero image for the banner (recommended: 1200x600px). Leave empty to use default SVG.'
+
+    banner_button_text:
+        label: CTA Button Text
+        span: left
+        comment: Call-to-action button text (e.g., "Browse Vehicles")
+
+    banner_button_url:
+        label: CTA Button URL
+        span: right
+        comment: Where the button links to (e.g., /vehicles)
+
+    is_active:
+        label: Active
+        type: switch
+        default: true
+        span: left
+
+    banner_enabled:
+        label: Show Banner
+        type: switch
+        default: true
+        span: left
+        commentAbove: Enable/disable the banner section
+
+    loan_enabled:
+        label: Show Loan Section
+        type: switch
+        default: true
+        span: left
+        commentAbove: Enable/disable the loan section

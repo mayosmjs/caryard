@@ -1,0 +1,105 @@
+title: Subscription Settings
+modelClass: Majos\Sellers\Models\Settings
+form:
+    fields:
+        general_tab:
+            type: tab
+            label: General
+        enable_trial:
+            label: Enable Trial
+            type: switch
+            comment: Allow new sellers to start with a free trial
+        default_trial_days:
+            label: Trial Duration (Days)
+            type: number
+            default: 14
+            comment: Number of days for free trial (0 to disable)
+        default_vehicle_limit:
+            label: Default Vehicle Limit
+            type: number
+            default: 2
+            comment: Default number of vehicles allowed for free tier
+        currency:
+            label: Currency
+            type: dropdown
+            options:
+                USD: USD - US Dollar
+                KES: KES - Kenyan Shilling
+                EUR: EUR - Euro
+                GBP: GBP - British Pound
+            default: USD
+
+        mpesa_tab:
+            type: tab
+            label: M-Pesa
+        mpesa_enabled:
+            label: Enable M-Pesa
+            type: switch
+        mpesa_environment:
+            label: Environment
+            type: dropdown
+            options:
+                sandbox: Sandbox
+                production: Production
+        mpesa_consumer_key:
+            label: Consumer Key
+            type: text
+        mpesa_consumer_secret:
+            label: Consumer Secret
+            type: text
+        mpesa_shortcode:
+            label: Business Short Code
+            type: text
+        mpesa_passkey:
+            label: Passkey
+            type: text
+        mpesa_callback_url:
+            label: Callback URL
+            type: text
+            comment: URL for M-Pesa callback notifications
+        mpesa_initiator_name:
+            label: Initiator Name
+            type: text
+        mpesa_security_credential:
+            label: Security Credential
+            type: text
+
+        paypal_tab:
+            type: tab
+            label: PayPal
+        paypal_enabled:
+            label: Enable PayPal
+            type: switch
+        paypal_environment:
+            label: Environment
+            type: dropdown
+            options:
+                sandbox: Sandbox
+                production: Production
+        paypal_client_id:
+            label: Client ID
+            type: text
+        paypal_secret:
+            label: Secret
+            type: text
+        paypal_return_url:
+            label: Return URL
+            type: text
+        paypal_cancel_url:
+            label: Cancel URL
+            type: text
+
+        stripe_tab:
+            type: tab
+            label: Stripe
+        stripe_enabled:
+            label: Enable Stripe
+            type: switch
+        stripe_api_key:
+            label: API Key
+            type: text
+            comment: Your Stripe secret key (sk_...)
+        stripe_webhook_secret:
+            label: Webhook Secret
+            type: text
+            comment: Secret for verifying Stripe webhooks (whsec_...)

@@ -1,0 +1,29 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+    name:
+        label: Plan Name
+        searchable: true
+    tier:
+        label: Tier
+        searchable: true
+    vehicle_limit:
+        label: Vehicle Limit
+    price_monthly:
+        label: Monthly Price
+    price_annual:
+        label: Annual Price
+    trial_duration_days:
+        label: Trial Days
+    is_active:
+        label: Active
+        type: switch
+    sort_order:
+        label: Order
+    created_at:
+        label: Created
+        type: datetime

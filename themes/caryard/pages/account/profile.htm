@@ -1,0 +1,101 @@
+url = "/account/profile"
+layout = "default"
+title = "Profile"
+description = "Manage account details."
+
+[session]
+security = "user"
+redirect = "account/login"
+checkToken = 0
+
+[account]
+paramCode = "code"
+forceSecure = 0
+requirePassword = 0
+
+[resources]
+vars[activeNavLink] = "profile"
+==
+<div class="min-h-screen w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-amber-600 to-orange-500 px-8 sm:px-10 py-8">
+            <h2 class="text-2xl font-bold text-white tracking-tight">Profile Details</h2>
+            <p class="mt-1 text-sm text-amber-100">Update your account information and password.</p>
+        </div>
+
+        <div class="p-8 sm:p-10">
+
+        <form data-request="account::onUpdate" data-request-success="alert('Profile successfully updated!')" class="space-y-8">
+            <div class="grid grid-cols-1 gap-y-5 sm:grid-cols-2 sm:gap-x-6">
+                <div class="sm:col-span-2">
+                    <label for="accountName" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input name="name" type="text" id="accountName" value="{{ user.name }}" class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 placeholder-slate-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="accountEmail" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
+                    <input name="email" type="email" id="accountEmail" value="{{ user.email }}" required class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 placeholder-slate-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all">
+                </div>
+
+                <div class="sm:col-span-1">
+                    <label for="accountPassword" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">New Password <span class="normal-case text-slate-300">(optional)</span></label>
+                    <input name="password" type="password" id="accountPassword" class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 placeholder-slate-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all">
+                </div>
+
+                <div class="sm:col-span-1">
+                    <label for="accountPasswordConfirm" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Confirm Password</label>
+                    <input name="password_confirmation" type="password" id="accountPasswordConfirm" class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 placeholder-slate-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all">
+                </div>
+
+                <div class="sm:col-span-2 mt-4 pt-6 border-t border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Seller Profile Information</h3>
+                    <p class="mt-1 text-xs text-slate-400">Provide your business and identification details as a seller.</p>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="sellerCompanyName" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Company Name</label>
+                    <input name="seller_profile[company_name]" type="text" id="sellerCompanyName" value="{{ user.seller_profile.company_name }}" class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 placeholder-slate-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all">
+                </div>
+
+                <div class="sm:col-span-1">
+                    <label for="sellerPhone" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Phone Number</label>
+                    <input name="seller_profile[phone_number]" type="text" id="sellerPhone" value="{{ user.seller_profile.phone_number }}" class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 placeholder-slate-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all">
+                </div>
+
+                <div class="sm:col-span-1">
+                    <label for="sellerTaxId" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Tax ID</label>
+                    <input name="seller_profile[tax_id]" type="text" id="sellerTaxId" value="{{ user.seller_profile.tax_id }}" class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 placeholder-slate-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all">
+                </div>
+
+                <div class="sm:col-span-1">
+                    <label for="sellerIdType" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">ID Type</label>
+                    <select name="seller_profile[identification_type]" id="sellerIdType" class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all">
+                        <option value="">-- Select ID Type --</option>
+                        <option value="national_id" {% if user.seller_profile.identification_type == 'national_id' %}selected{% endif %}>National ID</option>
+                        <option value="passport" {% if user.seller_profile.identification_type == 'passport' %}selected{% endif %}>Passport</option>
+                        <option value="dl" {% if user.seller_profile.identification_type == 'dl' %}selected{% endif %}>Driving License</option>
+                    </select>
+                </div>
+
+                <div class="sm:col-span-1">
+                    <label for="sellerIdNumber" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">ID Number</label>
+                    <input name="seller_profile[identification_number]" type="text" id="sellerIdNumber" value="{{ user.seller_profile.identification_number }}" class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 placeholder-slate-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="sellerAddress" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Address</label>
+                    <textarea name="seller_profile[address]" id="sellerAddress" rows="3" class="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 placeholder-slate-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-50 transition-all resize-none">{{ user.seller_profile.address }}</textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-6">
+                <button type="submit" class="rounded-xl bg-amber-500 hover:bg-amber-600 px-8 py-3 text-sm font-bold text-white shadow-sm hover:shadow-md transition-all">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>

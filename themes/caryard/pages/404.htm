@@ -3,9 +3,60 @@ url = "/404"
 layout = "default"
 description = "Error page"
 ==
-<div class="jumbotron">
-    <div class="container">
-        <h1>Page not found</h1>
-        <p>We're sorry, but the page you requested cannot be found.</p>
+<div class="min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-amber-950 flex items-center justify-center px-4">
+    <!-- Decorative Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-amber-500/5 to-orange-500/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative z-10 text-center max-w-2xl mx-auto">
+        <!-- 404 Illustration -->
+        <div class="mb-8">
+            <div class="relative inline-block">
+                <!-- Car Icon SVG -->
+                <svg class="w-32 h-32 mx-auto text-amber-400/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-2 4H7l-2-4M5 9h14l1.5 5H3.5L5 9zM5 14h14M6 18h.01M18 18h.01M7 9v5M17 9v5"/>
+                </svg>
+                <!-- 404 Text -->
+                <span class="text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-orange-400 leading-none select-none">404</span>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <h1 class="text-4xl md:text-5xl font-bold text-amber-50 mb-4">
+            Oops! You took a wrong turn
+        </h1>
+        <p class="text-lg text-amber-200/80 mb-8 max-w-md mx-auto">
+            The page you're looking for has drifted off the road. It might have been moved, deleted, or never existed in the first place.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="/" class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900 font-bold rounded-xl shadow-lg shadow-amber-500/40 hover:shadow-amber-400/60 transition-all duration-300 transform hover:-translate-y-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                Back to Homepage
+            </a>
+            <a href="javascript:history.back()" class="inline-flex items-center gap-2 px-8 py-4 bg-amber-500/20 hover:bg-amber-500/30 text-amber-100 font-medium rounded-xl border border-amber-400/30 hover:border-amber-400/50 transition-all duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Go Back
+            </a>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="mt-12 pt-8 border-t border-amber-400/20">
+            <p class="text-amber-300/70 text-sm mb-4">Or explore our popular sections:</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="/" class="px-4 py-2 text-sm text-amber-100 hover:text-slate-900 bg-amber-500/20 hover:bg-amber-400 rounded-lg transition-colors duration-200 border border-amber-400/30 hover:border-amber-400">Home</a>
+                <a href="/vehicles" class="px-4 py-2 text-sm text-amber-100 hover:text-slate-900 bg-amber-500/20 hover:bg-amber-400 rounded-lg transition-colors duration-200 border border-amber-400/30 hover:border-amber-400">Browse Cars</a>
+                <a href="/sell" class="px-4 py-2 text-sm text-amber-100 hover:text-slate-900 bg-amber-500/20 hover:bg-amber-400 rounded-lg transition-colors duration-200 border border-amber-400/30 hover:border-amber-400">Sell Your Car</a>
+                <a href="/contact" class="px-4 py-2 text-sm text-amber-100 hover:text-slate-900 bg-amber-500/20 hover:bg-amber-400 rounded-lg transition-colors duration-200 border border-amber-400/30 hover:border-amber-400">Contact Us</a>
+            </div>
+        </div>
     </div>
 </div>

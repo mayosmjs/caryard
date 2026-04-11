@@ -1,15 +1,17 @@
 <?php namespace RainLab\User\Controllers;
 
+use Flash;
 use BackendMenu;
 use Backend\Classes\Controller;
+use RainLab\User\Models\UserGroup;
 
 /**
- * UserGroups Controller
+ * User Groups Back-end Controller
  */
 class UserGroups extends Controller
 {
     /**
-     * @var array implement extensions
+     * @var array Extensions implemented by this controller.
      */
     public $implement = [
         \Backend\Behaviors\FormController::class,
@@ -17,27 +19,27 @@ class UserGroups extends Controller
     ];
 
     /**
-     * @var array formConfig configuration.
+     * @var array `FormController` configuration.
      */
     public $formConfig = 'config_form.yaml';
 
     /**
-     * @var array listConfig configuration.
+     * @var array `ListController` configuration.
      */
     public $listConfig = 'config_list.yaml';
 
     /**
-     * @var array relationConfig for extensions.
+     * @var array `RelationController` configuration, by extension.
      */
     public $relationConfig;
 
     /**
-     * @var array requiredPermissions to view this page.
+     * @var array Permissions required to view this page.
      */
     public $requiredPermissions = ['rainlab.users.access_groups'];
 
     /**
-     * __construct
+     * Constructor.
      */
     public function __construct()
     {

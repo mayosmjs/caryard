@@ -1,0 +1,21 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+name: Administrative Division
+form: $/majos/caryard/models/administrativedivision/fields.yaml
+modelClass: Majos\Caryard\Models\AdministrativeDivision
+defaultRedirect: majos/caryard/administrativedivisions
+
+create:
+    title: Create Division
+    redirect: majos/caryard/administrativedivisions/update/:id
+    redirectClose: majos/caryard/administrativedivisions
+
+update:
+    title: Edit Division
+    redirect: majos/caryard/administrativedivisions
+    redirectClose: majos/caryard/administrativedivisions
+
+preview:
+    title: Preview Division

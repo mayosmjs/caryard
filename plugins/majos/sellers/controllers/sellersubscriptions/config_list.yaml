@@ -1,0 +1,40 @@
+# =============================================
+# List Configuration for Seller Subscriptions
+# =============================================
+
+list: $/majos/sellers/models/sellersubscription/columns.yaml
+
+title: Seller Subscriptions
+modelClass: Majos\Sellers\Models\SellerSubscription
+
+toolbar:
+    buttons: list_toolbar
+
+defaultSort:
+    column: created_at
+    direction: desc
+
+recordUrl: majos/sellers/sellersubscriptions/update/:id
+
+noRecordsMessage: backend::lang.list.no_records
+
+recordsPerPage: 20
+
+showPageNumbers: true
+
+showSetup: true
+
+showSorting: true
+
+showCheckboxes: true
+
+filters:
+    scopes:
+        status:
+            label: Status
+            modelClass: Majos\Sellers\Models\SellerSubscription
+            options:
+                trialing: Trialing
+                active: Active
+                expired: Expired
+                cancelled: Cancelled

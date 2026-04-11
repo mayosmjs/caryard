@@ -1,0 +1,21 @@
+scopes:
+    tenant:
+        label: Tenant (Country)
+        type: group
+        modelClass: Majos\Caryard\Models\Tenant
+        nameFrom: name
+        conditions: tenant_id in (:filtered)
+
+    level:
+        label: Level
+        type: dropdown
+        options:
+            1: "Level 1"
+            2: "Level 2"
+            3: "Level 3"
+        conditions: level = :value
+
+    is_active:
+        label: Active
+        type: switch
+        conditions: is_active = :filtered

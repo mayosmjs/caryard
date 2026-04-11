@@ -12,15 +12,12 @@ class Vehicle extends Model
 
     public $table = 'majos_caryard_vehicles';
 
-    protected $purgeable = ['country', 'province'];
+    protected $purgeable = [];
 
     protected $jsonable = ['options'];
 
-    protected $keyType = 'string';
-    public $incrementing = false;
-
     protected $fillable = [
-        'tenant_id', 'brand_id', 'model_id', 'location_id',
+        'tenant_id', 'brand_id', 'model_id', 'division_id',
         'vin_id', 'vehicleid', 'title', 'slug', 'year',
         'price', 'mileage', 'condition_id', 'fuel_type_id',
         'transmission_id', 'body_type_id', 'color_id',
@@ -46,7 +43,6 @@ class Vehicle extends Model
         'drive_type_id'     => 'required',
         'tenant_id'         => 'required',
         'seller_id'         => 'required',
-        'location_id'       => 'required',
         'options'           => 'required',
     ];
 
@@ -54,7 +50,7 @@ class Vehicle extends Model
         'tenant' => ['Majos\Caryard\Models\Tenant'],
         'brand' => ['Majos\Caryard\Models\Brand'],
         'vehicle_model' => ['Majos\Caryard\Models\VehicleModel', 'key' => 'model_id'],
-        'location' => ['Majos\Location\Models\City'],
+        'division' => ['Majos\Caryard\Models\AdministrativeDivision', 'key' => 'division_id'],
         'condition' => ['Majos\Caryard\Models\Condition'],
         'fuel_type' => ['Majos\Caryard\Models\FuelType'],
         'transmission' => ['Majos\Caryard\Models\Transmission'],
@@ -73,30 +69,82 @@ class Vehicle extends Model
         'images' => ['System\Models\File', 'public' => true]
     ];
 
-    public function beforeCreate()
+    /**
+     * Scope to only show active listings (subscription not expired)
+     */
+    public function scopeActiveListings($query)
     {
-        if (empty($this->id)) {
-            $this->id = (string) \Str::uuid();
+        return $query->where('is_active', true)
+            ->whereHas('sellerProfile', function($subQuery) {
+                $subQuery->whereHas('subscriptions', function($subsQuery) {
+                    $subsQuery->whereIn('status', ['active', 'trialing'])
+                        ->where('expires_at', '>', now());
+                });
+            });
+    }
+
+    /**
+     * Scope to include all vehicles (including expired subscriptions)
+     */
+    public function scopeAllListings($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Get seller profile relation
+     */
+    public function sellerProfile()
+    {
+        return $this->belongsTo('Majos\Sellers\Models\SellerProfile', 'seller_id', 'user_id');
+    }
+
+    /**
+     * Get division options filtered by tenant (for backend form dropdowns).
+     */
+    public function getDivisionIdOptions($value, $formData)
+    {
+        $tenantId = array_get($formData, 'tenant_id', $this->tenant_id);
+        if (!$tenantId) return [];
+
+        $maxLevel = DivisionType::maxLevel($tenantId);
+
+        return AdministrativeDivision::where('tenant_id', $tenantId)
+            ->where('level', $maxLevel)
+            ->active()
+            ->orderBy('name')
+            ->get()
+            ->mapWithKeys(function ($div) {
+                $path = $div->full_path;
+                return [$div->id => $path];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Location breadcrumb: "Nairobi County → Westlands"
+     */
+    public function getDivisionPathAttribute()
+    {
+        return $this->division ? $this->division->full_path : null;
+    }
+
+    /**
+     * Masked VIN: shows first 4 and last 4 characters, masks the rest.
+     * e.g. "JTDKN3DU5A0123456" → "JTDK*********3456"
+     */
+    public function getMaskedVinAttribute()
+    {
+        $vin = $this->vin_id;
+        if (!$vin || strlen($vin) <= 8) {
+            return $vin;
         }
-    }
 
-    public function getCountryOptions()
-    {
-        return \Majos\Location\Models\Country::lists('name', 'id');
-    }
+        $start = substr($vin, 0, 4);
+        $end = substr($vin, -4);
+        $masked = str_repeat('*', strlen($vin) - 8);
 
-    public function getProvinceOptions($value, $formData)
-    {
-        $countryId = isset($formData['country']) ? $formData['country'] : null;
-        if (!$countryId) return [];
-        return \Majos\Location\Models\Province::where('country_id', $countryId)->lists('name', 'id');
-    }
-
-    public function getLocationIdOptions($value, $formData)
-    {
-        $provinceId = isset($formData['province']) ? $formData['province'] : null;
-        if (!$provinceId) return [];
-        return \Majos\Location\Models\City::where('province_id', $provinceId)->lists('name', 'id');
+        return $start . $masked . $end;
     }
 
     public function getBrandIdOptions()
@@ -192,5 +240,73 @@ class Vehicle extends Model
                 'mint' => 'Showroom/Mint Condition'
             ]
         ];
+    }
+
+    /**
+     * Check if financing is enabled for this vehicle.
+     * Returns true only if BOTH tenant AND seller have loan enabled.
+     * 
+     * @return bool
+     */
+    public function isFinancingEnabled()
+    {
+        // Check tenant-level loan settings
+        $tenantLoanEnabled = $this->tenant ? $this->tenant->isLoanEnabled() : true;
+        
+        // Check seller-level loan settings
+        $sellerLoanEnabled = false;
+        if ($this->seller_id) {
+            $sellerSettings = \Majos\Caryard\Models\SellerLoanSettings::where('user_id', $this->seller_id)->first();
+            $sellerLoanEnabled = $sellerSettings ? $sellerSettings->isEnabled() : false;
+        }
+        
+        // Loan is enabled only if both tenant AND seller have it enabled
+        return $tenantLoanEnabled && $sellerLoanEnabled;
+    }
+
+    /**
+     * Returns all options grouped by category, with each item's enabled state.
+     * Used by the vehicle detail page template.
+     */
+    public function getCategorizedOptionsAttribute()
+    {
+        $allOptions = static::getCategorizedOptions();
+
+        // options is saved as a flat array of keys: ["power_tailgate", "apple_carplay", ...]
+        $raw = $this->getAttributeValue('options');
+        if (is_string($raw)) {
+            $vehicleOptions = json_decode($raw, true) ?: [];
+        } elseif (is_array($raw)) {
+            $vehicleOptions = $raw;
+        } else {
+            $vehicleOptions = [];
+        }
+
+        // Normalise: could be ["key1","key2"] or {"key1":true,"key2":true}
+        if (array_keys($vehicleOptions) === range(0, count($vehicleOptions) - 1)) {
+            // Indexed array — values are the option keys
+            $enabledKeys = array_flip($vehicleOptions);
+        } else {
+            // Associative array — keys with truthy values
+            $enabledKeys = array_flip(array_keys(array_filter($vehicleOptions, function ($v) {
+                return filter_var($v, FILTER_VALIDATE_BOOLEAN);
+            })));
+        }
+
+        $result = [];
+
+        foreach ($allOptions as $category => $items) {
+            $categoryItems = [];
+            foreach ($items as $key => $label) {
+                $categoryItems[] = [
+                    'key'     => $key,
+                    'label'   => $label,
+                    'enabled' => isset($enabledKeys[$key]),
+                ];
+            }
+            $result[$category] = $categoryItems;
+        }
+
+        return $result;
     }
 }

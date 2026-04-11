@@ -14,8 +14,8 @@ class VehicleModel extends Model
 
     public $table = 'majos_caryard_models';
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = ['name', 'slug', 'brand_id', 'description'];
 
@@ -32,10 +32,5 @@ class VehicleModel extends Model
         'vehicles' => ['Majos\Caryard\Models\Vehicle']
     ];
 
-    public function beforeCreate()
-    {
-        if (empty($this->id)) {
-            $this->id = (string) \Str::uuid();
-        }
-    }
+
 }

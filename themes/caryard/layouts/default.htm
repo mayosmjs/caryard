@@ -1,41 +1,89 @@
 description = "Default layout"
+
+[session globalSession]
+security = "all"
+==
+use Majos\Caryard\Models\Tenant;
+
+function onStart()
+{
+$segments = explode('/', trim(request()->path(), '/'));
+$firstSeg = strtoupper($segments[0] ?? '');
+
+$tenant = null;
+
+if ($firstSeg && strlen($firstSeg) === 2) {
+$tenant = Tenant::where('country_code', $firstSeg)
+->where('is_active', true)
+->first();
+}
+
+if (!$tenant && $id = \Session::get('caryard_tenant_id')) {
+$tenant = Tenant::where('id', $id)->where('is_active', true)->first();
+}
+
+if (!$tenant) {
+$tenant = Tenant::where('is_active', true)->first();
+}
+
+if ($tenant) {
+\Session::put('caryard_tenant_id', $tenant->id);
+}
+
+$this['tenant'] = $tenant;
+}
 ==
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>October CMS - {{ this.page.title }}</title>
-        <meta name="description" content="{{ this.page.meta_title }}">
-        <meta name="title" content="{{ this.page.meta_description }}">
-        <meta name="author" content="Caryard">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/png" href="{{ 'assets/images/october.png'|theme }}">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-          <script src="https://cdn.tailwindcss.com"></script>
-        <!-- <link href="{{ 'assets/css/style.css'|theme }}" rel="stylesheet"> -->
-        {% styles %}
-    </head>
-    <body class="page-{{ this.page.id }} layout-{{ this.layout.id }}">
 
-       
-        {% partial 'header' %}
+<head>
+    <meta charset="utf-8">
+    <title>October CMS - {{ this.page.title }}</title>
+    <meta name="description" content="{{ this.page.meta_title }}">
+    <meta name="title" content="{{ this.page.meta_description }}">
+    <meta name="author" content="Caryard">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ this.session.token }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="icon" type="image/png" href="{{ 'assets/images/october.png'|theme }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% styles %}
+</head>
 
-        <!-- Content -->
-        <section id="layout-content">
-            {% page %}
-        </section>
+<body class="page-{{ this.page.id }} layout-{{ this.layout.id }}">
 
-        <!-- Footer -->
-        <footer id="layout-footer">
-            {% partial 'footer' %}
-        </footer>
 
-        <!-- Scripts -->
-        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="{{ 'assets/js/app.js'|theme }}"></script>
-        {% framework extras %}
-        {% scripts %}
-    </body>
+
+    {% partial 'header' %}
+
+
+    <section id="layout-content">
+        {% page %}
+        <div class="fixed bottom-6 left-6 z-[99] lg:hidden">
+            <button onclick="openFilterDrawer()"
+                class="group flex h-14 w-14 items-center justify-center rounded-full bg-amber-500 text-white shadow-[0_10px_30px_rgba(245,158,11,0.5)] transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none">
+                <div class="absolute -inset-2 rounded-full bg-amber-500/20 animate-pulse group-hover:bg-amber-500/30">
+                </div>
+                <i class="fas fa-search text-xl drop-shadow-lg"></i>
+            </button>
+        </div>
+    </section>
+
+    <footer id="layout-footer">
+        {% partial 'footer' %}
+    </footer>
+
+
+    {% framework extras %}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+    {% scripts %}
+</body>
+
 </html>

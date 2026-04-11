@@ -1,0 +1,38 @@
+# =============================================
+# List Configuration for Seller Profiles
+# =============================================
+
+list: $/majos/sellers/models/sellerprofile/columns.yaml
+
+title: Seller Profiles
+modelClass: Majos\Sellers\Models\SellerProfile
+
+toolbar:
+    buttons: list_toolbar
+
+defaultSort:
+    column: created_at
+    direction: desc
+
+recordUrl: majos/sellers/sellerprofiles/update/:id
+
+noRecordsMessage: backend::lang.list.no_records
+
+recordsPerPage: 20
+
+showPageNumbers: true
+
+showSetup: true
+
+showSorting: true
+
+showCheckboxes: true
+
+filters:
+    scopes:
+        is_seller:
+            label: Is Seller
+            type: switch
+        is_verified_seller:
+            label: Verified
+            type: switch

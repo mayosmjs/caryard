@@ -1,0 +1,8 @@
+# =============================================
+# Form Configuration for Seller Profiles
+# =============================================
+
+form: $/majos/sellers/models/sellerprofile/fields.yaml
+
+title: Seller Profile
+modelClass: Majos\Sellers\Models\SellerProfile

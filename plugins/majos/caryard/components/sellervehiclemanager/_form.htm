@@ -1,0 +1,637 @@
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    @media (max-width: 479px) {
+        .form-grid-xs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    body { font-family: 'Inter', sans-serif; }
+    
+    .select2-container--default .select2-selection--single {
+        width: 100% !important;
+        border-radius: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+        background-color: #fff !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #1e293b !important;
+        outline: none !important;
+        transition: all 0.2s ease !important;
+        height: 44px !important;
+        padding: 0 2.5rem 0 14px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--single,
+    .select2-container--default.select2-container--open .select2-selection--single {
+        border-color: #0071E3 !important;
+        box-shadow: 0 0 0 3px rgba(0,113,227,0.15) !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #1e293b !important;
+        padding-left: 0 !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 44px !important;
+        right: 12px !important;
+    }
+
+    .select2-dropdown {
+        border-radius: 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        background-color: #fff !important;
+        box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15) !important;
+        margin-top: 6px !important;
+        overflow: hidden !important;
+    }
+
+    .select2-results__option {
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .select2-results__option--highlighted[aria-selected] {
+        background-color: #0071E3 !important;
+        color: #fff !important;
+    }
+
+    .select2-search--dropdown .select2-search__field {
+        border-radius: 8px !important;
+        border: 1px solid #e2e8f0 !important;
+        padding: 12px !important;
+        outline: none !important;
+        font-size: 14px !important;
+    }
+
+    .sortable-ghost {
+        opacity: 0.4;
+        background: #f1f5f9;
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+    }
+
+    .form-label {
+        margin-bottom: 6px !important;
+        display: block !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #64748b !important;
+    }
+
+    .form-input {
+        width: 100% !important;
+        border-radius: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+        background-color: #fff !important;
+        padding: 12px 14px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #1e293b !important;
+        outline: none !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .form-input:focus {
+        border-color: #0071E3 !important;
+        box-shadow: 0 0 0 3px rgba(0,113,227,0.15) !important;
+        background-color: #fff !important;
+    }
+
+    .section-title {
+        margin-bottom: 16px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #1e293b !important;
+        padding-bottom: 12px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+
+    .feature-checkbox {
+        height: 18px !important;
+        width: 18px !important;
+        border-radius: 4px !important;
+        border: 2px solid #cbd5e1 !important;
+        appearance: none !important;
+        cursor: pointer !important;
+        position: relative !important;
+        transition: all 0.2s !important;
+    }
+
+    .feature-checkbox:checked {
+        background-color: #0071E3 !important;
+        border-color: #0071E3 !important;
+    }
+
+    .feature-checkbox:checked::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font-weight: 700;
+        font-size: 11px;
+    }
+</style>
+
+{% set handler = vehicle ? __SELF__ ~ '::onUpdateVehicle' : __SELF__ ~ '::onCreateVehicle' %}
+
+<form data-request="{{ handler }}"
+    data-request-validate data-request-flash data-request-files
+    data-request-success="handleFormSuccess(data)"
+    class="text-base w-full space-y-6" id="vehicleForm">
+
+    {% if vehicle %}
+    <input type="hidden" name="id" value="{{ vehicle.id }}" id="vehicleIdField">
+    {% endif %}
+
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#1D1D1F] rounded-2xl p-5 sm:p-6">
+        <div>
+            <h2 class="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+                {% if vehicle %}{{ vehicle.title }}{% else %}Add New Vehicle{% endif %}
+            </h2>
+            <p class="text-xs text-[#86868B] mt-1">Ref: {{ vehicle.vehicleid ?: 'Auto-generated' }}</p>
+        </div>
+        <div class="flex items-center gap-3 bg-white/10 backdrop-blur rounded-full px-4 py-2">
+            <span class="text-xs font-medium text-white/80">Publish</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" name="is_active" value="1" {% if not vehicle or vehicle.is_active %}checked{% endif %} class="sr-only peer">
+                <div class="w-11 h-6 bg-white/20 rounded-full peer after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#0071E3] peer-checked:after:translate-x-5"></div>
+            </label>
+        </div>
+    </div>
+
+    <section>
+        <div class="section-title">Basic Information</div>
+        <div class="grid grid-cols-1 form-grid-xs lg:grid-cols-4 gap-3">
+            <div class="form-grid-xs lg:col-span-4">
+                <label class="form-label">Listing Title</label>
+                <input type="text" name="title" placeholder="e.g. 2022 Mercedes-Benz C300 AMG"
+                    value="{{ vehicle.title }}" class="form-input">
+                <span data-validate-for="title" class="text-[10px] font-semibold text-red-500 mt-1 block"></span>
+            </div>
+
+            <div>
+                <label class="form-label">Brand</label>
+                <select name="brand_id" id="brandSelect" class="form-input uppercase"
+                    data-request="{{ __SELF__ }}::onLoadModels"
+                    data-track-input>
+                    <option value="">Select Brand</option>
+                    {% for key, name in brands %}
+                    <option value="{{ key }}" {% if vehicle.brand_id == key %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+                <span data-validate-for="brand_id" class="text-[10px] font-semibold text-red-500 mt-1 block"></span>
+            </div>
+
+            <div>
+                <label class="form-label">Model</label>
+                <select name="model_id" id="modelSelect" class="form-input uppercase">
+                    <option value="">Select Model</option>
+                    {% for key, name in models %}
+                    <option value="{{ key }}" {% if vehicle.model_id == key %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+                <span data-validate-for="model_id" class="text-[10px] font-semibold text-red-500 mt-1 block"></span>
+            </div>
+
+            <div>
+                <label class="form-label">Price (KSH)</label>
+                <input type="number" name="price" placeholder="0.00" value="{{ vehicle.price }}" class="form-input">
+                <span data-validate-for="price" class="text-[10px] font-semibold text-red-500 mt-1 block"></span>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-title">Specifications</div>
+        <div class="grid grid-cols-2 form-grid-xs sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div>
+                <label class="form-label">Condition</label>
+                <select name="condition_id" class="form-input uppercase">
+                    <option value="">Select</option>
+                    {% for key, name in conditions %}
+                    <option value="{{ key }}" {% if vehicle.condition_id==key %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="form-label">Year</label>
+                <input type="date" name="year" value="{{ vehicle.year }}" placeholder="e.g. 2024" class="form-input">
+            </div>
+
+            <div>
+                <label class="form-label">Mileage (KM)</label>
+                <input type="number" name="mileage" placeholder="0" value="{{ vehicle.mileage }}" class="form-input">
+            </div>
+
+            <div>
+                <label class="form-label">Body Type</label>
+                <select name="body_type_id" class="form-input uppercase">
+                    <option value="">Select</option>
+                    {% for key, name in bodyTypes %}
+                    <option value="{{ key }}" {% if vehicle.body_type_id==key %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="form-label">Fuel Type</label>
+                <select name="fuel_type_id" class="form-input uppercase">
+                    <option value="">Select</option>
+                    {% for key, name in fuelTypes %}
+                    <option value="{{ key }}" {% if vehicle.fuel_type_id==key %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="form-label">Transmission</label>
+                <select name="transmission_id" class="form-input uppercase">
+                    <option value="">Select</option>
+                    {% for key, name in transmissions %}
+                    <option value="{{ key }}" {% if vehicle.transmission_id==key %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="form-label">Engine (CC)</label>
+                <select name="engine_capacity_d" class="form-input uppercase">
+                    <option value="">Select</option>
+                    {% for key, name in engineCapacities %}
+                    <option value="{{ key }}" {% if vehicle.engine_capacity_d==key %}selected{% endif %}>{{ name }} CC</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="form-label">Color</label>
+                <select name="color_id" class="form-input uppercase">
+                    <option value="">Select</option>
+                    {% for key, name in colors %}
+                    <option value="{{ key }}" {% if vehicle.color_id==key %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-title">Features</div>
+        <div class="bg-gray-50 rounded-2xl border border-gray-100 p-4 sm:p-5">
+            <div class="grid grid-cols-1 form-grid-xs sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {% for category, options in categorizedOptions %}
+                <div class="col-span-full form-grid-xs sm:col-span-2 lg:col-span-3 mt-3 first:mt-0 mb-1">
+                    <span class="text-xs font-semibold text-[#86868B] uppercase tracking-wider border-b border-gray-200 pb-1 block w-full">{{ category }}</span>
+                </div>
+                {% for key, label in options %}
+                <label class="flex items-center gap-2.5 cursor-pointer">
+                    <input type="checkbox" name="options[{{ key }}]" value="1" {% if vehicle.options[key] %}checked{% endif %} class="feature-checkbox">
+                    <span class="text-sm font-medium text-[#1D1D1F]">{{ label }}</span>
+                </label>
+                {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-title">Location & ID</div>
+        <div class="grid grid-cols-1 form-grid-xs sm:grid-cols-2 gap-3">
+            <div>
+                <label class="form-label">VIN / Chassis</label>
+                <input type="text" name="vin_id" placeholder="VIN Number" value="{{ vehicle.vin_id }}" class="form-input uppercase">
+            </div>
+
+            <div>
+                <label class="form-label">Stock ID</label>
+                <input type="text" name="vehicleid" placeholder="e.g. STOCK-001" value="{{ vehicle.vehicleid }}" class="form-input uppercase">
+            </div>
+
+            <input type="hidden" name="division_id" id="divisionIdField" value="{{ vehicle.division_id }}">
+
+            <div id="divisionCascadeContainer" class="col-span-full">
+                {% if divisionTypes is not empty %}
+                    <div class="grid grid-cols-1 sm:grid-cols-{{ divisionTypes|length }} gap-4">
+                        {% for type in divisionTypes %}
+                            <div>
+                                <label class="form-label">{{ type.label }}</label>
+                                <select name="division_level_{{ type.level }}"
+                                        id="divisionLevel{{ type.level }}"
+                                        class="form-input uppercase"
+                                        {% if type.level < divisionTypes|length %}
+                                            data-request="{{ __SELF__ }}::onLoadDivisionChildren"
+                                            data-track-input
+                                        {% endif %}>
+                                    <option value="">Select {{ type.label }}</option>
+                                    {% set levelOptions = divisionLevelOptions[type.level] is defined ? divisionLevelOptions[type.level] : [] %}
+                                    {% set levelSelected = divisionAncestors[type.level] is defined ? divisionAncestors[type.level] : '' %}
+                                    {% for id, name in levelOptions %}
+                                        <option value="{{ id }}" {% if levelSelected == id %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-title">Images</div>
+
+        <div id="imageDropZone"
+             class="rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 transition-all hover:border-[#0071E3] hover:bg-[#0071E3]/5 cursor-pointer p-8"
+             onclick="document.getElementById('imageUploaderInput').click();">
+            <input type="file" name="images[]" id="imageUploaderInput" multiple accept="image/*" class="hidden">
+            <div class="flex flex-col items-center text-center pointer-events-none">
+                <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#0071E3]/10 text-[#0071E3]">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-[#1D1D1F]">Drop images here or click to browse</p>
+                <p class="text-xs text-[#86868B] mt-1">JPG, PNG up to 5 MB each · Max 10 images</p>
+            </div>
+        </div>
+
+        <div id="imagePreviewContainer" class="mt-4" style="display:none;">
+            <div class="flex items-center justify-between mb-3">
+                <p class="text-xs font-semibold text-[#86868B] uppercase tracking-wider">
+                    Selected · <span id="imagePreviewCount">0</span> image(s)
+                </p>
+                <button type="button" id="clearPreviewsBtn" class="text-xs font-medium text-red-500 hover:text-red-700 transition-colors">
+                    Clear all
+                </button>
+            </div>
+            <div id="imagePreviewGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
+        </div>
+
+        <div id="existingGalleryWrapper">
+        {% if vehicle and vehicle.images.count %}
+        <div class="mt-6">
+            <div class="flex items-center justify-between mb-3">
+                <p class="text-xs font-semibold text-[#86868B] uppercase tracking-wider">
+                    Current Gallery · {{ vehicle.images.count }} image(s)
+                </p>
+                <p class="text-xs text-[#86868B] italic">Drag to reorder</p>
+            </div>
+            <div id="existingGallery" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                {% for image in vehicle.images %}
+                <div class="relative group cursor-move aspect-square rounded-2xl overflow-hidden ring-1 ring-gray-200 hover:ring-[#0071E3] transition-all bg-gray-100"
+                     data-id="{{ image.id }}">
+                    <img src="{{ image.thumb(300, 300, 'crop') }}" class="w-full h-full object-cover" loading="lazy">
+                    <div class="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 group-hover:bg-black/40 transition-all">
+                        <button type="button" class="rounded-full bg-red-500 px-3 py-1.5 text-xs font-semibold text-white opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-red-600 transition-all"
+                                onclick="if(window.deleteVehicleImage)window.deleteVehicleImage('{{ vehicle.id }}', '{{ image.id }}', this)">
+                            Delete
+                        </button>
+                    </div>
+                    <span class="absolute top-2 left-2 flex h-5 w-5 items-center justify-center rounded bg-black/50 text-[10px] font-bold text-white pointer-events-none">
+                        {{ loop.index }}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        </div>
+    </section>
+
+    <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm z-40 -mx-6 sm:-mx-8 px-6 sm:px-8 py-4 border-t border-gray-100">
+        <div class="flex justify-end gap-3">
+            <button type="button" class="px-6 py-3 rounded-full border border-gray-200 bg-white text-sm font-medium text-[#1D1D1F] hover:bg-gray-50 transition-colors"
+                    onclick="document.getElementById('vehicle-modal-container').innerHTML = '';">
+                Cancel
+            </button>
+            <button type="submit" class="px-8 py-3 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all disabled:opacity-50" data-attach-loading>
+                {% if vehicle %}Update Vehicle{% else %}Add Vehicle{% endif %}
+            </button>
+        </div>
+    </div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+<script>
+(function(){
+    setTimeout(initGallery, 50);
+
+    function initGallery() {
+        var previewContainer = document.getElementById('imagePreviewContainer');
+        var previewGrid      = document.getElementById('imagePreviewGrid');
+        var previewCount     = document.getElementById('imagePreviewCount');
+        var fileInput        = document.getElementById('imageUploaderInput');
+        var dropZone         = document.getElementById('imageDropZone');
+        var clearBtn         = document.getElementById('clearPreviewsBtn');
+
+        if (!fileInput) return;
+
+        var handler = $('#vehicleForm').data('component-alias') || '{{ __SELF__ }}';
+        var selectedFiles = [];
+
+        function syncFilesToInput() {
+            var dt = new DataTransfer();
+            selectedFiles.forEach(function(f) { dt.items.add(f); });
+            fileInput.files = dt.files;
+        }
+
+        function renderPreviews() {
+            if (!previewGrid || !previewContainer) return;
+            previewGrid.innerHTML = '';
+
+            if (!selectedFiles.length) {
+                previewContainer.style.display = 'none';
+                return;
+            }
+            previewContainer.style.display = '';
+            if (previewCount) previewCount.textContent = selectedFiles.length;
+
+            selectedFiles.forEach(function(file, idx) {
+                var card = document.createElement('div');
+                card.style.cssText = 'position:relative;border-radius:12px;overflow:hidden;aspect-ratio:1/1;background:#f1f5f9;border:1px solid #e2e8f0;';
+
+                var img = document.createElement('img');
+                img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+                img.alt = file.name;
+
+                var badge = document.createElement('span');
+                badge.style.cssText = 'position:absolute;top:6px;left:6px;width:20px;height:20px;border-radius:6px;background:rgba(0,0,0,0.5);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;pointer-events:none;';
+                badge.textContent = idx + 1;
+
+                var removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.title = 'Remove';
+                removeBtn.style.cssText = 'position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#ef4444;color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;';
+                removeBtn.innerHTML = '&times;';
+                removeBtn.setAttribute('data-idx', idx);
+                removeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var i = parseInt(this.getAttribute('data-idx'), 10);
+                    selectedFiles.splice(i, 1);
+                    syncFilesToInput();
+                    renderPreviews();
+                });
+
+                card.appendChild(img);
+                card.appendChild(badge);
+                card.appendChild(removeBtn);
+                previewGrid.appendChild(card);
+
+                var reader = new FileReader();
+                reader.onload = (function(imgEl) {
+                    return function(ev) { imgEl.src = ev.target.result; };
+                })(img);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        fileInput.addEventListener('change', function() {
+            var newFiles = Array.from(this.files || []).filter(function(f) {
+                return f.type.indexOf('image') === 0;
+            });
+            if (!newFiles.length) return;
+
+            selectedFiles = selectedFiles.concat(newFiles);
+
+            if (selectedFiles.length > 10) {
+                alert('Maximum 10 images allowed.');
+                selectedFiles = selectedFiles.slice(0, 10);
+            }
+            syncFilesToInput();
+            renderPreviews();
+        });
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                selectedFiles = [];
+                fileInput.value = '';
+                if (previewGrid) previewGrid.innerHTML = '';
+                if (previewContainer) previewContainer.style.display = 'none';
+            });
+        }
+
+        if (dropZone) {
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#0071E3';
+                this.style.background = 'rgba(0,113,227,0.05)';
+            });
+            dropZone.addEventListener('dragleave', function() {
+                this.style.borderColor = '';
+                this.style.background = '';
+            });
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '';
+                this.style.background = '';
+                if (e.dataTransfer && e.dataTransfer.files.length) {
+                    var dropped = Array.from(e.dataTransfer.files).filter(function(f) {
+                        return f.type.indexOf('image') === 0;
+                    });
+                    selectedFiles = selectedFiles.concat(dropped);
+                    if (selectedFiles.length > 10) {
+                        selectedFiles = selectedFiles.slice(0, 10);
+                    }
+                    syncFilesToInput();
+                    renderPreviews();
+                }
+            });
+        }
+
+        var galleryEl = document.getElementById('existingGallery');
+        if (galleryEl && typeof Sortable !== 'undefined') {
+            Sortable.create(galleryEl, {
+                animation: 200,
+                ghostClass: 'sortable-ghost',
+                onEnd: function() {
+                    var order = [];
+                    $('#existingGallery > div').each(function() {
+                        order.push($(this).data('id'));
+                    });
+                    var vehicleId = $('#vehicleIdField').val();
+                    if (vehicleId && order.length) {
+                        $.request(handler + '::onReorderImages', {
+                            data: { vehicle_id: vehicleId, image_ids: order }
+                        });
+                    }
+                    $('#existingGallery > div').each(function(i) {
+                        $(this).find('span').first().text(i + 1);
+                    });
+                }
+            });
+        }
+    }
+})();
+
+window.deleteVehicleImage = function(vehicleId, imageId, btn) {
+    if (!confirm('Delete this photo permanently?')) return;
+
+    var card = $(btn).closest('[data-id]');
+    var handler = $('#vehicleForm').data('component-alias') || '{{ __SELF__ }}';
+
+    card.css({ opacity: 0.3, pointerEvents: 'none' });
+
+    $.request(handler + '::onDeleteImage', {
+        data: { vehicle_id: vehicleId, image_id: imageId },
+        success: function(data) {
+            setTimeout(function() {
+                var galleryEl = document.getElementById('existingGallery');
+                if (galleryEl && typeof Sortable !== 'undefined') {
+                    Sortable.create(galleryEl, {
+                        animation: 200,
+                        ghostClass: 'sortable-ghost',
+                        onEnd: function() {
+                            var order = [];
+                            $('#existingGallery > div').each(function() {
+                                order.push($(this).data('id'));
+                            });
+                            var vid = $('#vehicleIdField').val();
+                            if (vid && order.length) {
+                                $.request(handler + '::onReorderImages', {
+                                    data: { vehicle_id: vid, image_ids: order }
+                                });
+                            }
+                            $('#existingGallery > div').each(function(i) {
+                                $(this).find('span').first().text(i + 1);
+                            });
+                        }
+                    });
+                }
+            }, 100);
+        },
+        error: function(resp) {
+            card.css({ opacity: 1, pointerEvents: 'auto' });
+            var msg = (resp && resp.responseJSON && resp.responseJSON.X_OCTOBER_ERROR_MESSAGE)
+                    ? resp.responseJSON.X_OCTOBER_ERROR_MESSAGE
+                    : 'Failed to delete image.';
+            alert(msg);
+        }
+    });
+};
+
+(function() {
+    function syncDivision() {
+        var val = '';
+        $('select[name^="division_level_"]').each(function() {
+            if (this.value) val = this.value;
+        });
+        $('#divisionIdField').val(val);
+    }
+    $(document).on('change', 'select[name^="division_level_"]', syncDivision);
+    setTimeout(syncDivision, 100);
+})();
+
+function handleFormSuccess(data) {
+    if (data && data['#vehicle-modal-container'] === '') {
+        document.getElementById('vehicle-modal-container').innerHTML = '';
+    }
+}
+</script>

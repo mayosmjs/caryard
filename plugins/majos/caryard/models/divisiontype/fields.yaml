@@ -1,0 +1,25 @@
+fields:
+    tenant_id:
+        label: Tenant (Country)
+        type: dropdown
+        span: left
+        required: true
+
+    level:
+        label: Level
+        comment: "1 = top division, 2 = sub-division, 3+ = deeper"
+        span: right
+        required: true
+        type: number
+        default: 1
+
+    label:
+        label: Label (Singular)
+        comment: "e.g. County, State, Province, City, Town"
+        span: left
+        required: true
+
+    label_plural:
+        label: Label (Plural)
+        comment: "e.g. Counties, States, Provinces"
+        span: right

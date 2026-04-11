@@ -1,0 +1,180 @@
+{% if loanEnabled != false %}
+<div class="mx-auto max-w-4xl bg-white border border-slate-100 rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden font-sans" data-loan-component>
+  
+  <div class="w-full md:w-7/12 p-6 md:p-8 space-y-6">
+    <div class="flex justify-between items-center">
+      <h2 class="text-xl font-bold text-slate-800 tracking-tight">Loan Estimator</h2>
+      <span class="text-[10px] font-semibold px-2 py-1 bg-slate-100 text-slate-500 rounded-md uppercase tracking-wider">
+        Vehicle: {{ currencySymbol|default('KSh ') }}{{ (carValue/1000000)|number_format(1) }}M
+      </span>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 md:gap-8">
+      <div class="space-y-3">
+        <label class="text-[11px] uppercase tracking-widest font-bold text-slate-400">Tenure (Months)</label>
+        <div class="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
+          {% for term in terms %}
+          <button type="button" data-term="{{ term }}"
+                  class="term-btn flex-1 py-2 text-[11px] font-bold transition-all duration-200 rounded-lg
+                  {% if term == page.term %} bg-white shadow-sm text-indigo-600 border border-slate-100 {% else %} text-slate-400 hover:text-indigo-600 {% endif %}">
+            {{ term }}
+          </button>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="term" value="{{ page.term }}" id="loan-term">
+      </div>
+
+      <div class="space-y-3">
+        <label class="text-[11px] uppercase tracking-widest font-bold text-slate-400">Fixed Rate</label>
+        <div class="py-2 text-lg font-bold text-slate-700 tabular-nums">
+          {{ (annualRate)|number_format(1) }}% <span class="text-[10px] text-slate-400 uppercase">p.a</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <div class="flex justify-between items-end h-8">
+        <label class="text-[11px] uppercase tracking-widest font-bold text-slate-400">Down Payment</label>
+        <div class="text-lg font-bold text-indigo-600 tabular-nums font-mono min-w-[160px] text-right">
+            {{ currencySymbol|default('KSh ') }}<span id="downpayment-display">{{ downPayment|number_format(0, '.', ',') }}</span>
+        </div>
+      </div>
+      
+      <div class="relative flex items-center">
+        <input type="range" 
+               id="downpayment-slider"
+               name="downPayment"
+               min="{{ minDownPayment }}" 
+               max="{{ maxDownPayment }}" 
+               step="1000" 
+               value="{{ downPayment }}"
+               class="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-500 focus:outline-none transition-none">
+      </div>
+
+      <div class="flex justify-between text-[10px] text-slate-600 font-bold  uppercase tracking-tighter">
+        <span>Min: {{ (minDownPayment/carValue*100)|round }}%</span>
+        <span>Max: {{ (maxDownPayment/carValue*100)|round }}%</span>
+      </div>
+    </div>
+
+    <button type="button" id="calculate-btn"
+            class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-[0.98] flex justify-center items-center gap-2 text-xs uppercase tracking-widest">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+        Calculate Loan
+    </button>
+  </div>
+
+  <div class="w-full md:w-5/12 bg-slate-900 p-8 flex flex-col justify-between relative overflow-hidden text-white">
+    <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
+    
+    <div class="relative z-10">
+      <p class="text-[11px] uppercase tracking-[0.2em] text-indigo-300/60 font-semibold mb-1">Monthly Installment</p>
+      <h3 class="text-4xl font-light mb-6 tabular-nums tracking-tight h-12 flex items-center">
+        <span class="text-xl opacity-50 mr-1">{{ currencySymbol|default('KSh ') }}</span><span id="emi-display">{{ emi|number_format(0, '.', ',') }}</span>
+      </h3>
+
+      <div class="space-y-4 border-t border-white/10 pt-6">
+        <div class="flex justify-between text-xs tabular-nums">
+          <span class="text-slate-400">Loan Principal</span>
+          <span id="loanamount-result" class="text-slate-200 font-medium font-mono tracking-tighter">{{ currencySymbol|default('KSh ') }}{{ loanAmount|number_format(0, '.', ',') }}</span>
+        </div>
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-400">Duration</span>
+          <span id="tenure-result" class="text-slate-200 font-medium">{{ term }} Months</span>
+        </div>
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-400">Total Interest</span>
+          <span id="interest-result" class="text-slate-200 font-mono tracking-tighter">{{ currencySymbol|default('KSh ') }}{{ ((emi * term) - loanAmount)|number_format(0, '.', ',') }}</span>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="relative z-10 mt-10 w-full bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-[0.98]">
+      Apply for Financing
+    </button>
+  </div>
+</div>
+{% endif %}
+
+{% put scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const termBtns = document.querySelectorAll('.term-btn');
+    const termInput = document.getElementById('loan-term');
+    const slider = document.getElementById('downpayment-slider');
+    const sliderDisplay = document.getElementById('downpayment-display');
+    const emiDisplay = document.getElementById('emi-display');
+    const loanamountResult = document.getElementById('loanamount-result');
+    const tenureResult = document.getElementById('tenure-result');
+    const interestResult = document.getElementById('interest-result');
+    const calculateBtn = document.getElementById('calculate-btn');
+
+    const format = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    function syncUI(data) {
+        if (!data) return;
+        
+        if (data.emi !== undefined) emiDisplay.textContent = format(data.emi);
+        if (data.loanAmount !== undefined) {
+            loanamountResult.textContent = '{{ currencySymbol|default("KSh ") }}' + format(data.loanAmount);
+        }
+        if (data.interest !== undefined) {
+            interestResult.textContent = '{{ currencySymbol|default("KSh ") }}' + format(data.interest);
+        }
+        if (data.term !== undefined) {
+            tenureResult.textContent = data.term + ' Months';
+            termInput.value = data.term;
+            termBtns.forEach(btn => {
+                const isActive = btn.getAttribute('data-term') == data.term;
+                btn.className = isActive 
+                    ? 'term-btn flex-1 py-2 text-[11px] font-bold transition-all duration-200 rounded-lg bg-white shadow-sm text-indigo-600 border border-slate-100'
+                    : 'term-btn flex-1 py-2 text-[11px] font-bold transition-all duration-200 rounded-lg text-slate-400 hover:text-indigo-600';
+            });
+        }
+        if (data.downPayment !== undefined) {
+            slider.value = data.downPayment;
+            sliderDisplay.textContent = format(data.downPayment);
+        }
+    }
+
+    // Slider updates display only (no AJAX)
+    slider.addEventListener('input', function() {
+        sliderDisplay.textContent = format(this.value);
+    });
+
+    // Calculate button triggers AJAX
+    calculateBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        this.innerHTML = 'Calculating...';
+        
+        oc.request('{{ __SELF__ }}', 'onCalculate', {
+            data: { 
+                term: termInput.value, 
+                downPayment: slider.value 
+            },
+            success: (data) => {
+                syncUI(data);
+                this.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Calculate Loan';
+            }
+        });
+    });
+
+    // Term buttons update selection only (no auto-calculate)
+    termBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const val = this.getAttribute('data-term');
+            termInput.value = val;
+            
+            termBtns.forEach(b => {
+                if (b.getAttribute('data-term') == val) {
+                    b.className = 'term-btn flex-1 py-2 text-[11px] font-bold transition-all duration-200 rounded-lg bg-white shadow-sm text-indigo-600 border border-slate-100';
+                } else {
+                    b.className = 'term-btn flex-1 py-2 text-[11px] font-bold transition-all duration-200 rounded-lg text-slate-400 hover:text-indigo-600';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endput %}

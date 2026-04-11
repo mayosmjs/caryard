@@ -1,0 +1,56 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    tenant_id:
+        label: Tenant (Country)
+        type: dropdown
+        span: left
+        required: true
+
+    level:
+        label: Level
+        comment: "1 = Top division (State/Province/County), 2 = Sub-division (City/Town), 3+ = deeper"
+        span: right
+        required: true
+        type: number
+        default: 1
+
+    name:
+        label: Name
+        span: left
+        required: true
+
+    code:
+        label: Local Code
+        comment: Optional local/ISO code (e.g. CA, 047)
+        span: right
+
+    parent_id:
+        label: Parent Division
+        comment: Leave empty for top-level divisions
+        type: dropdown
+        emptyOption: "-- None (Top Level) --"
+        span: left
+        depends:
+            - tenant_id
+
+    slug:
+        label: Slug
+        span: right
+        preset:
+            field: name
+            type: slug
+
+    is_active:
+        label: Active
+        type: switch
+        default: true
+        span: left
+
+    sort_order:
+        label: Sort Order
+        type: number
+        default: 0
+        span: right

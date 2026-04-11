@@ -9,7 +9,7 @@ class BuilderTableCreateMajosCaryardLocations extends Migration
     {
         Schema::create('majos_caryard_locations', function($table)
         {
-            $table->uuid('id')->primary();
+            $table->increments('id');
             $table->integer('tenant_id');
             $table->string('name');
             $table->string('slug');

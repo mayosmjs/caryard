@@ -3,7 +3,7 @@
 # ===================================
 
 # List Title
-title: Manage Users
+title: rainlab.user::lang.users.list_title
 
 # Model List Column configuration
 list: $/rainlab/user/models/user/columns.yaml

@@ -1,0 +1,37 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+    seller:
+        label: Seller
+        relation: seller
+        valueFrom: fullName
+    plan:
+        label: Plan
+        relation: plan
+        select: name
+    status:
+        label: Status
+        type: partial
+        path: ~/plugins/majos/sellers/partials/_status_column.htm
+    duration_days:
+        label: Duration
+        type: number
+    started_at:
+        label: Started
+        type: date
+    expires_at:
+        label: Expires
+        type: date
+    amount:
+        label: Amount
+        type: number
+    auto_renew:
+        label: Auto Renew
+        type: switch
+    created_at:
+        label: Created
+        type: datetime

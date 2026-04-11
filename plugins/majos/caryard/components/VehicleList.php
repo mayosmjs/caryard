@@ -12,9 +12,8 @@ use Majos\Caryard\Models\Transmission;
 use Majos\Caryard\Models\BodyType;
 use Majos\Caryard\Models\Color;
 use Majos\Caryard\Models\DriveType;
-use Majos\Location\Models\Country;
-use Majos\Location\Models\Province;
-use Majos\Location\Models\City;
+use Majos\Caryard\Models\EngineCapacity;
+use Majos\Caryard\Models\AdministrativeDivision;
 use Session;
 use Event;
 
@@ -36,9 +35,7 @@ class VehicleList extends ComponentBase
     public $bodyTypeSlug    = false;
     public $colorSlug       = false;
     public $driveTypeSlug   = false;
-    public $countrySlug     = false;  // granular location step 1
-    public $provinceSlug    = false;  // granular location step 2
-    public $citySlug        = false;  // granular location step 3
+    public $divisionSlug    = false;  // administrative division (county/town)
     public $minPrice        = false;
     public $maxPrice        = false;
     public $yearMin         = false;
@@ -81,6 +78,8 @@ class VehicleList extends ComponentBase
     public function onRun()
     {
         $this->detailPage = $this->property('detailPage');
+        $this->resolveTenantFromUrl();
+        $this->resolveUrlSegments();
         $this->prepareVars();
         $this->getResults();
     }
@@ -89,6 +88,7 @@ class VehicleList extends ComponentBase
 
     public function onFilter()
     {
+        $this->resolveTenantForAjax();
         $this->pageNumber = (int) input('page', 1);
         $this->prepareVars();
         $this->getResults();
@@ -97,6 +97,7 @@ class VehicleList extends ComponentBase
 
     public function onChangePage()
     {
+        $this->resolveTenantForAjax();
         $this->pageNumber = (int) input('page', 1);
         $this->prepareVars();
         $this->getResults();
@@ -105,6 +106,7 @@ class VehicleList extends ComponentBase
 
     public function onLoadMore()
     {
+        $this->resolveTenantForAjax();
         $this->pageNumber = (int) input('page', 1);
         $this->prepareVars();
         $this->getResults();
@@ -116,7 +118,108 @@ class VehicleList extends ComponentBase
         ];
     }
 
-    /** Returns <option> HTML for models belonging to a brand (uses slugs as values) */
+    /** Returns JSON for Select2 Brands */
+    public function onSearchBrands()
+    {
+        $q = post('q', '');
+        $query = Brand::query();
+
+        if ($q) {
+            $query->where('name', 'LIKE', "%{$q}%");
+        }
+
+        return [
+            'results' => $query->orderBy('name')->limit(200)->get()->map(function ($i) {
+                $logo = null;
+                try {
+                    if ($i->logo_file) {
+                        $logo = $i->logo_file->getThumb(100, 100, ['mode' => 'crop']);
+                    }
+                } catch (\Exception $e) {}
+                return ['id' => $i->slug, 'text' => $i->name, 'logo' => $logo];
+            })->toArray()
+        ];
+    }
+
+    /** Returns JSON for Select2 Models (filtered by brand slug) */
+    public function onSearchModels()
+    {
+        $q = post('q', '');
+        $brandSlug = post('brand_slug', '');
+        $query = VehicleModel::query();
+
+        if ($brandSlug) {
+            $brand = Brand::where('slug', $brandSlug)->first();
+            if ($brand) {
+                $query->where('brand_id', $brand->id);
+            }
+        }
+
+        if ($q) {
+            $query->where('name', 'LIKE', "%{$q}%");
+        }
+
+        return [
+            'results' => $query->orderBy('name')->limit(200)->get()->map(function ($i) {
+                return ['id' => $i->slug, 'text' => $i->name];
+            })->toArray()
+        ];
+    }
+
+    /** Returns JSON for Select2 Divisions (filtered by tenant and optional parent) */
+    public function onSearchDivisions()
+    {
+        $term     = input('q');
+        $tenantId = $this->tenant ? $this->tenant->id : null;
+        $parentId = input('parent_id');
+
+        $query = AdministrativeDivision::where('is_active', true);
+
+        if ($tenantId) {
+            $query->where('tenant_id', $tenantId);
+        }
+        if ($parentId) {
+            $query->where('parent_id', $parentId);
+        }
+        if ($term) {
+            $query->where('name', 'LIKE', "%{$term}%");
+        }
+
+        $divisions = $query->orderBy('name')->limit(200)->get();
+
+        return [
+            'results' => $divisions->map(function ($d) {
+                return ['id' => $d->slug, 'text' => $d->name];
+            })->toArray()
+        ];
+    }
+
+    /** Returns <option> HTML for child divisions of a parent */
+    public function onGetChildDivisions()
+    {
+        $parentSlug = post('parent_slug');
+        if (!$parentSlug) {
+            return ['html' => '<option value="">All</option>', 'count' => 0];
+        }
+
+        $parent = AdministrativeDivision::where('slug', $parentSlug)->first();
+        $children = $parent
+            ? AdministrativeDivision::where('parent_id', $parent->id)
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get()
+            : collect();
+
+        $html = '<option value="">All</option>';
+        foreach ($children as $c) {
+            $html .= '<option value="' . e($c->slug) . '">' . e($c->name) . '</option>';
+        }
+
+        return ['html' => $html, 'count' => $children->count()];
+    }
+
+
+    /** Returns <option> HTML for models belonging to a brand (Legacy support) */
     public function onGetModels()
     {
         $brandSlug = input('brand_slug');
@@ -133,46 +236,23 @@ class VehicleList extends ComponentBase
         return ['html' => $html, 'count' => $models->count()];
     }
 
-    /** Returns <option> HTML for provinces belonging to a country (uses slugs as values) */
-    public function onGetProvinces()
-    {
-        $countrySlug = input('country_slug');
-        $country     = $countrySlug ? Country::where('slug', $countrySlug)->first() : null;
-        $provinces   = $country
-            ? Province::where('country_id', $country->id)->orderBy('name')->get()
-            : collect();
 
-        $html = '<option value="">All Provinces / States</option>';
-        foreach ($provinces as $p) {
-            $html .= '<option value="' . e($p->slug) . '">' . e($p->name) . '</option>';
+     public function onGetModelsForBrand()
+    {
+        $brandSlug = input('brand_slug');
+        $brand = Brand::where('slug', $brandSlug)->first();
+
+        $models = [];
+        if ($brand) {
+            $models = VehicleModel::where('brand_id', $brand->id)->orderBy('name')->get(['slug', 'name'])->toArray();
         }
 
-        return ['html' => $html, 'count' => $provinces->count()];
-    }
-
-    /** Returns <option> HTML for cities belonging to a province (uses slugs as values) */
-    public function onGetCities()
-    {
-        $provinceSlug = input('province_slug');
-        $province     = $provinceSlug ? Province::where('slug', $provinceSlug)->first() : null;
-        $cities       = $province
-            ? City::where('province_id', $province->id)->orderBy('name')->get()
-            : collect();
-
-        $html = '<option value="">All Cities</option>';
-        foreach ($cities as $c) {
-            $html .= '<option value="' . e($c->slug) . '">' . e($c->name) . '</option>';
-        }
-
-        return ['html' => $html, 'count' => $cities->count()];
+        return ['results' => $models];
     }
 
     // ── State Preparation ─────────────────────────────
     protected function prepareVars()
     {
-        $this->resolveTenantFromUrl();
-        $this->resolveUrlSegments();
-
         $this->resultsPerPage = (int) $this->property('resultsPerPage') ?: 5;
         $this->pageNumber     = (int) input('page', $this->pageNumber ?: 1);
 
@@ -185,16 +265,13 @@ class VehicleList extends ComponentBase
         $this->bodyTypeSlug     = request()->has('body_type')    ? input('body_type')    : $this->bodyTypeSlug;
         $this->colorSlug        = request()->has('color')        ? input('color')        : $this->colorSlug;
         $this->driveTypeSlug    = request()->has('drive_type')   ? input('drive_type')   : $this->driveTypeSlug;
-        $this->countrySlug      = request()->has('country')      ? input('country')      : $this->countrySlug;
-        $this->provinceSlug     = request()->has('province')     ? input('province')     : $this->provinceSlug;
-        $this->citySlug         = request()->has('city')         ? input('city')         : $this->citySlug;
+        $this->divisionSlug     = request()->has('division')     ? input('division')     : $this->divisionSlug;
         $this->minPrice         = request()->has('price_min')    ? input('price_min')    : $this->minPrice;
         $this->maxPrice         = request()->has('price_max')    ? input('price_max')    : $this->maxPrice;
         $this->yearMin          = request()->has('year_min')     ? input('year_min')     : $this->yearMin;
         $this->yearMax          = request()->has('year_max')     ? input('year_max')     : $this->yearMax;
         $this->engineMin        = request()->has('engine_min')   ? input('engine_min')   : $this->engineMin;
         $this->engineMax        = request()->has('engine_max')   ? input('engine_max')   : $this->engineMax;
-        $this->orderBy          = input('order_by', 'latest');
 
         $this->filterOptions  = $this->loadFilterOptions();
 
@@ -207,8 +284,11 @@ class VehicleList extends ComponentBase
     {
         $urlSlug = $this->property('tenant');
 
+        // During AJAX requests, skip redirect logic
+        $isAjax = request()->ajax();
+
         // 1. Try resolving from URL
-        if ($urlSlug) {
+        if ($urlSlug && !preg_match('/\{/', $urlSlug)) {
             $this->tenant = Tenant::where('slug', $urlSlug)
                 ->orWhere('country_code', strtoupper($urlSlug))
                 ->first();
@@ -232,29 +312,41 @@ class VehicleList extends ComponentBase
         if ($this->tenant) {
             Session::put('caryard_tenant_id', $this->tenant->id);
 
-            $currentUrl = request()->fullUrl();
-            $targetCC   = strtoupper($this->tenant->country_code);
+            // Only redirect on normal page loads, never on AJAX
+            if (!$isAjax) {
+                $targetCC = strtoupper($this->tenant->country_code);
 
-            // Case A: No tenant segment in URL (e.g. /buy-car)
-            // We want to redirect /buy-car to /KE/buy-car
-            if (!$urlSlug) {
-                // Find where the uri starts (excluding protocol and host)
-                $uri = request()->getRequestUri();
-                // Ensure we don't end up in an infinite loop if the URI is "/"
-                if ($uri !== '/') {
-                    $newUrl = url($targetCC . $uri);
-                    return \Redirect::to($newUrl)->send();
+                if (!$urlSlug || preg_match('/\{/', $urlSlug)) {
+                    $uri = request()->getRequestUri();
+                    if ($uri !== '/') {
+                        $newUrl = url($targetCC . $uri);
+                        return \Redirect::to($newUrl)->send();
+                    }
+                }
+
+                if ($urlSlug && !preg_match('/\{/', $urlSlug) && $urlSlug !== $targetCC) {
+                    $currentUrl = request()->fullUrl();
+                    $newUrl = str_replace('/' . $urlSlug . '/', '/' . $targetCC . '/', $currentUrl);
+                    if ($newUrl !== $currentUrl) {
+                        return \Redirect::to($newUrl)->send();
+                    }
                 }
             }
+        }
+    }
 
-            // Case B: URL has a slug or non-standard code (e.g. /kenya/buy-car or /ke/buy-car)
-            // We want to redirect /kenya/buy-car to /KE/buy-car
-            if ($urlSlug && $urlSlug !== $targetCC) {
-                $newUrl = str_replace('/' . $urlSlug . '/', '/' . $targetCC . '/', $currentUrl);
-                if ($newUrl !== $currentUrl) {
-                    return \Redirect::to($newUrl)->send();
-                }
-            }
+    /**
+     * Lightweight tenant resolution for AJAX requests — uses session only, no redirects.
+     */
+    protected function resolveTenantForAjax()
+    {
+        if ($this->tenant) return;
+
+        if ($tenantId = Session::get('caryard_tenant_id')) {
+            $this->tenant = Tenant::find($tenantId);
+        }
+        if (!$this->tenant) {
+            $this->tenant = Tenant::where('is_active', true)->first();
         }
     }
 
@@ -299,16 +391,23 @@ class VehicleList extends ComponentBase
             $this->modelSlug = $slug;
         }
         if ($slug = $this->property('location')) {
-            $this->citySlug = $slug;
+            $this->divisionSlug = $slug;
         }
     }
 
     protected function loadFilterOptions(): array
     {
-        // Resolve slugs to models for pre-populating cascades
-        $brand    = $this->brandSlug   ? Brand::where('slug',    $this->brandSlug)->first()   : null;
-        $country  = $this->countrySlug ? Country::where('slug',  $this->countrySlug)->first()  : null;
-        $province = $this->provinceSlug? Province::where('slug', $this->provinceSlug)->first(): null;
+        $brand = $this->brandSlug ? Brand::where('slug', $this->brandSlug)->first() : null;
+
+        // Load root divisions for this tenant
+        $rootDivisions = collect();
+        if ($this->tenant) {
+            $rootDivisions = AdministrativeDivision::where('tenant_id', $this->tenant->id)
+                ->where('level', 1)
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get();
+        }
 
         return [
             'brands'        => Brand::orderBy('name')->get(),
@@ -321,14 +420,7 @@ class VehicleList extends ComponentBase
             'bodyTypes'     => BodyType::all(),
             'colors'        => Color::orderBy('name')->get(),
             'driveTypes'    => DriveType::all(),
-            // Granular location
-            'countries'     => Country::where('is_active', true)->orderBy('name')->get(),
-            'provinces'     => $country
-                                ? Province::where('country_id', $country->id)->orderBy('name')->get()
-                                : collect(),
-            'cities'        => $province
-                                ? City::where('province_id', $province->id)->orderBy('name')->get()
-                                : collect(),
+            'divisions'     => $rootDivisions,
         ];
     }
 
@@ -368,7 +460,7 @@ class VehicleList extends ComponentBase
     public function executeSearch()
     {
         $items = $this->searchQuery
-            ->with(['brand', 'vehicle_model', 'location', 'condition'])
+            ->with(['brand', 'vehicle_model', 'division', 'condition'])
             ->paginate($this->resultsPerPage, ['*'], 'page', $this->pageNumber);
 
         $this->page['results'] = $this->results = $items;
@@ -387,21 +479,16 @@ class VehicleList extends ComponentBase
 
     public function filterByLocation()
     {
-        // Use most granular slug available: city > province > country
-        if ($this->citySlug) {
-            $this->searchQuery->whereHas('location', fn($q) => $q->where('slug', $this->citySlug));
-        } elseif ($this->provinceSlug) {
-            $province = Province::where('slug', $this->provinceSlug)->first();
-            if ($province) {
-                $cityIds = City::where('province_id', $province->id)->pluck('id');
-                $this->searchQuery->whereIn('location_id', $cityIds);
-            }
-        } elseif ($this->countrySlug) {
-            $country = Country::where('slug', $this->countrySlug)->first();
-            if ($country) {
-                $provIds = Province::where('country_id', $country->id)->pluck('id');
-                $cityIds = City::whereIn('province_id', $provIds)->pluck('id');
-                $this->searchQuery->whereIn('location_id', $cityIds);
+        if ($this->divisionSlug) {
+            $division = AdministrativeDivision::where('slug', $this->divisionSlug)->first();
+            if ($division) {
+                $ids = collect([$division->id]);
+                // Include child divisions if any
+                $childIds = AdministrativeDivision::where('parent_id', $division->id)
+                    ->where('is_active', true)
+                    ->pluck('id');
+                $ids = $ids->merge($childIds);
+                $this->searchQuery->whereIn('division_id', $ids);
             }
         }
         return $this;
@@ -427,32 +514,21 @@ class VehicleList extends ComponentBase
 
     public function filterByYearRange()
     {
-        if ($this->yearMin) $this->searchQuery->whereYear('year', '>=', (int) $this->yearMin);
-        if ($this->yearMax) $this->searchQuery->whereYear('year', '<=', (int) $this->yearMax);
+        if ($this->yearMin) $this->searchQuery->where('year', '>=', (int) $this->yearMin);
+        if ($this->yearMax) $this->searchQuery->where('year', '<=', (int) $this->yearMax);
         return $this;
     }
 
     public function filterByEngineSize()
     {
-        if ($this->engineMin || $this->engineMax) {
-            $this->searchQuery->whereHas('engine_capacity', function($q) {
-                if ($this->engineMin) $q->where('size', '>=', (int) $this->engineMin);
-                if ($this->engineMax) $q->where('size', '<=', (int) $this->engineMax);
-            });
-        }
+        if ($this->engineMin) $this->searchQuery->where('engine_size', '>=', (int) $this->engineMin);
+        if ($this->engineMax) $this->searchQuery->where('engine_size', '<=', (int) $this->engineMax);
         return $this;
     }
 
     public function applyOrder()
     {
-        $map = [
-            'latest'     => ['created_at', 'desc'],
-            'oldest'     => ['created_at', 'asc'],
-            'price_asc'  => ['price', 'asc'],
-            'price_desc' => ['price', 'desc'],
-        ];
-        [$field, $dir] = $map[$this->orderBy] ?? ['created_at', 'desc'];
-        $this->searchQuery->orderBy($field, $dir);
+        $this->searchQuery->orderByDesc('created_at');
         return $this;
     }
 

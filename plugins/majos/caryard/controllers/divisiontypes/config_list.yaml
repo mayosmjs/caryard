@@ -1,0 +1,15 @@
+title: Division Types
+modelClass: Majos\Caryard\Models\DivisionType
+list: $/majos/caryard/models/divisiontype/columns.yaml
+recordUrl: majos/caryard/divisiontypes/update/:id
+recordsPerPage: 50
+showSorting: true
+defaultSort:
+    column: country_code
+    direction: asc
+showCheckboxes: true
+
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: Search types...

@@ -37,38 +37,70 @@ v1.0.13:
     - 'Created table majos_caryard_drive_types'
     - builder_table_create_majos_caryard_drive_types.php
 v1.0.14:
-    - 'Created table majos_caryard_'
+    - 'Created table majos_caryard_colors'
     - builder_table_create_majos_caryard_.php
 v1.0.15:
-    - 'Updated table majos_caryard_'
+    - 'Created table majos_caryard_colors (rename from base table)'
     - builder_table_update_majos_caryard_colors.php
 v1.0.16:
-    - 'Adds is_active to tenants'
-    - builder_table_update_majos_caryard_tenants.php
-    - 'Adds is_active and seller_id to vehicles'
-    - builder_table_update_majos_caryard_vehicles.php
-v1.0.17:
-    - 'Extend users table for Seller KYC'
-    - builder_table_update_users_modify_seller.php
-v1.0.18:
-    - 'Remove direct KYC columns from users table'
-    - builder_table_delete_users_seller_kyc.php
+    - 'Reserved'
+# v1.0.17:
+#     - 'Extend users table for Seller KYC'
+#     - builder_table_update_users_modify_seller.php
+# v1.0.18:
+#     - 'Remove direct KYC columns from users table'
+#     - builder_table_delete_users_seller_kyc.php
 v1.0.19:
-    - 'Update vehicle foreign keys to UUID'
-    - builder_table_update_majos_caryard_vehicles_uuids.php
+    - 'Reserved'
 v1.0.20:
-    - 'Add options column to vehicles table'
-    - builder_table_update_majos_caryard_vehicles_add_options.php
+    - 'Reserved'
 v1.0.21:
-    - 'Add slugs to caryard tables'
-    - add_slugs_to_caryard_tables.php
+    - 'Reserved'
 v1.0.22:
-    - 'Add location slugs'
-    - $/majos/location/updates/add_slug_to_location_tables.php
+    - 'Reserved'
 v1.0.23:
     - 'Seed Caryard reference data'
     - seed_caryard_tables.php
     - seed_african_tenants.php
 v1.0.24:
-    - 'Seed initial vehicles'
+    - 'Reserved - vehicles seeded in v1.0.32'
+v1.0.25:
+    - 'Create administrative divisions and division types tables'
+    - create_administrative_divisions_tables.php
+    - seed_division_types.php
+v1.0.26:
+    - 'Reserved (division_id already in vehicles table)'
+v1.0.27:
+    - 'Seed Kenya counties and towns'
+    - seed_kenya_divisions.php
+v1.0.28:
+    - 'Seed Uganda districts and towns'
+    - seed_uganda_divisions.php
+v1.0.29:
+    - 'Seed Ethiopia regions and cities'
+    - seed_ethiopia_divisions.php
+v1.0.30:
+    - 'Seed Tanzania regions and districts'
+    - seed_tanzania_divisions.php
+v1.0.31:
+    - 'Seed Rwanda provinces and districts'
+    - seed_rwanda_divisions.php
+v1.0.32:
+    - 'Seed initial vehicles (after divisions are ready)'
     - seed_vehicles.php
+v1.0.33:
+    - 'Reserved'
+v1.0.34:
+    - 'Reserved'
+v1.0.35:
+    - 'Add loan fields to tenants table'
+    - add_loan_fields_to_tenants.php
+v1.0.36:
+    - 'Create seller loan settings table'
+    - builder_table_create_majos_caryard_seller_loan_settings.php
+v1.0.37:
+    - 'Create advertisements table'
+    - create_advertisements_table.php
+v1.0.38:
+    - 'Add image field to advertisements'
+    - add_image_field_to_advertisements.php

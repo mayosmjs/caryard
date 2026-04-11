@@ -11,8 +11,8 @@ class Location extends Model
 
     public $table = 'majos_caryard_locations';
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = ['tenant_id', 'name', 'slug', 'parent_id', 'type'];
 
@@ -30,10 +30,5 @@ class Location extends Model
         'vehicles' => ['Majos\Caryard\Models\Vehicle']
     ];
 
-    public function beforeCreate()
-    {
-        if (empty($this->id)) {
-            $this->id = (string) \Str::uuid();
-        }
-    }
+
 }

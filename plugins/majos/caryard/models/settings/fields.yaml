@@ -1,0 +1,103 @@
+# =============================================
+#  Form Field Definitions
+# =============================================
+
+fields:
+    site_section:
+        type: section
+        title: Site Information
+        span: full
+
+    site_name:
+        label: Site Name
+        comment: The name of your car dealership website
+        span: left
+        type: text
+
+    site_tagline:
+        label: Tagline
+        comment: A short tagline for your site
+        span: right
+        type: text
+
+    contact_section:
+        type: section
+        title: Contact Information
+        span: full
+
+    contact_email:
+        label: Contact Email
+        comment: Email address for contact inquiries
+        span: left
+        type: text
+
+    contact_phone:
+        label: Contact Phone
+        comment: Phone number for contact inquiries
+        span: right
+        type: text
+
+    contact_address:
+        label: Address
+        comment: Physical address of your dealership
+        span: full
+        type: textarea
+
+    social_section:
+        type: section
+        title: Social Media Links
+        span: full
+
+    social_facebook:
+        label: Facebook URL
+        span: left
+        type: text
+
+    social_twitter:
+        label: Twitter URL
+        span: right
+        type: text
+
+    social_instagram:
+        label: Instagram URL
+        span: left
+        type: text
+
+    social_youtube:
+        label: YouTube URL
+        span: right
+        type: text
+
+    currency_section:
+        type: section
+        title: Currency Settings
+        span: full
+
+    currency_symbol:
+        label: Currency Symbol
+        comment: e.g., $, KSh, R, TSh, USh
+        span: left
+        type: text
+
+    currency_code:
+        label: Currency Code
+        comment: e.g., USD, KES, ZAR, TZS, UGX
+        span: right
+        type: text
+
+    maintenance_section:
+        type: section
+        title: Maintenance Mode
+        span: full
+
+    maintenance_mode:
+        label: Enable Maintenance Mode
+        comment: Enable to show maintenance page to visitors
+        span: left
+        type: switch
+
+    maintenance_message:
+        label: Maintenance Message
+        comment: Message to display during maintenance
+        span: full
+        type: textarea
