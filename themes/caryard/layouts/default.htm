@@ -4,6 +4,7 @@ description = "Default layout"
 security = "all"
 ==
 use Majos\Caryard\Models\Tenant;
+use Majos\Caryard\Models\Brand;
 
 function onStart()
 {
@@ -31,6 +32,8 @@ if ($tenant) {
 }
 
 $this['tenant'] = $tenant;
+$this['activeTenants'] = Tenant::where('is_active', true)->orderBy('name')->get();
+$this['brands'] = Brand::with('logo_file')->orderBy('name')->get();
 }
 ==
 <!DOCTYPE html>

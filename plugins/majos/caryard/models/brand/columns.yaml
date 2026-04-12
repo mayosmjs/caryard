@@ -6,8 +6,15 @@ columns:
     id:
         label: ID
         searchable: true
+    logo_file:
+        label: Logo
+        type: image
+        height: 40
     name:
         label: Name
+        searchable: true
+    slug:
+        label: Slug
         searchable: true
     created_at:
         label: Created

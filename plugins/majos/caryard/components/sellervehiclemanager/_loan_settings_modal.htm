@@ -1,102 +1,165 @@
-<div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex min-h-full items-center justify-center p-4">
-        <div class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm transition-opacity" aria-hidden="true"
-            onclick="document.getElementById('loan-settings-modal-container').innerHTML = '';"></div>
+<div class="fixed inset-0 z-50 flex items-center justify-center">
+    
+    <!-- BACKDROP -->
+    <div class="absolute inset-0 bg-slate-900/65 backdrop-blur-sm"
+        onclick="document.getElementById('loan-settings-modal-container').innerHTML = '';">
+    </div>
 
-        <div class="relative w-full max-w-[580px] bg-white rounded-[20px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] p-8 max-h-[90vh] overflow-y-auto">
-            <form id="loan-settings-form" data-request="{{ __SELF__ }}::onSaveLoanSettings"
-                data-request-validate data-request-flash>
-                
-                <div class="flex justify-between items-start mb-7">
-                    <div>
-                        <h3 class="text-[26px] font-bold tracking-tight text-slate-900 mb-1.5">Loan Estimator</h3>
-                        <p class="text-slate-500 text-base">Configure your loan calculator settings</p>
-                    </div>
-                    <button type="button" class="text-slate-400 hover:text-slate-700 text-[28px] leading-none font-light transition-colors"
-                        onclick="document.getElementById('loan-settings-modal-container').innerHTML = '';">
-                        &times;
-                    </button>
+    <!-- MODAL -->
+    <div class="relative w-full h-screen sm:h-auto sm:max-w-[720px] bg-white sm:rounded-[20px] shadow-xl flex flex-col overflow-hidden">
+
+        <form id="loan-settings-form"
+            data-request="{{ __SELF__ }}::onSaveLoanSettings"
+            data-request-validate
+            data-request-flash
+            class="flex flex-col h-full">
+
+            <!-- HEADER -->
+            <div class="flex justify-between items-start px-4 sm:px-6 py-4 border-b shrink-0">
+                <div>
+                    <h3 class="text-xl sm:text-[26px] font-bold text-slate-900 mb-1">
+                        Loan Estimator
+                    </h3>
+                    <p class="text-slate-500 text-sm sm:text-base">
+                        Configure your loan calculator settings
+                    </p>
                 </div>
+                <button type="button"
+                    class="text-slate-400 hover:text-slate-700 text-2xl"
+                    onclick="document.getElementById('loan-settings-modal-container').innerHTML = '';">
+                    &times;
+                </button>
+            </div>
 
-                <div class="bg-slate-50 border border-slate-200 rounded-[14px] p-5 flex justify-between items-center mb-8">
+            <!-- BODY (SCROLLABLE) -->
+            <div class="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
+
+                <!-- ENABLE -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex justify-between items-center mb-6">
                     <div>
-                        <h4 class="text-slate-900 font-semibold text-[17px] mb-1">Enable Calculator</h4>
-                        <p class="text-slate-500 text-[15px]">Show on all vehicle listing pages</p>
+                        <h4 class="text-slate-900 font-semibold text-sm sm:text-[17px]">
+                            Enable Calculator
+                        </h4>
+                        <p class="text-slate-500 text-xs sm:text-[15px]">
+                            Show on all vehicle listing pages
+                        </p>
                     </div>
-                    <label class="switch relative inline-block w-14 h-8 shrink-0">
-                        <input type="checkbox" name="loan_enabled" value="1" class="sr-only peer" {{
-                            loanSettings.loan_enabled ? 'checked' : '' }}>
-                        <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-slate-300 rounded-[32px] transition-all peer-checked:bg-blue-600 before:content-[''] before:absolute before:h-6 before:w-6 before:left-1 before:bottom-1 before:bg-white before:rounded-full before:transition-all before:shadow-md peer-checked:before:translate-x-6"></span>
+
+                    <label class="switch relative inline-block w-12 h-7 shrink-0">
+                        <input type="checkbox" name="loan_enabled" value="1"
+                            class="sr-only peer"
+                            {{ loanSettings.loan_enabled ? 'checked' : '' }}>
+                        <span class="slider absolute inset-0 bg-slate-300 rounded-full transition peer-checked:bg-blue-600"></span>
+                        <span class="absolute left-1 bottom-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-5"></span>
                     </label>
                 </div>
 
-                <label class="text-slate-900 font-semibold text-[17px] block mb-1">Loan Duration</label>
-                <span class="text-slate-500 text-sm block mb-5">Select available terms (months) that users can choose from.</span>
-                
-                <div class="flex flex-wrap gap-3 mb-9">
+                <!-- TERMS -->
+                <label class="text-slate-900 font-semibold text-sm sm:text-[17px] block mb-1">
+                    Loan Duration
+                </label>
+                <span class="text-slate-500 text-xs sm:text-sm block mb-4">
+                    Select available terms (months)
+                </span>
+
+                <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-8">
                     {% for term in [3, 6, 12, 18, 24, 36, 48, 60, 72, 84, 96] %}
                     <div>
-                        <input type="checkbox" name="loan_terms[]" value="{{ term }}" id="term-{{ term }}"
-                            class="hidden peer" {{ term in loanSettings.loan_terms ? 'checked' : '' }}>
+                        <input type="checkbox"
+                            name="loan_terms[]"
+                            value="{{ term }}"
+                            id="term-{{ term }}"
+                            class="hidden peer"
+                            {{ term in loanSettings.loan_terms ? 'checked' : '' }}>
+
                         <label for="term-{{ term }}"
-                            class="block px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 text-[15px]
-                             font-medium cursor-pointer transition-all duration-150 hover:border-slate-300
-                              hover:bg-slate-50 peer-checked:bg-amber-50 peer-checked:text-amber-700
-                               peer-checked:border-amber-400 
-                               peer-checked:ring-2 peer-checked:ring-amber-400 peer-checked:font-semibold">
+                            class="block text-center px-2 py-2 rounded-lg text-sm font-medium
+                                   border border-slate-200 cursor-pointer transition
+                                   hover:bg-amber-50 hover:border-slate-300
+                                   peer-checked:bg-amber-100 peer-checked:text-amber-700
+                                   peer-checked:border-amber-400
+                                   peer-checked:ring-1 peer-checked:ring-amber-300">
                             {{ term }} mo
                         </label>
                     </div>
                     {% endfor %}
                 </div>
 
+                <!-- INTEREST -->
                 <div class="mb-6">
-                    <label class="text-slate-900 font-semibold text-[15px] block mb-2.5" for="interestRate">Annual Interest Rate</label>
+                    <label class="text-slate-900 font-semibold text-sm block mb-2" for="interestRate">
+                        Annual Interest Rate
+                    </label>
                     <div class="relative">
-                        <input type="number" name="loan_annual_rate" id="interestRate" value="{{ loanSettings.loan_annual_rate }}"
+                        <input type="number"
+                            name="loan_annual_rate"
+                            id="interestRate"
+                            value="{{ loanSettings.loan_annual_rate }}"
                             step="0.01" min="0" max="100"
-                            class="w-full border border-slate-200 rounded-[10px] py-3.5 px-[18px] text-slate-900 text-base font-normal transition-all duration-150 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)]"
-                            placeholder="e.g. 14.9900">
-                        <span class="absolute right-[18px] top-1/2 -translate-y-1/2 text-slate-400 text-base font-medium pointer-events-none">%</span>
+                            class="w-full border border-slate-200 rounded-lg py-3 px-4 text-sm
+                                   focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)]"
+                            placeholder="e.g. 14.99">
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+                            %
+                        </span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-5 mb-10">
+                <!-- DEPOSITS -->
+                <div class="flex flex-col sm:grid sm:grid-cols-2 gap-4 mb-8">
                     <div>
-                        <label class="text-slate-900 font-semibold text-[15px] block mb-2.5" for="minDeposit">Min Deposit (%)</label>
-                        <input type="number" name="loan_min_down_payment_percent" id="minDeposit"
-                            value="{{ loanSettings.loan_min_down_payment_percent }}" step="1" min="0" max="100"
-                            class="w-full border border-slate-200 rounded-[10px] py-3.5 px-[18px] text-slate-900 text-base font-normal transition-all duration-150 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)]"
-                            placeholder="e.g. 50.00">
+                        <label class="text-slate-900 font-semibold text-sm block mb-2" for="minDeposit">
+                            Min Deposit (%)
+                        </label>
+                        <input type="number"
+                            name="loan_min_down_payment_percent"
+                            id="minDeposit"
+                            value="{{ loanSettings.loan_min_down_payment_percent }}"
+                            step="1" min="0" max="100"
+                            class="w-full border border-slate-200 rounded-lg py-3 px-4 text-sm
+                                   focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)]">
                     </div>
+
                     <div>
-                        <label class="text-slate-900 font-semibold text-[15px] block mb-2.5" for="maxDeposit">Max Deposit (%)</label>
-                        <input type="number" name="loan_max_down_payment_percent" id="maxDeposit"
-                            value="{{ loanSettings.loan_max_down_payment_percent }}" step="1" min="0" max="100"
-                            class="w-full border border-slate-200 rounded-[10px] py-3.5 px-[18px] text-slate-900 text-base font-normal transition-all duration-150 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)]"
-                            placeholder="e.g. 70.00">
+                        <label class="text-slate-900 font-semibold text-sm block mb-2" for="maxDeposit">
+                            Max Deposit (%)
+                        </label>
+                        <input type="number"
+                            name="loan_max_down_payment_percent"
+                            id="maxDeposit"
+                            value="{{ loanSettings.loan_max_down_payment_percent }}"
+                            step="1" min="0" max="100"
+                            class="w-full border border-slate-200 rounded-lg py-3 px-4 text-sm
+                                   focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)]">
                     </div>
                 </div>
 
-                <div id="loan-settings-validation" class="hidden mb-4 p-3 bg-red-50 border border-red-100 rounded-lg">
+                <!-- ERROR -->
+                <div id="loan-settings-validation"
+                    class="hidden mb-4 p-3 bg-red-50 border border-red-100 rounded-lg">
                     <p class="text-sm text-red-600" id="loan-settings-error"></p>
                 </div>
+            </div>
 
-                <div class="flex justify-end">
-                    <button type="submit"
-                        class="bg-slate-900 text-slate-50 border-none rounded-[12px] py-4 px-9 text-[17px] font-semibold cursor-pointer transition-colors hover:bg-slate-800"
-                        data-attach-loading>
-                        <span id="loan-settings-loader" class="hidden mr-2">
-                            <svg class="animate-spin h-4 w-4 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                        </span>
-                        Save Settings
-                    </button>
-                </div>
-            </form>
-        </div>
+            <!-- FOOTER -->
+            <div class="px-4 sm:px-6 py-4 border-t shrink-0 bg-white">
+                <button type="submit"
+                    class="w-full sm:w-auto bg-slate-900 text-slate-50 rounded-lg py-3 px-6 text-sm font-semibold hover:bg-slate-800"
+                    data-attach-loading>
+                    
+                    <span id="loan-settings-loader" class="hidden mr-2">
+                        <svg class="animate-spin h-4 w-4 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                    </span>
+
+                    Save Settings
+                </button>
+            </div>
+
+        </form>
     </div>
 </div>
 
@@ -104,14 +167,13 @@
 .switch .slider:before {
     content: '';
     position: absolute;
-    height: 24px;
-    width: 24px;
+    height: 20px;
+    width: 20px;
     left: 4px;
     bottom: 4px;
     background-color: white;
-    transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: .3s;
     border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 </style>
 
@@ -125,12 +187,13 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('loan-settings-modal-container').innerHTML = '';
         });
 
-        form.addEventListener('ajaxError', function (e) {
+        form.addEventListener('ajaxError', function () {
             var loader = document.getElementById('loan-settings-loader');
             if (loader) loader.classList.add('hidden');
 
             var validationDiv = document.getElementById('loan-settings-validation');
             var errorMsg = document.getElementById('loan-settings-error');
+
             if (validationDiv && errorMsg) {
                 errorMsg.textContent = 'An error occurred. Please try again.';
                 validationDiv.classList.remove('hidden');

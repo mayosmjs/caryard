@@ -17,7 +17,7 @@ $this['featuredAds'] = collect();
 ==
 {% if tenant and tenant.isBannerEnabled %}
 <header
-    class="relative bg-gradient-to-br from-slate-900 via-slate-800 to-white-600/20 overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 ">
+    class="relative bg-gradient-to-b from-slate-900 via-slate-800 to-white-400/20 overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 ">
 
     <!-- Abstract Background Elements -->
     <div class="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
@@ -99,7 +99,7 @@ $this['featuredAds'] = collect();
                     {% for ad in featuredAds %}
                     <div class="embla__slide relative flex-[0_0_100%] min-w-0 h-full p-2 lg:p-4">
                         <div
-                            class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[2rem] lg:rounded-[2.5rem] overflow-hidden shadow-2xl h-full flex flex-col transition-all duration-500 hover:border-amber-500/50">
+                            class="group relative  rounded-[2rem] lg:rounded-[2.5rem] overflow-hidden  h-full flex flex-col transition-all duration-500 hover:border-amber-500/50">
 
                             <!-- Image Container -->
                             <div class="relative h-full overflow-hidden">

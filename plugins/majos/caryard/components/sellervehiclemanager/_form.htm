@@ -1,11 +1,8 @@
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
     @media (max-width: 479px) {
         .form-grid-xs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-    body { font-family: 'Inter', sans-serif; }
-    
+ 
     .select2-container--default .select2-selection--single {
         width: 100% !important;
         border-radius: 10px !important;
@@ -141,7 +138,6 @@
 
 <form data-request="{{ handler }}"
     data-request-validate data-request-flash data-request-files
-    data-request-success="handleFormSuccess(data)"
     class="text-base w-full space-y-6" id="vehicleForm">
 
     {% if vehicle %}
@@ -628,10 +624,4 @@ window.deleteVehicleImage = function(vehicleId, imageId, btn) {
     $(document).on('change', 'select[name^="division_level_"]', syncDivision);
     setTimeout(syncDivision, 100);
 })();
-
-function handleFormSuccess(data) {
-    if (data && data['#vehicle-modal-container'] === '') {
-        document.getElementById('vehicle-modal-container').innerHTML = '';
-    }
-}
 </script>

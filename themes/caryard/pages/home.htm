@@ -8,22 +8,22 @@ description = "Homepage"
 
   <section class="relative w-full overflow-hidden">
 
-    <div class="absolute inset-0 h-[750px] w-full bg-gradient-to-b from-[#FFD700] via-[#FFD700]/80 to-white"></div>
+    <div class="absolute inset-0 h-[750px] w-full bg-gradient-to-b from-slate-900 via-slate-500 to-white"></div>
 
     <div class="relative z-10 mx-auto max-w-7xl px-4 pt-20 pb-20 text-center ">
-      <h1 class="mb-6 text-5xl font-black tracking-tight text-gray-900 md:text-7xl">
+      <h1 class="mb-6 text-5xl font-black tracking-tight text-white md:text-7xl">
         Luxury Meets Convenience<br />
-        <span class="text-gray-800">Rent with Zairent.</span>
+        <span class="text-gray-400">Drive with Majos caryard</span>
       </h1>
-      <p class="mx-auto mb-12 max-w-2xl text-lg font-medium leading-relaxed text-gray-700">
-        Experience the freedom of seamless travel with Zairent. Whether you're planning
+      <p class="mx-auto mb-12 max-w-2xl text-lg font-medium leading-relaxed text-gray-400">
+        Experience the freedom of seamless travel with Majos caryard. Whether you're planning
         a weekend getaway, a business trip or an extended adventure.
       </p>
     </div>
 
     <div class="relative z-20 flex justify-center px-4">
-      <img src="https://cdn.prod.website-files.com/6774d17666ee15be4e7c09be/67765714c20bacd2c9440e61_Banner%20Image.png"
-        alt="Car Fleet" class="w-full max-w-5xl object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]" />
+      <img src="{{'assets/images/static/porche.png'|theme}}"
+        alt="Cars" class="w-1/4 max-w-5xl object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]" />
     </div>
 
   </section>
@@ -32,11 +32,13 @@ description = "Homepage"
 
 
 
-  <section class="relative w-full  py-20 px-6 overflow-hidden">
+  <section class="relative w-full py-20 px-6 overflow-hidden">
 
-    <div class="absolute inset-0 opacity-40 pointer-events-none"
-      style="background-image: radial-gradient(#e5e7eb 1.5px, transparent 1.5px); background-size: 40px 40px;">
+    <div class="absolute inset-0 opacity-30 pointer-events-none"
+      style="background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 24px 24px;">
     </div>
+    <div class="absolute top-20 -left-20 w-64 h-64 bg-amber-100 rounded-full blur-3xl opacity-30"></div>
+    <div class="absolute bottom-20 -right-20 w-72 h-72 bg-amber-100 rounded-full blur-3xl opacity-20"></div>
 
     <div class="relative z-10 mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
@@ -48,25 +50,24 @@ description = "Homepage"
         </div>
 
         <h2 class="text-5xl md:text-6xl font-black text-[#1a2b3c] leading-tight mb-8">
-          Car <span class="text-orange-500">Rentals</span> & Repairs <br />
-          — All in One Place
+          Buy & <span class="text-orange-500">Finance</span> <br />
+          Your Dream Car
         </h2>
 
         <p class="text-gray-600 text-lg leading-relaxed mb-10 max-w-xl">
-          Whether you're hitting the road or getting back on it, we've got you covered. From reliable car rentals to
-          expert repairs, our all-in-one auto service is built for speed, trust, and comfort. Book your ride or repair
-          in just a few clicks — no delays, no worries.
+          Find your perfect car from our curated selection of quality vehicles. We make it easy with 
+          flexible financing options and a seamless buying experience. Your dream car is just a few clicks away.
         </p>
 
-        <div class="flex flex-wrap gap-4">
-          <button
-            class="flex items-center gap-3 bg-[#f9a01b] hover:bg-orange-500 text-white font-bold py-4 px-8 rounded-md transition-all shadow-lg shadow-orange-200">
-            <span>🏎️</span> Rent A Car
-          </button>
-          <button
-            class="flex items-center gap-3 border-2 border-gray-200 hover:border-gray-900 bg-white text-gray-900 font-bold py-4 px-8 rounded-md transition-all">
-            <span>🏎️</span> Repair A Car
-          </button>
+        <div class="flex flex-row gap-3">
+          <a href="{{ 'buy'|page }}"
+            class="flex-1 flex items-center justify-center gap-2 bg-[#f9a01b] hover:bg-orange-500 text-white font-bold py-3 px-4 sm:py-4 sm:px-8 rounded-md transition-all shadow-lg shadow-orange-200 text-sm sm:text-base">
+            <span>🚗</span> <span>Browse Cars</span>
+          </a>
+          <a href="{{ 'loan'|page }}"
+            class="flex-1 flex items-center justify-center gap-2 border-2 border-gray-200 hover:border-gray-900 bg-white text-gray-900 font-bold py-3 px-4 sm:py-4 sm:px-8 rounded-md transition-all text-sm sm:text-base">
+            <span>💰</span> <span>Get Finance</span>
+          </a>
         </div>
       </div>
 
@@ -78,10 +79,9 @@ description = "Homepage"
             <div class="flex gap-6">
               <div class="text-4xl">🚗</div>
               <div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-3">Reliable Car Rentals</h3>
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">Quality Selection</h3>
                 <p class="text-gray-600 leading-relaxed text-sm md:text-base">
-                  Choose from a range of clean, fully-inspected vehicles. Rent daily, weekly, or monthly with flexible
-                  terms.
+                  Browse our curated collection of thoroughly inspected vehicles. Every car meets our high quality standards.
                 </p>
               </div>
             </div>
@@ -99,12 +99,11 @@ description = "Homepage"
           class="group relative bg-[#eeeeee]/60 hover:bg-white p-8 rounded-2xl border border-transparent hover:border-gray-100 transition-all duration-300 hover:shadow-2xl hover:shadow-gray-200/50">
           <div class="flex items-start justify-between">
             <div class="flex gap-6">
-              <div class="text-4xl">🛠️</div>
+              <div class="text-4xl">💰</div>
               <div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-3">Car Repairs</h3>
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">Easy Financing</h3>
                 <p class="text-gray-600 leading-relaxed text-sm md:text-base">
-                  Choose from a range of clean, fully-inspected vehicles. Rent daily, weekly, or monthly with flexible
-                  terms.
+                  Competitive rates, flexible terms, and quick approval. Get pre-approved in minutes.
                 </p>
               </div>
             </div>
@@ -122,12 +121,11 @@ description = "Homepage"
           class="group relative bg-[#eeeeee]/60 hover:bg-white p-8 rounded-2xl border border-transparent hover:border-gray-100 transition-all duration-300 hover:shadow-2xl hover:shadow-gray-200/50">
           <div class="flex items-start justify-between">
             <div class="flex gap-6">
-              <div class="text-4xl">🚛</div>
+              <div class="text-4xl">🛡️</div>
               <div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-3">Emergency Assistance</h3>
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">Trusted Process</h3>
                 <p class="text-gray-600 leading-relaxed text-sm md:text-base">
-                  Choose from a range of clean, fully-inspected vehicles. Rent daily, weekly, or monthly with flexible
-                  terms.
+                  Verified sellers, secure payments, and full documentation. Buy with confidence.
                 </p>
               </div>
             </div>
@@ -141,6 +139,73 @@ description = "Homepage"
           </div>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Brands Section -->
+  <section class="py-20 px-6 bg-gray-50 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-30 pointer-events-none" style="background-image: radial-gradient(#d1d5db 1px, transparent 1px); background-size: 20px 20px;"></div>
+    <div class="absolute top-0 -left-20 w-56 h-56 bg-amber-200 rounded-full blur-3xl opacity-40"></div>
+    <div class="absolute bottom-0 -right-20 w-64 h-64 bg-amber-100 rounded-full blur-3xl opacity-30"></div>
+    
+    <div class="relative z-10 max-w-6xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-3">Popular <span class="text-orange-500">Brands</span></h2>
+        <p class="text-gray-500">Find your dream car from top brands</p>
+      </div>
+      
+      <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
+        {% for brand in brands %}
+        <a href="{{ 'buy'|page({ brand: brand.slug }) }}"
+          class="group flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg border border-gray-200 hover:border-orange-400 hover:shadow-md transition-all duration-300 bg-white h-full">
+          {% if brand.logo_file %}
+          <img src="{{ brand.logo_file.getPath }}" alt="{{ brand.name }}" class="w-10 h-10 sm:w-12 sm:h-12 object-contain mb-1" />
+          {% else %}
+          <span class="text-lg sm:text-xl font-bold text-gray-600">{{ brand.name|slice(0,1) }}</span>
+          {% endif %}
+          <span class="text-xs font-medium text-gray-600 group-hover:text-gray-900">{{ brand.name }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Choose Your Country Section -->
+  <section class="py-20 px-6 bg-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-30 pointer-events-none" style="background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 20px 20px;"></div>
+    <div class="absolute top-0 -left-20 w-56 h-56 bg-amber-200 rounded-full blur-3xl opacity-40"></div>
+    <div class="absolute bottom-0 -right-20 w-64 h-64 bg-amber-100 rounded-full blur-3xl opacity-30"></div>
+    
+    <div class="relative z-10 max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-3">Choose Your <span class="text-orange-500">Country</span></h2>
+      <p class="text-gray-500 mb-10">Select your location for local inventory and pricing</p>
+      
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {% if activeTenants %}
+          {% for t in activeTenants %}
+          <a href="/{{ t.country_code }}/buy-car"
+            class="group flex flex-col items-center p-3 sm:p-4 rounded-xl bg-white border border-gray-100 hover:border-orange-300 hover:shadow-md transition-all duration-300 h-full">
+            <img src="https://flagcdn.com/w80/{{ t.country_code|lower }}.png" 
+                 class="w-14 h-10 sm:w-20 sm:h-14 object-contain rounded mb-2 group-hover:scale-105 transition-transform" 
+                 alt="{{ t.name }}">
+            <span class="text-sm font-semibold text-gray-700">{{ t.name }}</span>
+            <span class="text-xs text-gray-400">{{ t.country_code }}</span>
+          </a>
+          {% endfor %}
+        {% else %}
+        <!-- Fallback countries -->
+        {% for c in [{name: 'Kenya', code: 'KE'}, {name: 'Nigeria', code: 'NG'}, {name: 'Uganda', code: 'UG'}, {name: 'Tanzania', code: 'TZ'}] %}
+        <a href="/{{ c.code }}/buy-car"
+          class="group flex flex-col items-center p-3 sm:p-4 rounded-xl bg-white border border-gray-100 hover:border-orange-300 hover:shadow-md transition-all duration-300 h-full">
+          <img src="https://flagcdn.com/w80/{{ c.code|lower }}.png" 
+               class="w-14 h-10 sm:w-20 sm:h-14 object-contain rounded mb-2 group-hover:scale-105 transition-transform" 
+               alt="{{ c.name }}">
+          <span class="text-sm font-semibold text-gray-700">{{ c.name }}</span>
+          <span class="text-xs text-gray-400">{{ c.code }}</span>
+        </a>
+        {% endfor %}
+        {% endif %}
       </div>
     </div>
   </section>

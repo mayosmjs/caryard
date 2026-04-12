@@ -76,9 +76,12 @@ class SubscriptionManager extends ComponentBase
         $this->availablePlans = SubscriptionPlan::active()->get();
         
         // Get transaction history for this seller
-        $this->transactions = \Majos\Sellers\Models\SubscriptionTransaction::whereHas('subscription', function($query) {
-            $query->where('seller_id', (string) $this->seller->id);
-        })->orderBy('created_at', 'desc')->limit(50)->get();
+        $subscriptionIds = \Majos\Sellers\Models\SellerSubscription::where('seller_id', $this->seller->id)->pluck('id');
+        $this->transactions = \Majos\Sellers\Models\SubscriptionTransaction::whereIn('subscription_id', $subscriptionIds)
+            ->orderBy('created_at', 'desc')
+            ->limit(50)
+            ->get();
+            
 
         // Get available payment providers - filter by backend settings
         $providersJson = $this->property('providers');
@@ -130,6 +133,7 @@ class SubscriptionManager extends ComponentBase
         }
         
         $this->page['providers'] = $providers;
+        $this->page['transactions'] = $this->transactions;
         $this->page['providerLogos'] = $providerLogos;
         $this->page['subscription'] = $this->subscription;
         $this->page['currentPlan'] = $this->currentPlan;
@@ -655,5 +659,77 @@ class SubscriptionManager extends ComponentBase
     {
         $settings = \Majos\Sellers\Models\Settings::instance();
         return $settings->getAvailableProviders();
+    }
+
+    /**
+     * Download transactions as CSV
+     */
+    protected function downloadTransactionsCsv()
+    {
+        $transactions = $this->transactions;
+        
+        $csv = "Date,Provider,Amount,Status,Transaction ID\n";
+        
+        foreach ($transactions as $txn) {
+            $csv .= sprintf(
+                "%s,%s,%s,%s,%s\n",
+                $txn->created_at->format('M d, Y H:i'),
+                $txn->providerDisplayName,
+                $txn->formattedAmount,
+                $txn->status,
+                $txn->transaction_id ?? '-'
+            );
+        }
+        
+        $filename = 'transactions_' . date('Y-m-d') . '.csv';
+        
+        return \Response::make($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ]);
+    }
+
+    /**
+     * AJAX handler to download transactions as CSV
+     */
+    public function onDownloadTransactions()
+    {
+        $user = \Auth::getUser();
+        if (!$user) {
+            return ['error' => 'Unauthorized'];
+        }
+
+        $seller = SellerProfile::where('user_id', $user->id)->first();
+        if (!$seller) {
+            return ['error' => 'No subscription'];
+        }
+
+        $subscriptionIds = \Majos\Sellers\Models\SellerSubscription::where('seller_id', $seller->id)->pluck('id');
+        $transactions = \Majos\Sellers\Models\SubscriptionTransaction::whereIn('subscription_id', $subscriptionIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if ($transactions->isEmpty()) {
+            return ['error' => 'No transactions'];
+        }
+
+        $csv = "Date,Provider,Amount,Status,Transaction ID\n";
+        
+        foreach ($transactions as $txn) {
+            $csv .= sprintf(
+                "%s,%s,%s,%s,%s\n",
+                $txn->created_at->format('M d, Y H:i'),
+                $txn->providerDisplayName,
+                $txn->formattedAmount,
+                $txn->status,
+                $txn->transaction_id ?? '-'
+            );
+        }
+
+        // Return as base64 for JavaScript download
+        return [
+            'csv' => base64_encode($csv),
+            'filename' => 'transactions_' . date('Y-m-d') . '.csv'
+        ];
     }
 }

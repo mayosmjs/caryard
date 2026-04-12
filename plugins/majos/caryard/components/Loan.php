@@ -280,4 +280,63 @@ class Loan extends ComponentBase
     {
         return $this->tenant ? $this->tenant->getCurrencySymbol() : '$ ';
     }
+
+    /**
+     * Handle loan application form submission - Step 1
+     */
+    public function onSubmitStep1()
+    {
+        $data = post();
+        
+        // Store in session for next steps
+        $applicationData = Session::get('loan_application_data', []);
+        $applicationData['step1'] = $data;
+        Session::put('loan_application_data', $applicationData);
+        
+        return ['success' => true, 'nextStep' => 2];
+    }
+
+    /**
+     * Handle loan application form submission - Step 2
+     */
+    public function onSubmitStep2()
+    {
+        $applicationData = Session::get('loan_application_data', []);
+        $applicationData['step2'] = post();
+        Session::put('loan_application_data', $applicationData);
+        
+        return ['success' => true, 'nextStep' => 3];
+    }
+
+    /**
+     * Handle loan application form submission - Step 3
+     */
+    public function onSubmitStep3()
+    {
+        $applicationData = Session::get('loan_application_data', []);
+        $applicationData['step3'] = post();
+        Session::put('loan_application_data', $applicationData);
+        
+        return ['success' => true, 'nextStep' => 4];
+    }
+
+    /**
+     * Handle final loan application submission
+     */
+    public function onSubmitApplication()
+    {
+        $applicationData = Session::get('loan_application_data', []);
+        $applicationData['step4'] = post();
+        $applicationData['submitted_at'] = now();
+        $applicationData['status'] = 'pending';
+        
+        // Here you would save to database
+        // For now, just flash a success message
+        \Flash::success('Your loan application has been submitted! We will contact you within 24-48 hours.');
+        
+        // Clear session data
+        Session::forget('loan_application_data');
+        
+        return ['success' => true, 'message' => 'Application submitted'];
+    }
 }
