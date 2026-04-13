@@ -14,6 +14,7 @@ class CreateAdvertisementsTable extends Migration
             $table->integer('tenant_id')->unsigned()->index();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
+            $table->string('image')->nullable();
             $table->string('link_url')->nullable();
             $table->boolean('is_active')->default(true);
             $table->integer('sort_order')->default(0);

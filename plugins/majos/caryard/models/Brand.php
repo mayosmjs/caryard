@@ -17,7 +17,7 @@ class Brand extends Model
     protected $keyType = 'int';
     public $incrementing = true;
 
-    protected $fillable = ['name', 'slug', 'description', 'logo'];
+    protected $fillable = ['name', 'slug', 'description', 'logo', 'popular'];
 
     public $rules = [
         'name' => 'required'

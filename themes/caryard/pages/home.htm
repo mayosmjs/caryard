@@ -1,12 +1,14 @@
-title = "Home"
 url = "/"
 layout = "default"
+title = "Home"
 description = "Homepage"
+
+[brandFilter]
+limit = 30
+orderBy = "name"
+page = "buy"
 ==
-
-
-
-  <section class="relative w-full overflow-hidden">
+<section class="relative w-full overflow-hidden">
 
     <div class="absolute inset-0 h-[750px] w-full bg-gradient-to-b from-slate-900 via-slate-500 to-white"></div>
 
@@ -155,19 +157,9 @@ description = "Homepage"
         <p class="text-gray-500">Find your dream car from top brands</p>
       </div>
       
-      <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
-        {% for brand in brands %}
-        <a href="{{ 'buy'|page({ brand: brand.slug }) }}"
-          class="group flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg border border-gray-200 hover:border-orange-400 hover:shadow-md transition-all duration-300 bg-white h-full">
-          {% if brand.logo_file %}
-          <img src="{{ brand.logo_file.getPath }}" alt="{{ brand.name }}" class="w-10 h-10 sm:w-12 sm:h-12 object-contain mb-1" />
-          {% else %}
-          <span class="text-lg sm:text-xl font-bold text-gray-600">{{ brand.name|slice(0,1) }}</span>
-          {% endif %}
-          <span class="text-xs font-medium text-gray-600 group-hover:text-gray-900">{{ brand.name }}</span>
-        </a>
-        {% endfor %}
-      </div>
+     
+           {% component 'brandFilter' limit=12 page='buy' %}
+
     </div>
   </section>
 
@@ -209,8 +201,3 @@ description = "Homepage"
       </div>
     </div>
   </section>
-
-
-
-
-

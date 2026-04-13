@@ -16,6 +16,12 @@ fields:
         imageHeight: 200
         span: right
 
+    popular:
+        label: Popular
+        type: switch
+        span: auto
+        comment: Show in popular brands section
+
     description:
         label: Description
         type: textarea

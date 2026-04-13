@@ -37,6 +37,7 @@ class Plugin extends PluginBase
             'Majos\Caryard\Components\TenantRedirect'  => 'tenantRedirect',
             'Majos\Caryard\Components\SellerVehicleManager' => 'sellerVehicleManager',
             'Majos\Caryard\Components\Loan' => 'loan',
+            'Majos\Caryard\Components\BrandFilter' => 'brandFilter',
         ];
     }
 

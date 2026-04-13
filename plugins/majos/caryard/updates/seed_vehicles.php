@@ -20,40 +20,50 @@ class SeedVehicles extends Seeder
 {
     public function run()
     {
-        // Skip if admin divisions table doesn't exist yet
         if (!\Schema::hasTable('majos_caryard_admin_divisions')) {
             return;
         }
 
-        // 1. Ensure Default Seller/User exists
-        $seller = User::first();
-        if (!$seller) {
-            $seller = User::create([
-                'name' => 'Default',
-                'email' => 'seller@example.com',
-                'password' => 'Password123',
-                'password_confirmation' => 'Password123',
-                'username' => 'seller',
-                'activated_at' => now()
-            ]);
-        }
-
-        // 2. Ensure Tenants are Active
         $tenants = [
-            'UG' => Tenant::where('country_code', 'UG')->first(),
             'KE' => Tenant::where('country_code', 'KE')->first(),
+            'UG' => Tenant::where('country_code', 'UG')->first(),
+            'TZ' => Tenant::where('country_code', 'TZ')->first(),
+        ];
+
+        $sellerUsers = [];
+        
+        $sellerData = [
+            'KE' => ['name' => 'Kenya Seller', 'email' => 'kenya@caryard.com'],
+            'UG' => ['name' => 'Uganda Seller', 'email' => 'uganda@caryard.com'],
+            'TZ' => ['name' => 'Tanzania Seller', 'email' => 'tanzania@caryard.com'],
         ];
 
         foreach ($tenants as $code => $tenant) {
             if ($tenant) {
                 $tenant->is_active = true;
                 $tenant->save();
+
+                $data = $sellerData[$code];
+                $seller = User::where('email', $data['email'])->first();
+                
+                if (!$seller) {
+                    $seller = User::create([
+                        'name' => $data['name'],
+                        'email' => $data['email'],
+                        'password' => 'Password123',
+                        'password_confirmation' => 'Password123',
+                        'username' => strtolower($code) . ' seller',
+                        'activated_at' => now()
+                    ]);
+                }
+                
+                $sellerUsers[$code] = $seller;
             }
         }
 
-        // 3. Seed Vehicles
-        $this->seedVehiclesForTenant($tenants['KE'], $seller);
-        $this->seedVehiclesForTenant($tenants['UG'], $seller);
+        $this->seedVehiclesForTenant($tenants['KE'], $sellerUsers['KE']);
+        $this->seedVehiclesForTenant($tenants['UG'], $sellerUsers['UG']);
+        $this->seedVehiclesForTenant($tenants['TZ'], $sellerUsers['TZ']);
     }
 
     protected function seedVehiclesForTenant($tenant, $seller)

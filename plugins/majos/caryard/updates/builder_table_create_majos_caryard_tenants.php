@@ -17,6 +17,7 @@ class BuilderTableCreateMajosCaryardTenants extends Migration
             $table->string('currency_symbol', 10)->nullable();
             $table->string('locale')->nullable();
             $table->boolean('is_active')->default(true);
+            
             // Banner fields
             $table->string('banner_title')->nullable();
             $table->string('banner_subtitle')->nullable();
@@ -25,13 +26,17 @@ class BuilderTableCreateMajosCaryardTenants extends Migration
             $table->string('banner_button_text')->nullable();
             $table->string('banner_button_url')->nullable();
             $table->boolean('banner_enabled')->default(true);
+            
             // Loan settings
             $table->boolean('loan_enabled')->default(true);
-            $table->text('loan_terms')->nullable(); // JSON array of term months
+            $table->text('loan_terms')->nullable();
             $table->integer('loan_default_term')->default(24);
             $table->integer('loan_min_down_payment_percent')->default(10);
             $table->integer('loan_max_down_payment_percent')->default(70);
             $table->decimal('loan_annual_rate', 5, 4)->default(0.1800);
+            
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
     

@@ -9,12 +9,15 @@ columns:
     logo_file:
         label: Logo
         type: image
-        height: 40
     name:
         label: Name
         searchable: true
     slug:
         label: Slug
+        searchable: true
+    popular:
+        label: Popular
+        type: switch
         searchable: true
     created_at:
         label: Created

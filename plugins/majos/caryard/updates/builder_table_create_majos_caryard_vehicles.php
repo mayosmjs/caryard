@@ -28,6 +28,7 @@ class BuilderTableCreateMajosCaryardVehicles extends Migration
             $table->integer('transmission_id');
             $table->integer('body_type_id');
             $table->integer('color_id');
+            $table->integer('view_count')->default(0);
             $table->integer('engine_capacity_d');
             $table->integer('drive_type_id');
             $table->boolean('is_active')->default(true);
@@ -35,7 +36,6 @@ class BuilderTableCreateMajosCaryardVehicles extends Migration
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
-            
         });
     }
     

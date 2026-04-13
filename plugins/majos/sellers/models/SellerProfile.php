@@ -55,6 +55,14 @@ class SellerProfile extends Model
         'is_verified_seller',
     ];
 
+    protected $casts = [
+        'division_id' => 'integer',
+        'tenant_id' => 'integer',
+        'user_id' => 'integer',
+        'is_seller' => 'boolean',
+        'is_verified_seller' => 'boolean',
+    ];
+
     /**
      * @var array Rules
      */

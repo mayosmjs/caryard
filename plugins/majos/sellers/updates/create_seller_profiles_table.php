@@ -10,8 +10,8 @@ class CreateSellerProfilesTable extends Migration
         Schema::create('majos_sellers_profiles', function($table)
         {
                 $table->string('id', 36)->primary();
-                $table->unsignedInteger('division_id')->nullable();
-                $table->string('tenant_id', 36)->nullable();
+                $table->unsignedInteger('division_id')->nullable()->default(null);
+                $table->unsignedInteger('tenant_id')->nullable()->default(null);
                 $table->boolean('is_seller')->default(0);
                 $table->unsignedInteger('user_id')->default(0);
                 $table->text('company_name')->nullable();
