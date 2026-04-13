@@ -109,11 +109,73 @@ class LoanApplication extends ComponentBase
             return ['success' => false, 'errors' => $this->errors];
         }
         
+        return $this->saveApplication($data);
+    }
+
+    public function onSubmit()
+    {
+        $data = post();
+        
+        $required = [
+            'first_name', 'last_name', 'phone', 'email', 'national_id', 
+            'gender', 'date_of_birth', 'nationality_status', 'nationality', 
+            'referral_source', 'employment_type', 'employer_name', 'monthly_income',
+            'loan_amount', 'loan_term', 'consent_credit', 'consent_terms', 'consent_notice'
+        ];
+        
+        $errors = [];
+        foreach ($required as $field) {
+            if (!isset($data[$field]) || empty($data[$field])) {
+                $errors[] = ucfirst(str_replace('_', ' ', $field)) . ' is required';
+            }
+        }
+        
+        if (!empty($errors)) {
+            $this->errors = $errors;
+            $this->page['errors'] = $errors;
+            return;
+        }
+        
+        return $this->saveApplication($data);
+    }
+
+    protected function saveApplication($data)
+    {
         $applicationData = [
-            'step1' => Session::get('loan_application_step1', []),
-            'step2' => Session::get('loan_application_step2', []),
-            'step3' => Session::get('loan_application_step3', []),
-            'step4' => $data,
+            'personal' => [
+                'first_name' => $data['first_name'] ?? '',
+                'last_name' => $data['last_name'] ?? '',
+                'phone' => $data['phone'] ?? '',
+                'email' => $data['email'] ?? '',
+                'national_id' => $data['national_id'] ?? '',
+                'kra_pin' => $data['kra_pin'] ?? '',
+                'gender' => $data['gender'] ?? '',
+                'date_of_birth' => $data['date_of_birth'] ?? '',
+                'nationality_status' => $data['nationality_status'] ?? '',
+                'nationality' => $data['nationality'] ?? '',
+                'referral_source' => $data['referral_source'] ?? '',
+            ],
+            'employment' => [
+                'employment_type' => $data['employment_type'] ?? '',
+                'employer_name' => $data['employer_name'] ?? '',
+                'monthly_income' => $data['monthly_income'] ?? '',
+            ],
+            'loan' => [
+                'loan_currency' => $data['loan_currency'] ?? 'KES',
+                'equity_contribution' => $data['equity_contribution'] ?? '',
+                'monthly_payment' => $data['monthly_payment'] ?? '',
+                'interest_rate_type' => $data['interest_rate_type'] ?? '',
+                'interest_rate' => $data['interest_rate'] ?? '',
+                'residual_percentage' => $data['residual_percentage'] ?? '0',
+                'loan_term' => $data['loan_term'] ?? '',
+                'repayment_date' => $data['repayment_date'] ?? '',
+                'loan_amount' => $data['loan_amount'] ?? '',
+                'roadworthiness' => $data['roadworthiness'] ?? '',
+                'licence_renewal' => $data['licence_renewal'] ?? '',
+                'tint_permit' => $data['tint_permit'] ?? '',
+                'fees_payment' => $data['fees_payment'] ?? '',
+                'upfront_items' => $data['upfront_items'] ?? [],
+            ],
             'submitted_at' => now()->toDateTimeString(),
         ];
         
@@ -122,12 +184,7 @@ class LoanApplication extends ComponentBase
             'tenant_id' => $this->getTenantId(),
         ]);
         
-        Session::forget(['loan_application_step', 'loan_application_step1', 'loan_application_step2', 'loan_application_step3']);
-        Session::put('loan_application_step', 1);
-        
         \Flash::success('Your loan application has been submitted successfully!');
-        
-        return ['success' => true, 'message' => 'Application submitted'];
     }
 
     public function onGoBack()

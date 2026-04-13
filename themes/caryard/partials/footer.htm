@@ -1,2 +1,16 @@
 description = "Site Footer"
 ==
+
+<footer class="bg-gray-50 border-t border-gray-200 py-8 mt-auto">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+            <div class="flex items-center gap-6">
+                <a href="{{ 'home'|page }}" class="font-semibold text-gray-900">Caryard</a>
+                <a href="#" class="hover:text-amber-600">About Us</a>
+                <a href="#" class="hover:text-amber-600">Privacy Policy</a>
+                <a href="#" class="hover:text-amber-600">Terms & Conditions</a>
+            </div>
+            <p class="text-gray-500">&copy; {{ now|date('Y') }} Caryard</p>
+        </div>
+    </div>
+</footer>
