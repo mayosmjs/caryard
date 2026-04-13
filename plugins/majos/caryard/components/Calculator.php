@@ -8,11 +8,11 @@ use Majos\Caryard\Models\SellerLoanSettings;
 use Illuminate\Support\Facades\Session;
 
 /**
- * Loan Component
+ * Calculator Component
  *
  * Loan calculator for vehicle purchases
  */
-class Loan extends ComponentBase
+class Calculator extends ComponentBase
 {
     public $tenant;
     public $currencySymbol;
@@ -33,7 +33,7 @@ class Loan extends ComponentBase
     public function componentDetails()
     {
         return [
-            'name' => 'Loan Component',
+            'name' => 'Calculator Component',
             'description' => 'Vehicle loan calculator'
         ];
     }

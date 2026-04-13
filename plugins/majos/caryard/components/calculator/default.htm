@@ -137,12 +137,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Slider updates display only (no AJAX)
     slider.addEventListener('input', function() {
         sliderDisplay.textContent = format(this.value);
     });
 
-    // Calculate button triggers AJAX
     calculateBtn.addEventListener('click', function(e) {
         e.preventDefault();
         
@@ -160,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Term buttons update selection only (no auto-calculate)
     termBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             const val = this.getAttribute('data-term');

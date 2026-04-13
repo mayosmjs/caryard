@@ -1,0 +1,12 @@
+<?php
+$data = json_decode($record->application, true);
+$step1 = $data['step1'] ?? [];
+$name = trim(($step1['first_name'] ?? '') . ' ' . ($step1['last_name'] ?? ''));
+$email = $step1['email'] ?? 'N/A';
+$phone = $step1['phone'] ?? 'N/A';
+?>
+<div class="text-sm">
+    <div class="font-semibold text-gray-800"><?= e($name ?: 'Unknown') ?></div>
+    <div class="text-gray-500"><?= e($email) ?></div>
+    <div class="text-gray-400 text-xs"><?= e($phone) ?></div>
+</div>

@@ -1,0 +1,28 @@
+# ===================================
+#  List Configuration
+# ===================================
+
+title: Loan Applications
+modelClass: Majos\Caryard\Models\LoanApplication
+recordUrl: 
+noRecordsMessage: No loan applications found
+showSetup: true
+showCheckboxes: true
+defaultSort:
+    column: id
+    direction: desc
+
+columns:
+    id:
+        label: ID
+        width: 60
+        searchable: true
+    created_at:
+        label: Submitted
+        width: 150
+        type: datetime
+    application:
+        label: Application Data
+        type: partial
+        path: ~plugins/majos/caryard/controllers/loanapplications/_application_column.htm
+        width: 200

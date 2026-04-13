@@ -36,8 +36,9 @@ class Plugin extends PluginBase
             'Majos\Caryard\Components\VehicleDetail'   => 'vehicleDetail',
             'Majos\Caryard\Components\TenantRedirect'  => 'tenantRedirect',
             'Majos\Caryard\Components\SellerVehicleManager' => 'sellerVehicleManager',
-            'Majos\Caryard\Components\Loan' => 'loan',
+            'Majos\Caryard\Components\Calculator' => 'calculator',
             'Majos\Caryard\Components\BrandFilter' => 'brandFilter',
+            'Majos\Caryard\Components\LoanApplication' => 'loanApplication',
         ];
     }
 
@@ -73,6 +74,12 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-star',
                         'url'         => \Backend::url('majos/caryard/brands'),
                         'permissions' => ['majos.caryard.access_brands'],
+                    ],
+                    'loan_applications' => [
+                        'label'       => 'Loan Applications',
+                        'icon'        => 'icon-file-text-o',
+                        'url'         => \Backend::url('majos/caryard/loanapplications'),
+                        'permissions' => ['majos.caryard.access_loan_applications'],
                     ],
                     'vehiclemodels' => [
                         'label'       => 'Vehicle Models',
@@ -195,6 +202,10 @@ class Plugin extends PluginBase
             'majos.caryard.access_advertisements' => [
                 'tab'   => 'Caryard',
                 'label' => 'Access Advertisements'
+            ],
+            'majos.caryard.access_loan_applications' => [
+                'tab'   => 'Caryard',
+                'label' => 'Access Loan Applications'
             ],
         ];
     }

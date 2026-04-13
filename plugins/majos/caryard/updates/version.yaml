@@ -75,3 +75,6 @@ v1.0.36:
 v1.0.37:
     - Create advertisements table - Banner/ad management with image
     - create_advertisements_table.php
+v1.0.38:
+    - Create loan applications table - Stores loan application data as JSON
+    - create_loan_applications_table.php
