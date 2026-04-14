@@ -1,0 +1,19 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Loan Application
+
+# Model Class name
+modelClass: Majos\Caryard\Models\LoanApplication
+
+# Form Field configuration
+# We use an empty array because we are using a custom preview view
+form: []
+
+# Preview configuration
+preview:
+    title: View Loan Application
+    # This points to preview.php in the controller's view folder
+    view: preview

@@ -73,38 +73,37 @@
                     }
                 });
 
-                var modalHtml = `
-                    <div id="stripe-card-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[1000]" style="display:flex;">
-                        <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl border border-slate-100">
-                            <div class="text-center">
-                                <div class="mb-4">
-                                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <h3 class="pricing-header text-xl font-bold text-slate-900 mb-2">Card Payment</h3>
-                                <p class="text-sm text-slate-500 mb-6">Enter your card details to complete payment.</p>
-                                <form id="stripe-card-form">
-                                    <input type="hidden" name="transaction_id" value="${transactionId}">
-                                    <div class="mb-6">
-                                        <div id="card-element" class="px-4 py-4 border border-slate-200 rounded-xl"></div>
-                                        <p id="card-errors" class="text-red-500 text-sm mt-2"></p>
-                                    </div>
-                                    <div class="flex flex-col gap-3">
-                                        <button type="submit" class="w-full btn-modern btn-blue py-4 text-base">
-                                            Pay Now
-                                        </button>
-                                        <button type="button" id="cancel-stripe-btn" class="w-full btn-modern btn-outline py-3 border-none hover:bg-slate-50">
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                var modalHtml = 
+                    '<div id="stripe-card-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[1000]" style="display:flex;">' +
+                        '<div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl border border-slate-100">' +
+                            '<div class="text-center">' +
+                                '<div class="mb-4">' +
+                                    '<div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">' +
+                                        '<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>' +
+                                        '</svg>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<h3 class="pricing-header text-xl font-bold text-slate-900 mb-2">Card Payment</h3>' +
+                                '<p class="text-sm text-slate-500 mb-6">Enter your card details to complete payment.</p>' +
+                                '<form id="stripe-card-form">' +
+                                    '<input type="hidden" name="transaction_id" value="' + transactionId + '">' +
+                                    '<div class="mb-6">' +
+                                        '<div id="card-element" class="px-4 py-4 border border-slate-200 rounded-xl"></div>' +
+                                        '<p id="card-errors" class="text-red-500 text-sm mt-2"></p>' +
+                                    '</div>' +
+                                    '<div class="flex flex-col gap-3">' +
+                                        '<button type="submit" class="w-full btn-modern btn-blue py-4 text-base">' +
+                                            'Pay Now' +
+                                        '</button>' +
+                                        '<button type="button" id="cancel-stripe-btn" class="w-full btn-modern btn-outline py-3 border-none hover:bg-slate-50">' +
+                                            'Cancel' +
+                                        '</button>' +
+                                    '</div>' +
+                                '</form>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
                 
                 $('body').append(modalHtml);
                 

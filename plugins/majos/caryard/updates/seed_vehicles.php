@@ -28,6 +28,8 @@ class SeedVehicles extends Seeder
             'KE' => Tenant::where('country_code', 'KE')->first(),
             'UG' => Tenant::where('country_code', 'UG')->first(),
             'TZ' => Tenant::where('country_code', 'TZ')->first(),
+            'RW' => Tenant::where('country_code', 'RW')->first(),
+
         ];
 
         $sellerUsers = [];
@@ -36,6 +38,7 @@ class SeedVehicles extends Seeder
             'KE' => ['name' => 'Kenya Seller', 'email' => 'kenya@caryard.com'],
             'UG' => ['name' => 'Uganda Seller', 'email' => 'uganda@caryard.com'],
             'TZ' => ['name' => 'Tanzania Seller', 'email' => 'tanzania@caryard.com'],
+            'RW' => ['name' => 'Rwanda Seller', 'email' => 'rwanda@caryard.com'],
         ];
 
         foreach ($tenants as $code => $tenant) {

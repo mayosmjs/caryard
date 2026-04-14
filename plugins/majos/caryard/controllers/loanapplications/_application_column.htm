@@ -1,9 +1,9 @@
 <?php
 $data = json_decode($record->application, true);
-$step1 = $data['step1'] ?? [];
-$name = trim(($step1['first_name'] ?? '') . ' ' . ($step1['last_name'] ?? ''));
-$email = $step1['email'] ?? 'N/A';
-$phone = $step1['phone'] ?? 'N/A';
+$personal = $data['personal'] ?? $data['step1'] ?? [];
+$name  = trim(($personal['first_name'] ?? '') . ' ' . ($personal['last_name'] ?? ''));
+$email = $personal['email'] ?? 'N/A';
+$phone = $personal['phone'] ?? 'N/A';
 ?>
 <div class="text-sm">
     <div class="font-semibold text-gray-800"><?= e($name ?: 'Unknown') ?></div>

@@ -78,3 +78,9 @@ v1.0.37:
 v1.0.38:
     - Create loan applications table - Stores loan application data as JSON
     - create_loan_applications_table.php
+v1.0.39:
+    - Add vehicle_id to loan applications - Links a loan application to its vehicle
+    - add_vehicle_id_to_loan_applications.php
+v1.0.40:
+    - Add status to loan applications - Track application approval workflow
+    - add_status_to_loan_applications.php

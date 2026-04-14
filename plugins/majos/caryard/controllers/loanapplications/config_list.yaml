@@ -1,0 +1,44 @@
+# ===================================
+#  List Behavior Config
+# ===================================
+
+# Model List Column configuration (required 'list' key)
+list: $/majos/caryard/models/loanapplication/columns.yaml
+
+# Model Class name
+modelClass: Majos\Caryard\Models\LoanApplication
+
+# List Title
+title: Loan Applications
+
+# No link per record (no form yet)
+recordUrl: majos/caryard/loanapplications/preview/:id
+
+# Message to display if the list is empty
+noRecordsMessage: No loan applications found
+
+# Records per page
+recordsPerPage: 20
+
+# Display page numbers with pagination
+showPageNumbers: true
+
+# Displays the list column set up button
+showSetup: true
+
+# Displays the sorting link on each column
+showSorting: true
+
+# Default sorting column
+defaultSort:
+    column: id
+    direction: desc
+
+# Display checkboxes next to each record
+showCheckboxes: true
+
+# Toolbar widget configuration
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: Search applications...

@@ -1,73 +1,92 @@
 {% for vehicle in vehicles %}
-    <tr class="group transition-colors hover:bg-white/60">
-        <td class="px-6 py-5">
-            <input type="checkbox" class="vehicle-checkbox h-5 w-5 rounded-md border-gray-300 text-[#0071E3] focus:ring-[#0071E3]"
-                   value="{{ vehicle.id }}">
-        </td>
-        <td class="px-6 py-5">
-            <div class="flex items-center gap-4">
+    <tr class="group hover:bg-slate-50 transition-colors">
+        <td class="px-6 py-4">
+        <label class="relative flex items-center justify-center cursor-pointer group">
+            <input type="checkbox" class="vehicle-checkbox sr-only peer" value="{{ vehicle.id }}">
+            <div class="w-5 h-5 rounded-md border border-slate-200 bg-slate-50 transition-all peer-checked:bg-amber-500 peer-checked:border-slate-900 group-hover:border-slate-400"></div>
+            <i class="fas fa-check absolute text-[10px] text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></i>
+        </label>
+    </td>
+        <td class="px-8 py-6">
+            <div class="flex items-center gap-6">
                 {% if vehicle.images.count %}
-                    <div class="h-16 w-20 overflow-hidden rounded-2xl border border-gray-100 shadow-sm">
-                        <img class="h-full w-full object-cover" src="{{ vehicle.images.first.thumb(150, 150, 'crop') }}" alt="{{ vehicle.title }}">
+                    <div class="relative shrink-0 h-16 w-20 rounded-xl overflow-hidden border-2 border-slate-900 shadow-[4px_4px_0_0_#0f172a] group-hover:scale-105 transition-transform">
+                        <img class="h-full w-full object-cover" src="{{ vehicle.images.first.thumb(300, 300, 'crop') }}" alt="{{ vehicle.title }}">
                     </div>
                 {% else %}
-                    <div class="flex h-16 w-20 items-center justify-center rounded-2xl bg-gray-100 text-[10px] text-gray-400">
-                        No Image
+                    <div class="shrink-0 flex h-16 w-20 items-center justify-center rounded-xl bg-slate-100 border-2 border-dashed border-slate-300 text-[8px] font-black uppercase text-slate-400">
+                        No Media
                     </div>
                 {% endif %}
                 <div>
-                    <div class="font-semibold text-[#1D1D1F]">{{ vehicle.title }}</div>
-                    <div class="text-xs text-[#86868B]">{{ vehicle.year|date('Y') }} · {{ vehicle.mileage|number_format }} km</div>
+                    <h4 class="font-black text-slate-900 text-sm uppercase tracking-tighter leading-none mb-2">{{ vehicle.title }}</h4>
+                    <div class="flex items-center gap-3 text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                        <span>{{ vehicle.year|date('Y') }}</span>
+                        <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                        <span class="text-slate-600">{{ vehicle.mileage|number_format }} KM</span>
+                    </div>
                 </div>
             </div>
         </td>
-        <td class="px-6 py-5 text-sm font-medium text-[#1D1D1F]">KSH {{ vehicle.price|number_format }}</td>
-        <td class="px-6 py-5">
+        <td class="px-8 py-6">
+            <p class="text-[9px] font-black text-amber-500 uppercase tracking-widest mb-1">List Price</p>
+            <p class="text-sm font-black text-slate-900">KSH {{ vehicle.price|number_format }}</p>
+        </td>
+        <td class="px-8 py-6">
             {% if vehicle.is_active %}
-                <span class="inline-flex items-center rounded-full bg-[#E8F5E9] px-2.5 py-1 text-[10px] font-bold text-[#2E7D32]">
-                    ● ACTIVE
+                <span class="flex items-center gap-2 w-max px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded text-[9px] font-black uppercase tracking-widest leading-none">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-600 animate-pulse"></span>
+                    ACTIVE
                 </span>
             {% else %}
-                <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-[10px] font-bold text-gray-500">
-                    ● DRAFT
+                <span class="flex items-center gap-2 w-max px-3 py-1 bg-slate-100 text-slate-500 border border-slate-200 rounded text-[9px] font-black uppercase tracking-widest leading-none">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                    DRAFT
                 </span>
             {% endif %}
+            <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-2">Ref: {{ vehicle.vehicleid ?: 'N/A' }}</p>
         </td>
-        <td class="px-6 py-5 text-right">
+        <td class="px-8 py-6 text-right">
             <div class="flex justify-end gap-2">
-                <button class="rounded-full bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 transition-colors"
+                <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:border-amber-500 hover:text-amber-600 transition-all"
+                        title="Edit Record"
                         data-request="{{ __SELF__ }}::onLoadForm"
                         data-request-data="id: {{ vehicle.id }}"
                         data-attach-loading>
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
+                    <i class="fas fa-edit text-sm"></i>
                 </button>
-                <button class="rounded-full bg-gray-100 p-2 text-red-500 hover:bg-red-50 transition-colors"
+                <a href="{{ 'vehicle'|page({ slug: vehicle.slug }) }}" 
+                   target="_blank"
+                   title="View Publicly"
+                   class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-all">
+                    <i class="fas fa-external-link-alt text-sm"></i>
+                </a>
+                <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-red-500 hover:bg-red-50 hover:border-red-200 transition-all"
+                        title="Delete Unit"
                         data-request="{{ __SELF__ }}::onDeleteVehicle"
                         data-request-data="id: {{ vehicle.id }}"
-                        data-request-confirm="Are you sure you want to delete this listing?"
+                        data-request-confirm="COMMIT DELETION: Permanent removal of this unit from inventory?"
                         data-attach-loading>
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
+                    <i class="fas fa-trash-alt text-sm"></i>
                 </button>
             </div>
         </td>
     </tr>
 {% else %}
     <tr>
-        <td colspan="5" class="px-6 py-16 text-center">
+        <td colspan="5" class="px-8 py-24 text-center">
             <div class="flex flex-col items-center justify-center">
-                <div class="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center mb-4">
-                    <svg class="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                    </svg>
+                <div class="w-16 h-16 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center mb-6 text-slate-300">
+                    <i class="fas fa-truck-loading text-3xl"></i>
                 </div>
-                <p class="text-sm font-semibold text-gray-600 mb-2">No vehicles found</p>
-                <button class="inline-flex items-center rounded-full bg-[#0071E3] px-5 py-2 text-sm font-medium text-white"
+                <h4 class="text-xl font-black text-slate-900 uppercase tracking-tighter mb-2">No Vehicles Found</h4>
+                <p class="text-sm font-medium text-slate-400 mb-8 uppercase tracking-widest leading-tight">We couldn't find any listings matching your search criteria.</p>
+                
+                <!-- This button ensures we always have an ADD button in the empty state Table too -->
+                <button class="flex items-center gap-3 px-8 py-4 bg-amber-500 border-2 border-slate-900 text-xs font-black text-slate-900 uppercase tracking-widest rounded-2xl hover:bg-amber-400 transition-all shadow-xl"
                         data-request="{{ __SELF__ }}::onLoadForm">
-                    Add Vehicle
+                    <i class="fas fa-plus"></i>
+                    Add Your First Vehicle
                 </button>
             </div>
         </td>

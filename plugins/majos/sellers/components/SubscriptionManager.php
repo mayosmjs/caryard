@@ -150,10 +150,14 @@ class SubscriptionManager extends ComponentBase
         $stripeConfig = \Majos\Sellers\Classes\Payments\PaymentFactory::getSettingsConfig('stripe');
         $this->page['stripePubKey'] = $stripeConfig['publishable_key'] ?? '';
         
+        // Inject explicit paths for JS loaders to prevent path resolution issues
+        $this->page['sellerAssetPath'] = url('/plugins/majos/sellers/components/subscriptionmanager/assets/js');
+        $this->page['assetVersion'] = '5';
+        
         // Add assets for payment handling
         $this->addJs('https://js.stripe.com/v3/');
-        $this->addCss('/plugins/majos/sellers/assets/css/subscription.css?v=4');
-        $this->addJs('/plugins/majos/sellers/assets/js/subscription.js?v=4');
+        $this->addCss('/plugins/majos/sellers/components/subscriptionmanager/assets/css/subscription.css?v=5');
+        $this->addJs('/plugins/majos/sellers/components/subscriptionmanager/assets/js/subscription.js?v=5');
     }
 
     /**

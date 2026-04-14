@@ -1,196 +1,188 @@
-<div class="glass rounded-2xl border border-white shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] p-4 sm:p-6 mb-6">
-    <form data-request="{{ __SELF__ }}::onFilterVehicles" data-request-update id="filterForm">
-        <div class="relative mb-4">
-            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86868B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
+<!-- High-Density Filter Toggle -->
+<div class="lg:hidden p-2 border-b border-slate-100 bg-slate-50/50">
+    <button type="button" onclick="document.getElementById('mobileFilterContent').classList.toggle('hidden');"
+        class="flex items-center justify-between w-full px-4 py-3 bg-white border border-slate-900 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-900 shadow-sm">
+        <span class="flex items-center gap-2">
+            <i class="fas fa-search text-amber-500"></i>
+            SEARCH INVENTORY
+        </span>
+        <i class="fas fa-plus-square text-slate-300"></i>
+    </button>
+</div>
+
+<div id="mobileFilterContent" class="hidden lg:block bg-slate-50 border-b border-slate-900 p-4 lg:p-8">
+    <form data-request="{{ __SELF__ }}::onFilterVehicles" data-request-update id="filterForm" class="space-y-4">
+        <div class="relative">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-[10px]"></i>
             <input type="text" name="filter[search]" value="{{ filters.search }}"
-                placeholder="Search vehicles..."
-                class="w-full rounded-2xl border border-gray-200 bg-white pl-12 pr-4 py-3 text-sm text-[#1D1D1F] placeholder-[#86868B] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all">
+                placeholder="Search by Title, ID or VIN..."
+                class="w-full rounded-lg border border-slate-200 bg-white pl-10 pr-4 py-3 text-[9px] font-black text-slate-900 placeholder-slate-300 uppercase tracking-widest outline-none focus:border-amber-500 transition-all">
         </div>
-        
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-            <select name="filter[brand_id]" class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#1D1D1F] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2386868B%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_10px_center] bg-no-repeat">
-                <option value="">All Brands</option>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <select name="filter[brand_id]"
+                class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[9px] font-bold text-slate-900 uppercase tracking-widest outline-none focus:border-amber-500 cursor-pointer">
+                <option value="">Brands</option>
                 {% for key, name in filterBrands %}
-                <option value="{{ key }}" {% if filters.brand_id == key %}selected{% endif %}>{{ name }}</option>
+                <option value="{{ key }}" {% if filters.brand_id==key %}selected{% endif %}>{{ name }}</option>
                 {% endfor %}
             </select>
-            <select name="filter[condition_id]" class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#1D1D1F] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2386868B%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_10px_center] bg-no-repeat">
-                <option value="">Condition</option>
+            <select name="filter[condition_id]"
+                class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[9px] font-bold text-slate-900 uppercase tracking-widest outline-none focus:border-amber-500 cursor-pointer">
+                <option value="">Grade</option>
                 {% for key, name in filterConditions %}
-                <option value="{{ key }}" {% if filters.condition_id == key %}selected{% endif %}>{{ name }}</option>
+                <option value="{{ key }}" {% if filters.condition_id==key %}selected{% endif %}>{{ name }}</option>
                 {% endfor %}
             </select>
-            <select name="filter[is_active]" class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#1D1D1F] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2386868B%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_10px_center] bg-no-repeat">
+            <select name="filter[is_active]"
+                class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[9px] font-bold text-slate-900 uppercase tracking-widest outline-none focus:border-amber-500 cursor-pointer">
                 <option value="">Status</option>
                 {% for key, name in filterStatuses %}
-                <option value="{{ key }}" {% if filters.is_active is defined and filters.is_active == key %}selected{% endif %}>{{ name }}</option>
+                <option value="{{ key }}" {% if filters.is_active is defined and filters.is_active==key %}selected{%
+                    endif %}>{{ name }}</option>
                 {% endfor %}
             </select>
-            <input type="number" name="filter[price_min]" value="{{ filters.price_min }}" placeholder="Min Price"
-                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#1D1D1F] placeholder-[#86868B] outline-none focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 transition-all">
+            <input type="number" name="filter[price_min]" value="{{ filters.price_min }}" placeholder="Min KSH"
+                class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[9px] font-bold text-slate-900 uppercase tracking-widest outline-none focus:border-amber-500">
         </div>
-        
+
         <div class="flex gap-2">
             <button type="submit"
-                class="flex-1 inline-flex items-center justify-center rounded-full bg-[#0071E3] py-2.5 text-sm font-medium text-white hover:bg-[#0077ED] transition-colors"
+                class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 py-3 text-[9px] font-black text-white uppercase tracking-widest hover:bg-slate-800 transition-all"
                 data-attach-loading>
-                Apply Filters
+                <i class="fas fa-search"></i> Search
             </button>
             <button type="button"
-                class="px-5 py-2.5 rounded-full border border-gray-200 bg-white text-sm font-medium text-[#86868B] hover:bg-gray-50 transition-colors"
+                class="px-4 py-3 rounded-lg border border-slate-200 bg-white text-[9px] font-black text-slate-400 uppercase tracking-widest hover:bg-slate-50 transition-all"
                 onclick="this.closest('form').reset(); this.closest('form').querySelectorAll('input, select').forEach(el => el.value = ''); $(this).closest('form').request('{{ __SELF__ }}::onFilterVehicles');">
-                Clear
+                <i class="fas fa-undo"></i>
             </button>
         </div>
     </form>
 </div>
 
-<div class="glass overflow-hidden rounded-[24px] border border-white shadow-[0_8px_32px_0_rgba(0,0,0,0.05)]">
-    <div class="flex items-center justify-between border-b border-gray-200/50 bg-white/40 px-4 sm:px-6 py-4">
+<div class="bg-white overflow-hidden">
+    <!-- Super-Tighter Bulk Ops -->
+    <div class="flex items-center justify-between border-b border-slate-50 bg-slate-50/30 px-6 py-3 gap-2">
         <div class="flex items-center gap-3">
-            <input type="checkbox" class="select-all-vehicles h-5 w-5 rounded-md border-gray-300 text-[#0071E3] focus:ring-[#0071E3]"
-                   data-selector=".vehicle-checkbox">
-            <span class="text-sm font-medium text-[#1D1D1F]" id="selected-count">0 selected</span>
+            <label class="relative flex items-center justify-center cursor-pointer group">
+                <input type="checkbox" class="select-all-vehicles sr-only peer" data-selector=".vehicle-checkbox">
+                <div class="w-5 h-5 rounded-md border border-slate-300 bg-white transition-all peer-checked:bg-amber-500 peer-checked:border-slate-900 group-hover:border-slate-400"></div>
+                <i class="fas fa-check absolute inset-0 m-auto flex items-center justify-center text-[10px] text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none z-10"></i>
+            </label>
+            <span class="text-[9px] font-black text-slate-900 uppercase tracking-[0.1em] truncate" id="selected-count">0
+                Selected</span>
         </div>
-        
-        <div class="flex gap-2">
-            <button type="button" class="rounded-lg px-3 py-1.5 text-xs font-medium text-red-500 hover:bg-red-50"
-                    id="bulk-delete-btn" onclick="handleBulkDelete()" style="display: none;">
-                Delete
-            </button>
-            <button type="button" class="rounded-lg px-3 py-1.5 text-xs font-medium text-[#0071E3] hover:bg-[#0071E3]/5"
-                    id="bulk-draft-btn" onclick="handleBulkStatusChange(0)" style="display: none;">
-                Mark Draft
-            </button>
-            <button type="button" class="rounded-lg px-3 py-1.5 text-xs font-medium text-emerald-600 hover:bg-emerald-50"
-                    id="bulk-active-btn" onclick="handleBulkStatusChange(1)" style="display: none;">
-                Mark Active
-            </button>
+
+        <div id="bulk-actions-group"
+            class="flex items-center gap-1 opacity-0 pointer-events-none transition-all duration-200 translate-y-1">
+            <button type="button"
+                class="px-3 py-2 bg-white border border-slate-200 text-[8px] font-black text-green-600 uppercase rounded-lg hover:border-slate-900"
+                onclick="handleBulkStatusChange(1)"><i class="fas fa-play"></i></button>
+            <button type="button"
+                class="px-3 py-2 bg-white border border-slate-200 text-[8px] font-black text-slate-400 uppercase rounded-lg hover:border-slate-900"
+                onclick="handleBulkStatusChange(0)"><i class="fas fa-pause"></i></button>
+            <button type="button"
+                class="px-3 py-2 bg-red-50 border border-red-100 text-[8px] font-black text-red-600 uppercase rounded-lg hover:bg-red-600 hover:text-white"
+                onclick="handleBulkDelete()"><i class="fas fa-trash"></i></button>
         </div>
     </div>
-    
-    <div id="vehicle-card-list" class="lg:hidden divide-y divide-gray-100">
+
+    <!-- Mobile Cards (Denser) -->
+    <div id="vehicle-card-list" class="lg:hidden divide-y divide-slate-50">
         {% partial __SELF__ ~ '::_list_cards' vehicles=vehicles %}
     </div>
-    
+
+    <!-- Desktop List (Dense) -->
     <div class="hidden lg:block overflow-x-auto">
         <table class="w-full border-collapse text-left">
-            <thead class="bg-white/30 text-[11px] font-semibold uppercase tracking-wider text-[#86868B]">
+            <thead
+                class="bg-slate-50/30 text-[9px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
                 <tr>
-                    <th class="px-6 py-4 w-12"></th>
-                    <th class="px-6 py-4">Vehicle</th>
-                    <th class="px-6 py-4">Price</th>
+                    <th class="px-6 py-4 w-10">Select</th>
+                    <th class="px-6 py-4">Vehicle Specification</th>
+                    <th class="px-6 py-4">Valuation</th>
                     <th class="px-6 py-4">Status</th>
                     <th class="px-6 py-4 text-right">Actions</th>
                 </tr>
             </thead>
-            <tbody id="vehicle-table-body" class="divide-y divide-gray-100">
+            <tbody id="vehicle-table-body" class="divide-y divide-slate-50">
                 {% partial __SELF__ ~ '::_list_rows' vehicles=vehicles %}
             </tbody>
         </table>
     </div>
 
-    <div class="flex items-center justify-between border-t border-gray-100 bg-white/20 px-4 sm:px-6 py-4">
-        <span class="text-xs text-[#86868B]">{{ vehicles|length }} Vehicles</span>
-        <div class="flex gap-1">
+    <!-- Paging (Dense) -->
+    <div class=" items-center  border-t border-slate-900 bg-white px-4 py-4 gap-4">
+        <div class="">
             {% partial __SELF__ ~ '::_load_more_button'
-                currentPage=currentPage
-                perPage=perPage
-                hasMore=hasMore
-                filters=filters
+            currentPage=currentPage
+            perPage=perPage
+            hasMore=hasMore
+            filters=filters
             %}
         </div>
     </div>
 </div>
 
-<div id="deleted-vehicles-section" class="mt-6 sm:mt-8">
+<div id="deleted-vehicles-section">
     {% partial __SELF__ ~ '::_deleted_vehicles' deletedVehicles=deletedVehicles %}
 </div>
 
 <script>
-window.getSelectedVehicleIds = function() {
-    var checkboxes = document.querySelectorAll('.vehicle-checkbox:checked');
-    return Array.from(checkboxes).map(cb => cb.value);
-};
+    window.getSelectedVehicleIds = function () {
+        var checkboxes = document.querySelectorAll('.vehicle-checkbox:checked');
+        return Array.from(checkboxes).map(cb => cb.value);
+    };
 
-window.handleBulkDelete = function() {
-    var ids = window.getSelectedVehicleIds();
-    if (ids.length === 0) {
-        alert('Please select at least one vehicle to delete.');
-        return;
-    }
-    
-    if (!confirm('Are you sure you want to delete the selected vehicle(s)? They will be moved to trash and can be restored.')) {
-        return;
-    }
-    
-    if (typeof $ === 'undefined' || typeof $.request === 'undefined') {
-        alert('AJAX not available. Please refresh the page and try again.');
-        return;
-    }
-    
-    $.request('{{ __SELF__ }}::onDeleteMultipleVehicles', {
-        data: { vehicle_ids: ids },
-        success: function() {
-            window.location.reload();
-        }
-    });
-};
-
-window.updateSelectedCount = function() {
-    var checkboxes = document.querySelectorAll('.vehicle-checkbox:checked');
-    var count = checkboxes.length;
-    var countEl = document.getElementById('selected-count');
-    var bulkDeleteBtn = document.getElementById('bulk-delete-btn');
-    var bulkDraftBtn = document.getElementById('bulk-draft-btn');
-    var bulkActiveBtn = document.getElementById('bulk-active-btn');
-    if (countEl) countEl.textContent = count + ' selected';
-    if (bulkDeleteBtn) bulkDeleteBtn.style.display = count > 0 ? 'block' : 'none';
-    if (bulkDraftBtn) bulkDraftBtn.style.display = count > 0 ? 'block' : 'none';
-    if (bulkActiveBtn) bulkActiveBtn.style.display = count > 0 ? 'block' : 'none';
-};
-
-window.handleBulkStatusChange = function(status) {
-    var ids = window.getSelectedVehicleIds();
-    if (ids.length === 0) {
-        alert('Please select at least one vehicle to change status.');
-        return;
-    }
-    
-    var statusText = status === '1' ? 'active' : 'inactive/draft';
-    if (!confirm('Mark selected vehicle(s) as ' + statusText + '?')) {
-        return;
-    }
-    
-    if (typeof $ === 'undefined' || typeof $.request === 'undefined') {
-        alert('AJAX not available. Please refresh the page and try again.');
-        return;
-    }
-    
-    $.request('{{ __SELF__ }}::onChangeMultipleVehicleStatus', {
-        data: { vehicle_ids: ids, status: status },
-        success: function() {
-            window.location.reload();
-        }
-    });
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-    var selectAll = document.querySelector('.select-all-vehicles');
-    if (selectAll) {
-        selectAll.addEventListener('change', function() {
-            var checkboxes = document.querySelectorAll('.vehicle-checkbox');
-            checkboxes.forEach(function(cb) { cb.checked = this.checked; }, this);
-            window.updateSelectedCount();
+    window.handleBulkDelete = function () {
+        var ids = window.getSelectedVehicleIds();
+        if (ids.length === 0) return;
+        if (!confirm('Delete ' + ids.length + ' vehicles?')) return;
+        $.request('{{ __SELF__ }}::onDeleteMultipleVehicles', {
+            data: { vehicle_ids: ids },
+            success: function () { window.location.reload(); }
         });
-    }
-    
-    document.addEventListener('change', function(e) {
-        if (e.target.classList.contains('vehicle-checkbox')) {
-            window.updateSelectedCount();
+    };
+
+    window.updateSelectedCount = function () {
+        var checkboxes = document.querySelectorAll('.vehicle-checkbox:checked');
+        var count = checkboxes.length;
+        var countEl = document.getElementById('selected-count');
+        var bulkGroup = document.getElementById('bulk-actions-group');
+        if (countEl) countEl.textContent = count + ' Selected';
+        if (bulkGroup) {
+            if (count > 0) {
+                bulkGroup.classList.remove('opacity-0', 'pointer-events-none');
+                bulkGroup.classList.add('opacity-100');
+            } else {
+                bulkGroup.classList.add('opacity-0', 'pointer-events-none');
+            }
         }
+    };
+
+    window.handleBulkStatusChange = function (status) {
+        var ids = window.getSelectedVehicleIds();
+        if (ids.length === 0) return;
+        $.request('{{ __SELF__ }}::onChangeMultipleVehicleStatus', {
+            data: { vehicle_ids: ids, status: status },
+            success: function () { window.location.reload(); }
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var selectAll = document.querySelector('.select-all-vehicles');
+        if (selectAll) {
+            selectAll.addEventListener('change', function () {
+                var checkboxes = document.querySelectorAll('.vehicle-checkbox');
+                checkboxes.forEach(function (cb) { cb.checked = selectAll.checked; });
+                window.updateSelectedCount();
+            });
+        }
+        document.addEventListener('change', function (e) {
+            if (e.target.classList.contains('vehicle-checkbox')) {
+                window.updateSelectedCount();
+            }
+        });
     });
-});
 </script>

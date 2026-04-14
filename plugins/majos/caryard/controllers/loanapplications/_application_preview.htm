@@ -1,0 +1,150 @@
+<?php
+    $data = json_decode($record->application, true);
+    $personal = $data['personal'] ?? [];
+    $employment = $data['employment'] ?? [];
+    $loan = $data['loan'] ?? [];
+    $vehicle = $record->vehicle;
+?>
+
+<div class="application-document shadow-sm" style="background: #fff; padding: 40px; border: 1px solid #e2e8f0; max-width: 900px; margin: 20px auto; color: #1e293b; font-family: 'Inter', system-ui, sans-serif; line-height: 1.5;">
+    
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px;">
+        <div>
+            <h1 style="margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.025em;">Loan Application</h1>
+            <p style="margin: 5px 0 0; color: #64748b; font-size: 13px; font-weight: 600; text-transform: uppercase;">Reference ID: #<?= str_pad($record->id, 6, '0', STR_PAD_LEFT) ?></p>
+        </div>
+        <div style="text-align: right;">
+            <p style="margin: 0; font-size: 13px; font-weight: 700; text-transform: uppercase;"><?= e($record->tenant->name ?? 'Caryard System') ?></p>
+            <p style="margin: 2px 0 0; color: #64748b; font-size: 12px;"><?= $record->created_at->toFormattedDateString() ?></p>
+        </div>
+    </div>
+
+    <!-- Vehicle Section -->
+    <?php if ($vehicle): ?>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; margin-bottom: 30px; display: flex; gap: 20px; align-items: center;">
+        <div style="width: 120px; height: 80px; background: #cbd5e1; flex-shrink: 0; overflow: hidden; border: 1px solid #cbd5e1;">
+             <img src="<?= $vehicle->images->first()->path ?? 'https://placehold.co/120x80?text=No+Image' ?>" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div style="flex-grow: 1;">
+            <p style="margin: 0; font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Applying For Vehicle</p>
+            <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #0f172a;"><?= e($vehicle->title) ?></h2>
+            <p style="margin: 2px 0 0; font-size: 14px; font-weight: 600; color: #334155;">Vehicle Price: <?= $record->tenant->currency ?? 'KES' ?> <?= number_format($vehicle->price) ?></p>
+        </div>
+    </div>
+    <?php endif ?>
+
+    <!-- 2 Column Layout for Data -->
+    <div style="display: grid; grid-template-cols: 1fr 1fr; gap: 40px;">
+        
+        <!-- Column 1: Personal & Employment -->
+        <div>
+            <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px; color: #0f172a;">I. Personal Information</h3>
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 120px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Full Name</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($personal['first_name'] ?? '') ?> <?= e($personal['last_name'] ?? '') ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 120px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">ID Number</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($personal['national_id'] ?? 'N/A') ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 120px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">KRA PIN</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($personal['kra_pin'] ?? 'N/A') ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 120px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Date of Birth</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($personal['date_of_birth'] ?? 'N/A') ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 120px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Phone</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($personal['phone'] ?? 'N/A') ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 120px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Email</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($personal['email'] ?? 'N/A') ?></div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px; color: #0f172a;">II. Employment Details</h3>
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 120px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Type</div>
+                    <div style="font-size: 13px; font-weight: 600; text-transform: capitalize;"><?= e($employment['employment_type'] ?? 'N/A') ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 120px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Employer</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($employment['employer_name'] ?? 'N/A') ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 120px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Net Income</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= $record->tenant->currency ?? 'KES' ?> <?= number_format((float)($employment['monthly_income'] ?? 0)) ?></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 2: Loan & Other -->
+        <div>
+            <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px; color: #0f172a;">III. Loan Parameters</h3>
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 140px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Requested Amount</div>
+                    <div style="font-size: 13px; font-weight: 800; color: #15803d;"><?= e($loan['loan_currency'] ?? 'KES') ?> <?= number_format((float)($loan['loan_amount'] ?? 0)) ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 140px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Term (Months)</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($loan['loan_term'] ?? 'N/A') ?> months</div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 140px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Down Payment</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($loan['equity_contribution'] ?? 0) ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 140px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Monthly Repayment</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($loan['monthly_payment'] ?? 0) ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 140px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Interest Method</div>
+                    <div style="font-size: 13px; font-weight: 600; text-transform: capitalize;"><?= e($loan['interest_rate_type'] ?? 'N/A') ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 140px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Balloon Payment</div>
+                    <div style="font-size: 13px; font-weight: 600;"><?= e($loan['residual_percentage'] ?? 0) ?>%</div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px; color: #0f172a;">IV. Extras & Compliance</h3>
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 140px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Fee Payment</div>
+                    <div style="font-size: 13px; font-weight: 600; text-transform: capitalize;"><?= e($loan['fees_payment'] ?? 'N/A') ?></div>
+                </div>
+                <div style="display: flex; margin-bottom: 8px;">
+                    <div style="width: 140px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Included Extras</div>
+                    <div style="font-size: 11px; font-weight: 600;">
+                        <?php 
+                            $extras = $loan['upfront_items'] ?? [];
+                            if (empty($extras)) echo 'None';
+                            else echo implode(', ', array_map(function($i) { return ucwords(str_replace('_', ' ', $i)); }, $extras));
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legal Status Placeholder -->
+    <div style="margin-top: 40px; border: 1px dashed #cbd5e1; padding: 15px; text-align: center; color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">
+        Applicant Digital Signature Verified &middot; Consent to Credit Check Granted
+    </div>
+
+</div>
+
+<style>
+    .application-document h3 { margin-top: 0; }
+    @media print {
+        .form-buttons, .breadcrumb, .main-menu { display: none !important; }
+        .application-document { border: none !important; box-shadow: none !important; margin: 0 !important; width: 100% !important; max-width: none !important; padding: 0 !important; }
+    }
+</style>

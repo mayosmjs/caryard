@@ -1,31 +1,53 @@
-<div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex min-h-full items-center justify-center p-3 sm:p-4">
-        <div class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm transition-opacity" aria-hidden="true" 
-             onclick="document.getElementById('vehicle-modal-container').innerHTML = '';"></div>
+<div class="fixed inset-0 z-[1000] flex flex-col sm:items-center sm:justify-center overflow-hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    
+    <!-- BACKDROP (Desktop Only) -->
+    <div class="hidden sm:block absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" aria-hidden="true" 
+         onclick="document.getElementById('vehicle-modal-container').innerHTML = '';"></div>
 
-        <div class="relative w-full max-w-3xl bg-white rounded-[20px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] max-h-[90vh] overflow-hidden">
-            <div class="max-h-[90vh] overflow-y-auto">
-                <div class="p-6 sm:p-8">
-                    {% partial __SELF__ ~ '::_form'
-                        vehicle=vehicle
-                        brands=brands
-                        models=models
-                        conditions=conditions
-                        bodyTypes=bodyTypes
-                        colors=colors
-                        fuelTypes=fuelTypes
-                        transmissions=transmissions
-                        engineCapacities=engineCapacities
-                        driveTypes=driveTypes
-                        divisionTypes=divisionTypes
-                        rootDivisions=rootDivisions
-                        divisionAncestors=divisionAncestors
-                        divisionLevelOptions=divisionLevelOptions
-                        tenantId=tenantId
-                        tenantCurrency=tenantCurrency
-                        categorizedOptions=categorizedOptions
-                    %}
+    <!-- MODERN MODAL SHELL -->
+    <div class="relative w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-4xl bg-white sm:border sm:border-slate-200 sm:rounded-3xl sm:shadow-2xl flex flex-col overflow-hidden z-10 transition-all duration-300">
+        
+        <!-- MODERN STICKY HEADER -->
+        <div class="sticky top-0 z-50 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between shadow-sm">
+            <div class="min-w-0 pr-12">
+                <h3 class="text-sm sm:text-lg font-black text-slate-900 uppercase tracking-tighter truncate leading-none">
+                    {% if vehicle %}{{ vehicle.title }}{% else %}Add New Vehicle{% endif %}
+                </h3>
+                <div class="flex items-center gap-2 mt-1.5 font-bold text-[8px] sm:text-[9px] text-slate-400 uppercase tracking-widest whitespace-nowrap overflow-hidden">
+                    <span class="px-1.5 py-0.5 bg-slate-100 rounded text-slate-600 border border-slate-200">ID:{{ vehicle.vehicleid ?: 'PENDING' }}</span>
+                    <span class="hidden xs:inline italic">Inventory Management Module</span>
                 </div>
+            </div>
+            
+            <button type="button" 
+                    class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-slate-50 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center border border-slate-100"
+                    onclick="document.getElementById('vehicle-modal-container').innerHTML = '';">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- SCROLLABLE CONTENT -->
+        <div class="flex-1 overflow-y-auto bg-slate-50/30">
+            <div class="p-4 sm:p-8 lg:p-12">
+                {% partial __SELF__ ~ '::_form'
+                    vehicle=vehicle
+                    brands=brands
+                    models=models
+                    conditions=conditions
+                    bodyTypes=bodyTypes
+                    colors=colors
+                    fuelTypes=fuelTypes
+                    transmissions=transmissions
+                    engineCapacities=engineCapacities
+                    driveTypes=driveTypes
+                    divisionTypes=divisionTypes
+                    rootDivisions=rootDivisions
+                    divisionAncestors=divisionAncestors
+                    divisionLevelOptions=divisionLevelOptions
+                    tenantId=tenantId
+                    tenantCurrency=tenantCurrency
+                    categorizedOptions=categorizedOptions
+                %}
             </div>
         </div>
     </div>

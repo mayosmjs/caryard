@@ -1,82 +1,123 @@
 {% if deletedVehicles.count > 0 %}
-<div class="mt-10">
-    <div class="glass rounded-2xl border border-white shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] overflow-hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 border-b border-gray-200/50 bg-white/40">
+<div class="mt-12">
+    <div class="bg-white border border-slate-900 rounded-2xl overflow-hidden shadow-[6px_6px_0_0_#0f172a]">
+        
+        <!-- Standardized Header -->
+        <div class="bg-slate-900 px-6 py-4 flex items-center justify-between border-b border-slate-900">
             <div class="flex items-center gap-3">
-                <input type="checkbox" class="select-all-deleted h-5 w-5 rounded-md border-gray-300 text-[#0071E3] focus:ring-[#0071E3]"
-                       data-selector=".deleted-vehicle-checkbox">
-                <span class="text-sm font-medium text-[#1D1D1F]">Trash ({{ deletedVehicles.count }})</span>
+                <i class="fas fa-trash-alt text-amber-500 text-sm"></i>
+                <h3 class="text-[10px] sm:text-xs font-black text-white uppercase tracking-[0.2em] leading-none">Trash Bin</h3>
+                <span class="px-2 py-0.5 bg-white/10 rounded text-[7px] font-bold text-slate-400 uppercase tracking-widest">{{ deletedVehicles.count }} DELETED</span>
             </div>
-            <div class="flex items-center gap-2">
-                <button type="button" class="rounded-full bg-emerald-600 hover:bg-emerald-700 px-4 py-2 text-xs font-medium text-white transition-colors"
-                        onclick="handleBulkRestore()">
-                    <svg class="w-3.5 h-3.5 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                    </svg>
-                    Restore
+            <div class="hidden sm:block text-[8px] text-slate-500 font-bold uppercase tracking-widest leading-none">RECOVERY_BUFFER</div>
+        </div>
+
+        <!-- Bulk Operations (Matched to List) -->
+        <div class="flex items-center justify-between border-b border-slate-50 bg-slate-50/30 px-6 py-3 gap-2">
+            <div class="flex items-center gap-3">
+                <label class="relative flex items-center justify-center cursor-pointer group">
+                    <input type="checkbox" class="select-all-deleted sr-only peer" data-selector=".deleted-vehicle-checkbox">
+                    <div class="w-5 h-5 rounded-md border border-slate-300 bg-white transition-all peer-checked:bg-amber-500 peer-checked:border-slate-900 group-hover:border-slate-400"></div>
+                    <i class="fas fa-check absolute inset-0 m-auto flex items-center justify-center text-[10px] text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none z-10"></i>
+                </label>
+                <span class="text-[9px] font-black text-slate-900 uppercase tracking-widest truncate" id="selected-trash-count">0 Selected</span>
+            </div>
+            
+            <div id="bulk-trash-actions" class="flex items-center gap-2 opacity-0 pointer-events-none transition-all">
+                <button type="button" class="px-3 py-2 bg-white border border-slate-200 text-[8px] font-black text-green-600 uppercase rounded-lg hover:border-slate-900 shadow-sm" onclick="handleBulkRestore()">
+                    <i class="fas fa-undo-alt mr-1"></i> Restore
                 </button>
-                <button type="button" class="rounded-full border border-gray-200 bg-white hover:bg-red-50 px-4 py-2 text-xs font-medium text-red-500 transition-colors"
-                        onclick="handleBulkPermanentDelete()">
-                    <svg class="w-3.5 h-3.5 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                    Delete Permanently
+                <button type="button" class="px-3 py-2 bg-red-50 border border-red-100 text-[8px] font-black text-red-600 uppercase rounded-lg hover:bg-red-600 hover:text-white shadow-sm" onclick="handleBulkPermanentDelete()">
+                    <i class="fas fa-skull-crossbones mr-1"></i> Purge
                 </button>
             </div>
         </div>
         
-        <div class="overflow-x-auto">
+        <!-- Mobile Trash Cards -->
+        <div class="lg:hidden divide-y divide-slate-50">
+            {% for vehicle in deletedVehicles %}
+            <div class="bg-white p-4">
+                <div class="flex items-center gap-3">
+                    <div class="shrink-0 flex items-center justify-center relative">
+                        <label class="relative flex items-center justify-center cursor-pointer group">
+                            <input type="checkbox" class="deleted-vehicle-checkbox sr-only peer" value="{{ vehicle.id }}">
+                            <div class="w-5 h-5 rounded-md border border-slate-200 bg-slate-50 transition-all peer-checked:bg-amber-500 peer-checked:border-slate-900 group-hover:border-slate-400"></div>
+                            <i class="fas fa-check absolute text-[10px] text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></i>
+                        </label>
+                    </div>
+
+                    {% if vehicle.images.count %}
+                        <div class="shrink-0 h-16 w-20 rounded-xl overflow-hidden border-2 border-slate-100 grayscale opacity-50">
+                            <img class="h-full w-full object-cover" src="{{ vehicle.images.first.thumb(150, 150, 'crop') }}" alt="{{ vehicle.title }}">
+                        </div>
+                    {% else %}
+                        <div class="shrink-0 h-16 w-20 bg-slate-50 rounded-xl border border-dashed border-slate-200 flex items-center justify-center text-[7px] font-black text-slate-300">NO MEDIA</div>
+                    {% endif %}
+
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-black text-slate-900 text-[11px] uppercase tracking-tighter leading-none mb-1 line-through decoration-slate-300">{{ vehicle.title }}</h4>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Val: KSH {{ vehicle.price|number_format }}</span>
+                            <span class="text-[8px] font-black text-red-400 uppercase tracking-widest px-1.5 py-0.5 bg-red-50 rounded">DELETED</span>
+                        </div>
+                        <div class="flex gap-1">
+                            <button class="flex-1 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[8px] font-black text-green-600 uppercase tracking-widest hover:border-slate-900 transition-all" onclick="restoreSingleVehicle('{{ vehicle.id }}')">Restore</button>
+                            <button class="flex-1 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[8px] font-black text-red-400 uppercase tracking-widest hover:border-red-600 transition-all" onclick="permanentDeleteSingleVehicle('{{ vehicle.id }}')">Purge</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop Trash List -->
+        <div class="hidden lg:block overflow-x-auto">
             <table class="w-full border-collapse text-left">
-                <thead class="bg-white/30 text-[11px] font-semibold uppercase tracking-wider text-[#86868B]">
+                <thead class="bg-slate-50/30 text-[9px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
                     <tr>
-                        <th class="px-6 py-4 w-12"></th>
-                        <th class="px-6 py-4">Vehicle</th>
-                        <th class="px-6 py-4">Price</th>
-                        <th class="px-6 py-4">Deleted</th>
-                        <th class="px-6 py-4 text-right">Actions</th>
+                        <th class="px-6 py-4 w-10">Select</th>
+                        <th class="px-8 py-4">Deleted Vehicle Entry</th>
+                        <th class="px-8 py-4">Original Valuation</th>
+                        <th class="px-8 py-4 text-right">Recovery Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-slate-50">
                     {% for vehicle in deletedVehicles %}
-                    <tr class="group transition-colors hover:bg-white/60">
-                        <td class="px-6 py-5">
-                            <input type="checkbox" class="deleted-vehicle-checkbox h-5 w-5 rounded-md border-gray-300 text-[#0071E3] focus:ring-[#0071E3]"
-                                   value="{{ vehicle.id }}">
+                    <tr class="group hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <label class="relative flex items-center justify-center cursor-pointer group">
+                                <input type="checkbox" class="deleted-vehicle-checkbox sr-only peer" value="{{ vehicle.id }}">
+                                <div class="w-5 h-5 rounded-md border border-slate-200 bg-slate-50 transition-all peer-checked:bg-amber-500 peer-checked:border-slate-900 group-hover:border-slate-400"></div>
+                                <i class="fas fa-check absolute text-[10px] text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></i>
+                            </label>
                         </td>
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-4">
+                        <td class="px-8 py-6">
+                            <div class="flex items-center gap-6 opacity-60">
                                 {% if vehicle.images.count %}
-                                    <div class="h-14 w-16 overflow-hidden rounded-xl border border-gray-100 shadow-sm opacity-70">
-                                        <img class="h-full w-full object-cover" src="{{ vehicle.images.first.thumb(150, 150, 'crop') }}" alt="{{ vehicle.title }}">
+                                    <div class="relative shrink-0 h-12 w-16 rounded-xl overflow-hidden border-2 border-slate-200 grayscale">
+                                        <img class="h-full w-full object-cover" src="{{ vehicle.images.first.thumb(300, 300, 'crop') }}" alt="{{ vehicle.title }}">
                                     </div>
                                 {% else %}
-                                    <div class="flex h-14 w-16 items-center justify-center rounded-xl bg-gray-100 text-[10px] text-gray-400 opacity-70">
-                                        No Image
-                                    </div>
+                                    <div class="shrink-0 flex h-12 w-16 items-center justify-center rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 text-[7px] font-black uppercase text-slate-300">NO MEDIA</div>
                                 {% endif %}
                                 <div>
-                                    <div class="font-semibold text-[#1D1D1F]">{{ vehicle.title }}</div>
-                                    <div class="text-xs text-[#86868B]">{{ vehicle.year|date('Y') }} · {{ vehicle.mileage|number_format }} km</div>
+                                    <h4 class="font-black text-slate-900 text-sm uppercase tracking-tighter leading-none mb-1 line-through decoration-slate-300">{{ vehicle.title }}</h4>
+                                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">ID:{{ vehicle.vehicleid ?: 'NA' }}</p>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-5 text-sm font-medium text-[#1D1D1F]">KSH {{ vehicle.price|number_format }}</td>
-                        <td class="px-6 py-5 text-xs text-[#86868B]">{{ vehicle.deleted_at|date('M d, Y H:i') }}</td>
-                        <td class="px-6 py-5 text-right">
+                        <td class="px-8 py-6">
+                            <p class="text-sm font-black text-slate-400 tracking-tight">KSH {{ vehicle.price|number_format }}</p>
+                        </td>
+                        <td class="px-8 py-6 text-right">
                             <div class="flex justify-end gap-2">
-                                <button class="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-600 hover:bg-emerald-100 transition-colors"
+                                <button class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black text-green-600 uppercase tracking-widest hover:border-slate-900 transition-all shadow-sm"
                                         onclick="restoreSingleVehicle('{{ vehicle.id }}')">
-                                    <svg class="w-3.5 h-3.5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                                    </svg>
                                     Restore
                                 </button>
-                                <button class="rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-red-500 hover:bg-red-50 transition-colors"
+                                <button class="px-4 py-2 bg-red-50 border border-red-100 rounded-xl text-[9px] font-black text-red-600 uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all shadow-sm"
                                         onclick="permanentDeleteSingleVehicle('{{ vehicle.id }}')">
-                                    <svg class="w-3.5 h-3.5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                    </svg>
-                                    Delete
+                                    Purge Forever
                                 </button>
                             </div>
                         </td>
@@ -86,115 +127,80 @@
             </table>
         </div>
     </div>
-    
-    <script>
-    window.getSelectedDeletedIds = function() {
-        var checkboxes = document.querySelectorAll('.deleted-vehicle-checkbox:checked');
-        return Array.from(checkboxes).map(cb => cb.value);
-    };
-    
-    window.handleBulkRestore = function() {
-        var ids = window.getSelectedDeletedIds();
-        if (ids.length === 0) {
-            alert('Please select at least one vehicle to restore.');
-            return;
+</div>
+
+<script>
+window.getSelectedDeletedIds = function() {
+    var checkboxes = document.querySelectorAll('.deleted-vehicle-checkbox:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+};
+
+window.updateTrashSelectedCount = function() {
+    var checkboxes = document.querySelectorAll('.deleted-vehicle-checkbox:checked');
+    var count = checkboxes.length;
+    var countEl = document.getElementById('selected-trash-count');
+    var bulkGroup = document.getElementById('bulk-trash-actions');
+    if (countEl) countEl.textContent = count + ' Selected';
+    if (bulkGroup) {
+        if (count > 0) {
+            bulkGroup.classList.remove('opacity-0', 'pointer-events-none');
+            bulkGroup.classList.add('opacity-100');
+        } else {
+            bulkGroup.classList.add('opacity-0', 'pointer-events-none');
         }
-        
-        if (!confirm('Restore selected vehicle(s)?')) {
-            return;
-        }
-        
-        if (typeof $ === 'undefined' || typeof $.request === 'undefined') {
-            alert('AJAX not available. Please refresh the page and try again.');
-            return;
-        }
-        
-        $.request('{{ __SELF__ }}::onRestoreMultipleVehicles', {
-            data: { vehicle_ids: ids },
-            success: function() {
-                window.location.reload();
-            }
+    }
+};
+
+window.handleBulkRestore = function() {
+    var ids = window.getSelectedDeletedIds();
+    if (ids.length === 0) return;
+    $.request('{{ __SELF__ }}::onRestoreMultipleVehicles', {
+        data: { vehicle_ids: ids },
+        success: function() { window.location.reload(); }
+    });
+};
+
+window.handleBulkPermanentDelete = function() {
+    var ids = window.getSelectedDeletedIds();
+    if (ids.length === 0) return;
+    if (!confirm('COMMIT PERMANENT PURGE: Clear selected records from recovery buffer?')) return;
+    $.request('{{ __SELF__ }}::onPermanentlyDeleteVehicles', {
+        data: { vehicle_ids: ids },
+        success: function() { window.location.reload(); }
+    });
+};
+
+window.restoreSingleVehicle = function(id) {
+    $.request('{{ __SELF__ }}::onRestoreMultipleVehicles', { data: { vehicle_ids: [id] }, success: () => window.location.reload() });
+};
+
+window.permanentDeleteSingleVehicle = function(id) {
+    if (!confirm('PURGE RECORD PERMANENTLY? This cannot be undone.')) return;
+    $.request('{{ __SELF__ }}::onPermanentlyDeleteVehicles', { data: { vehicle_ids: [id] }, success: () => window.location.reload() });
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    var selectAllDeleted = document.querySelector('.select-all-deleted');
+    if (selectAllDeleted) {
+        selectAllDeleted.addEventListener('change', function() {
+            var checkboxes = document.querySelectorAll('.deleted-vehicle-checkbox');
+            checkboxes.forEach(function(cb) { cb.checked = selectAllDeleted.checked; });
+            window.updateTrashSelectedCount();
         });
-    };
-    
-    window.handleBulkPermanentDelete = function() {
-        var ids = window.getSelectedDeletedIds();
-        if (ids.length === 0) {
-            alert('Please select at least one vehicle to permanently delete.');
-            return;
-        }
-        
-        if (!confirm('Permanently delete selected vehicle(s)? This cannot be undone!')) {
-            return;
-        }
-        
-        if (typeof $ === 'undefined' || typeof $.request === 'undefined') {
-            alert('AJAX not available. Please refresh the page and try again.');
-            return;
-        }
-        
-        $.request('{{ __SELF__ }}::onPermanentlyDeleteVehicles', {
-            data: { vehicle_ids: ids },
-            success: function() {
-                window.location.reload();
-            }
-        });
-    };
-    
-    window.restoreSingleVehicle = function(id) {
-        if (!confirm('Restore this vehicle?')) {
-            return;
-        }
-        
-        if (typeof $ === 'undefined' || typeof $.request === 'undefined') {
-            alert('AJAX not available. Please refresh the page and try again.');
-            return;
-        }
-        
-        $.request('{{ __SELF__ }}::onRestoreMultipleVehicles', {
-            data: { vehicle_ids: [id] },
-            success: function() {
-                window.location.reload();
-            }
-        });
-    };
-    
-    window.permanentDeleteSingleVehicle = function(id) {
-        if (!confirm('Permanently delete this vehicle? This cannot be undone!')) {
-            return;
-        }
-        
-        if (typeof $ === 'undefined' || typeof $.request === 'undefined') {
-            alert('AJAX not available. Please refresh the page and try again.');
-            return;
-        }
-        
-        $.request('{{ __SELF__ }}::onPermanentlyDeleteVehicles', {
-            data: { vehicle_ids: [id] },
-            success: function() {
-                window.location.reload();
-            }
-        });
-    };
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        var selectAllDeleted = document.querySelector('.select-all-deleted');
-        if (selectAllDeleted) {
-            selectAllDeleted.addEventListener('change', function() {
-                var checkboxes = document.querySelectorAll('.deleted-vehicle-checkbox');
-                checkboxes.forEach(function(cb) { cb.checked = this.checked; }, this);
-            });
+    }
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('deleted-vehicle-checkbox')) {
+            window.updateTrashSelectedCount();
         }
     });
-    </script>
+});
+</script>
 {% else %}
-<div class="mt-10">
-    <div class="glass rounded-2xl border border-white shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] p-10 text-center">
-        <svg class="mx-auto w-12 h-12 text-gray-200 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-        </svg>
-        <p class="text-sm font-medium text-[#86868B]">No deleted vehicles</p>
-        <p class="text-xs text-[#86868B] mt-1">Deleted vehicles will appear here</p>
+<div class="mt-12 bg-white border-2 border-dashed border-slate-200 rounded-2xl p-12 text-center group hover:bg-slate-50 transition-all">
+    <div class="w-16 h-16 mx-auto rounded-3xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-6 text-slate-300 group-hover:scale-110 transition-all">
+        <i class="fas fa-trash-can text-3xl"></i>
     </div>
+    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Trash Buffer Clear</h3>
+    <p class="text-[9px] font-bold text-slate-300 uppercase tracking-widest mt-2">Recovery registry contains zero historical records</p>
 </div>
 {% endif %}

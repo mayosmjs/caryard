@@ -1,0 +1,20 @@
+<?php
+$status = $record->status ?: 'pending';
+$label = ucfirst($status);
+$class = 'badge';
+
+switch ($status) {
+    case 'accepted':
+        $class .= ' bg-success';
+        break;
+    case 'rejected':
+        $class .= ' bg-danger';
+        break;
+    default:
+        $class .= ' bg-info';
+        break;
+}
+?>
+<span class="<?= $class ?>">
+    <?= e($label) ?>
+</span>

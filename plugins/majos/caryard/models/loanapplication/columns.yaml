@@ -1,0 +1,41 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+        searchable: true
+        width: 60
+
+    vehicle:
+        label: Vehicle
+        searchable: true
+        relation: vehicle
+        select: title
+        width: 200
+
+    status:
+        label: Status
+        type: partial
+        path: $/majos/caryard/controllers/loanapplications/_status_column.htm
+        width: 120
+
+
+
+    tenant:
+        label: Tenant
+        relation: tenant
+        select: name
+        width: 120
+
+    created_at:
+        label: Submitted
+        type: datetime
+        width: 150
+
+    application:
+        label: Applicant
+        type: partial
+        path: ~/plugins/majos/caryard/controllers/loanapplications/_application_column.htm
+        width: 200

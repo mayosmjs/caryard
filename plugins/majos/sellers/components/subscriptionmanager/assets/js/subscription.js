@@ -23,44 +23,75 @@
         
         var scriptPath = '';
         switch(provider) {
-            case 'stripe':
-                scriptPath = 'stripe.js';
-                break;
-            case 'paypal':
-                scriptPath = 'paypal.js';
-                break;
-            case 'mpesa':
-                scriptPath = 'mpesa.js';
-                break;
-            default:
-                return Promise.reject(new Error('Unknown provider: ' + provider));
+            case 'stripe': scriptPath = 'stripe.js'; break;
+            case 'paypal': scriptPath = 'paypal.js'; break;
+            case 'mpesa': scriptPath = 'mpesa.js'; break;
+            default: return Promise.reject(new Error('Unknown provider: ' + provider));
         }
         
-        // Get base URL from current script
-        var baseUrl = '';
-        var currentScript = document.querySelector('script[src*="subscription.js"]');
-        if (currentScript) {
-            var src = currentScript.src;
-            var lastSlash = src.lastIndexOf('/');
-            baseUrl = src.substring(0, lastSlash + 1);
+        // Get base URL (removed versioning to prevent caching issues)
+        var baseUrl = window.sellerAssetPath ? window.sellerAssetPath + '/' : '';
+        
+        if (!baseUrl) {
+            // Fallback to legacy detection if global not set
+            var currentScript = document.querySelector('script[src*="subscription.js"]');
+            if (currentScript) {
+                var src = currentScript.src;
+                var lastSlash = src.lastIndexOf('/');
+                baseUrl = src.substring(0, lastSlash + 1);
+            }
         }
         
         return new Promise(function(resolve, reject) {
+            var fullPath = baseUrl + scriptPath;
             var existing = document.querySelector('script[src*="' + scriptPath + '"]');
-            if (existing) {
+            
+            function onLoaded() {
+                console.log('Script loaded for provider:', provider, 'fullPath:', fullPath);
                 providersLoaded[provider] = true;
-                resolve();
+                // Double check the global object is available
+                var providerObjName = provider.charAt(0).toUpperCase() + provider.slice(1) + 'Provider';
+                console.log('Looking for global:', providerObjName, 'current value:', window[providerObjName]);
+                // Poll to ensure the provider is fully initialized
+                var maxAttempts = 10;
+                var attempts = 0;
+                function checkProvider() {
+                    attempts++;
+                    console.log('Check attempt:', attempts, 'for', providerObjName, 'window value:', window[providerObjName]);
+                    if (window[providerObjName]) {
+                        resolve();
+                    } else if (attempts < maxAttempts) {
+                        setTimeout(checkProvider, 50);
+                    } else {
+                        console.warn(providerObjName + ' still not found after multiple attempts');
+                        resolve(); // Resolve anyway to not block, but error will occur later
+                    }
+                }
+                checkProvider();
+            }
+
+            if (existing) {
+                if (providersLoaded[provider]) {
+                    resolve();
+                } else {
+                    // Script exists but not marked as loaded yet - wait for it
+                    existing.addEventListener('load', onLoaded);
+                    existing.addEventListener('error', function() { reject(new Error('Failed to load ' + scriptPath)); });
+                    
+                    // If it was already loaded but our flag is false
+                    var providerObjName = provider.charAt(0).toUpperCase() + provider.slice(1) + 'Provider';
+                    if (window[providerObjName]) onLoaded();
+                }
                 return;
             }
             
             var s = document.createElement('script');
             s.type = 'text/javascript';
-            s.src = baseUrl + scriptPath;
-            s.onload = function() {
-                providersLoaded[provider] = true;
-                resolve();
-            };
-            s.onerror = function() {
+            s.src = fullPath;
+            s.crossOrigin = 'anonymous';
+            s.onload = onLoaded;
+            s.onerror = function(e) {
+                console.error('Failed to load ' + scriptPath, e);
                 reject(new Error('Failed to load ' + scriptPath));
             };
             document.head.appendChild(s);
@@ -81,7 +112,6 @@
             
             // Check if this is a free plan
             var isFree = form.attr('data-free') === '1' || form.find('input[name="_free"]').val() === '1';
-            console.log('isFree:', isFree, 'data-free attr:', form.attr('data-free'), '_free input:', form.find('input[name="_free"]').val());
             
             // Get provider (not needed for free plans)
             var provider = null;
@@ -92,8 +122,6 @@
                     return;
                 }
             }
-            
-            console.log('Form submitted, provider:', provider);
             
             // Store button reference
             var btn = form.find('button[type="submit"]');
@@ -114,37 +142,51 @@
                         resetButton(btn);
                     }
                 });
-            } else switch(provider) {
-                case 'stripe':
-                    btn.prop('disabled', true).text('Processing...');
-                    loadProviderScript('stripe').then(function() {
-                        $.request('onSubscribe', {
-                            data: { plan_id: planId, billing_cycle: billingCycle, provider: 'stripe' },
-                            success: handleSubscribeSuccess,
-                            complete: function() {
-                                resetButton(btn);
-                            }
+            } else {
+                switch(provider) {
+                    case 'stripe':
+                        btn.prop('disabled', true).text('Processing...');
+                        loadProviderScript('stripe').then(function() {
+                            $.request('onSubscribe', {
+                                data: { plan_id: planId, billing_cycle: billingCycle, provider: 'stripe' },
+                                success: handleSubscribeSuccess,
+                                complete: function() {
+                                    resetButton(btn);
+                                }
+                            });
                         });
-                    });
-                    break;
-                    
-                case 'paypal':
-                    btn.prop('disabled', true).text('Processing...');
-                    loadProviderScript('paypal').then(function() {
-                        $.request('onSubscribe', {
-                            data: { plan_id: planId, billing_cycle: billingCycle, provider: 'paypal' },
-                            success: handleSubscribeSuccess,
-                            complete: function() {
-                                resetButton(btn);
-                            }
+                        break;
+                        
+                    case 'paypal':
+                        btn.prop('disabled', true).text('Processing...');
+                        loadProviderScript('paypal').then(function() {
+                            $.request('onSubscribe', {
+                                data: { plan_id: planId, billing_cycle: billingCycle, provider: 'paypal' },
+                                success: handleSubscribeSuccess,
+                                complete: function() {
+                                    resetButton(btn);
+                                }
+                            });
                         });
-                    });
-                    break;
-                    
-                case 'mpesa':
-                    // Show phone modal via MpesaProvider
-                    window.MpesaProvider.showPhoneModal(planId, billingCycle);
-                    break;
+                        break;
+                        
+                    case 'mpesa':
+                        // Show phone modal via MpesaProvider (ensure script is loaded first)
+                        loadProviderScript('mpesa').then(function() {
+                            // Additional safety check - ensure provider is fully initialized
+                            if (!window.MpesaProvider || typeof window.MpesaProvider.showPhoneModal !== 'function') {
+                                console.error('MpesaProvider not properly initialized');
+                                alert('M-Pesa payment provider failed to load. Please refresh and try again.');
+                                resetButton(btn);
+                                return;
+                            }
+                            window.MpesaProvider.showPhoneModal(planId, billingCycle);
+                        })['catch'](function(err) {
+                            console.error('Failed to load M-Pesa provider:', err);
+                            alert('Could not initialize M-Pesa payment. Please try again.');
+                        });
+                        break;
+                }
             }
         });
 
@@ -201,7 +243,6 @@
             }, 10000);
         });
 
-        console.log('Subscription forms initialized');
         initPricingToggle();
     }
 
@@ -228,10 +269,8 @@
 
     function initPricingToggle() {
         $(document).on('change', '#billing-cycle-toggle', function() {
-            const isAnnual = $(this).is(':checked');
-            const cycle = isAnnual ? 'annual' : 'monthly';
-            
-            console.log('Billing cycle changed to:', cycle);
+            var isAnnual = $(this).is(':checked');
+            var cycle = isAnnual ? 'annual' : 'monthly';
             
             $('input[name="billing_cycle"]').val(cycle);
             
@@ -255,16 +294,20 @@
         
         // Handle free plan/success without transaction_id
         if (data && data.success && !data.transaction_id) {
-            console.log('Free plan activated - reloading page');
             window.location.reload();
             return;
         }
         
         if (data && data.success && data.transaction_id) {
             // Check for Stripe flow
-            if (data.data && data.client_secret) {
+            if (data.data && data.data.client_secret) {
                 loadProviderScript('stripe').then(function() {
-                    window.StripeProvider.showCardModal(data.client_secret, data.transaction_id);
+                    if (!window.StripeProvider || typeof window.StripeProvider.showCardModal !== 'function') {
+                        console.error('StripeProvider not properly initialized');
+                        alert('Stripe payment provider failed to load. Please refresh and try again.');
+                        return;
+                    }
+                    window.StripeProvider.showCardModal(data.data.client_secret, data.transaction_id);
                 });
                 return;
             }
@@ -272,18 +315,28 @@
             // Check for PayPal flow
             if (data.redirectUrl) {
                 loadProviderScript('paypal').then(function() {
+                    if (!window.PayPalProvider || typeof window.PayPalProvider.redirectToCheckout !== 'function') {
+                        console.error('PayPalProvider not properly initialized');
+                        alert('PayPal payment provider failed to load. Please refresh and try again.');
+                        return;
+                    }
                     window.PayPalProvider.redirectToCheckout(data.redirectUrl);
                 });
                 return;
             }
 
             // M-Pesa flow
-            if (data.data && data.checkout_request_id) {
+            if (data.data && data.data.checkout_request_id) {
                 loadProviderScript('mpesa').then(function() {
+                    if (!window.MpesaProvider || typeof window.MpesaProvider.showPaymentPendingModal !== 'function') {
+                        console.error('MpesaProvider not properly initialized');
+                        alert('M-Pesa payment provider failed to load. Please refresh and try again.');
+                        return;
+                    }
                     window.MpesaProvider.showPaymentPendingModal(
                         data.message || 'STK Push sent', 
                         data.transaction_id, 
-                        data.checkout_request_id
+                        data.data.checkout_request_id
                     );
                 });
                 return;
