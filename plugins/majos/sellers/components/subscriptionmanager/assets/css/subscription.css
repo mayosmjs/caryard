@@ -135,6 +135,41 @@ input:checked + .slider:before {
     color: var(--slate-900);
 }
 
+/* Stripe Button */
+.btn-blue {
+    background: linear-gradient(135deg, #635bff 0%, #5851df 100%);
+    color: white;
+    box-shadow: 0 4px 14px 0 rgba(99, 91, 255, 0.39);
+}
+
+.btn-blue:hover {
+    background: linear-gradient(135deg, #5851df 0%, #4f46e5 100%);
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(99, 91, 255, 0.5);
+}
+
+.btn-blue:disabled {
+    background: var(--slate-200);
+    color: var(--slate-500);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Cancel Button - More prominent */
+.btn-cancel {
+    border: 1px solid var(--slate-200);
+    background: white;
+    color: var(--slate-600);
+    font-weight: 500;
+}
+
+.btn-cancel:hover {
+    background: var(--slate-50);
+    border-color: var(--slate-300);
+    color: var(--slate-800);
+}
+
 /* Pulse Animation for status */
 .pulse-amber {
     box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);

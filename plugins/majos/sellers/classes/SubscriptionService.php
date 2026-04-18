@@ -8,6 +8,7 @@ use Majos\Sellers\Classes\Payments\PaymentFactory;
 use Majos\Sellers\Classes\Payments\PaymentResult;
 use Exception;
 use Log;
+use Mail;
 
 /**
  * Subscription Service
@@ -283,7 +284,27 @@ class SubscriptionService
                 'seller_id' => $subscription->seller_id
             ]);
 
+            // Update subscription with transaction details
+            $subscription->update([
+                'transaction_id' => $transaction->transaction_id,
+                'amount' => $transaction->amount,
+            ]);
+
+            // Add provider information to notes
+            $providerInfo = "Provider: {$transaction->provider}";
+            $notes = $subscription->notes ?? '';
+            if (strpos($notes, 'Provider:') === false) {
+                $subscription->notes = $notes . ($notes ? "\n" : "") . $providerInfo;
+                $subscription->save();
+            }
+
             $this->activateSubscription($subscription);
+
+            try {
+                $this->sendReceiptEmail($subscription, $transaction);
+            } catch (\Throwable $e) {
+                Log::error('Subscription receipt email failed: '.$e->getMessage());
+            }
 
             return new PaymentResult(true, 'Subscription activated successfully', $transactionId);
 
@@ -336,6 +357,93 @@ class SubscriptionService
             'new_status' => $subscription->status,
             'expires_at' => $subscription->expires_at
         ]);
+    }
+
+    /**
+     * Send receipt email to customer
+     */
+    protected function sendReceiptEmail(SellerSubscription $subscription, SubscriptionTransaction $transaction): void
+    {
+        try {
+            // Get the seller profile and user
+            $seller = $subscription->seller;
+            if (!$seller || !$seller->user) {
+                Log::warning('Cannot send receipt email: seller or user not found', [
+                    'subscription_id' => $subscription->id
+                ]);
+                return;
+            }
+
+            $user = $seller->user;
+            $email = $user->email;
+            
+            // Validate email
+            if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                Log::warning('Cannot send receipt email: invalid email address', [
+                    'subscription_id' => $subscription->id,
+                    'email' => $email
+                ]);
+                return;
+            }
+
+            $plan = $subscription->plan;
+            
+            // Prepare email variables
+            $vars = [
+                'brand' => config('app.name', 'Car Yard'),
+                'receipt_badge' => 'RECEIPT',
+                'amount_label' => 'Amount Paid',
+                'amount_integer' => floor($transaction->amount),
+                'amount_cents' => str_pad(round(($transaction->amount - floor($transaction->amount)) * 100), 2, '0'),
+                'currency_symbol' => $transaction->currency === 'KES' ? 'KSh ' : '$',
+                'status_text' => 'Paid',
+                'payment_band_label' => 'Payment Method',
+                'payment_method' => ucfirst($transaction->provider),
+                'provider_name' => strtoupper($transaction->provider),
+                'transaction_date' => $transaction->created_at->format('M d, Y'),
+                'invoice_number' => 'INV-' . $subscription->id . '-' . time(),
+                'invoice_date' => $transaction->created_at->format('M d, Y'),
+                'customer_name' => $user->name ?? $user->full_name ?? 'Customer',
+                'transaction_id' => $transaction->transaction_id,
+                'section_label_subscription' => 'Subscription Details',
+                'plan_name' => $plan->name ?? 'Subscription Plan',
+                'billing_cycle' => 'Monthly',
+                'plan_features' => '',
+                'amount' => number_format($transaction->amount, 2),
+                'totals_total' => 'Total',
+                'next_renewal_date' => $subscription->expires_at ? $subscription->expires_at->format('M d, Y') : '',
+                'renewal_amount' => number_format($transaction->amount, 2),
+                'renewal_period' => 'month',
+                'section_label_payment' => 'Payment Details',
+                'payment_method' => ucfirst($transaction->provider),
+                'card_last_four' => '****',
+                'card_expiry' => '---',
+                'footer_links_manage' => 'Manage Subscription',
+                'footer_links_help' => 'Help Center',
+                'footer_links_support' => 'Contact Support',
+                'support_email' => config('mail.from.address', 'support@caryard.com'),
+                'manage_subscription_url' => url('/account/subscription'),
+                'help_center_url' => url('/help'),
+                'current_year' => date('Y'),
+            ];
+
+            // Send email using October CMS mail
+            Mail::queue('majos.sellers::mail.subscription-receipt', $vars, function ($message) use ($email, $user) {
+                $message->to($email, $user->name ?? $user->full_name ?? 'Customer');
+                $message->subject('Your Subscription Receipt');
+            });
+
+            Log::info('Receipt email sent successfully', [
+                'subscription_id' => $subscription->id,
+                'email' => $email
+            ]);
+
+        } catch (Exception $e) {
+            Log::error('Failed to send receipt email: ' . $e->getMessage(), [
+                'subscription_id' => $subscription->id,
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
 
     /**

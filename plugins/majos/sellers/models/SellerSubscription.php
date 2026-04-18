@@ -38,6 +38,9 @@ class SellerSubscription extends Model
         'expires_at',
         'auto_renew',
         'notes',
+        'amount',
+        'currency',
+        'transaction_id',
     ];
 
     /**

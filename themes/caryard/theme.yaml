@@ -1,6 +1,9 @@
 name: Caryard
-description: Caryard theme for vehicle marketplace
+description: 'Caryard theme for vehicle marketplace'
 author: majos
 homepage: ''
+authorCode: ''
 code: ''
-version: '1.0.0'
+parent: ''
+database: '1'
+version: 1.0.0

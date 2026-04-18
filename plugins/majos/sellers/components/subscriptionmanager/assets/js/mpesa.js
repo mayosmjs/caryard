@@ -39,10 +39,15 @@
                                     '<p class="text-[10px] font-bold text-slate-400 uppercase mt-2 tracking-widest text-center">Format: 254712345678</p>' +
                                 '</div>' +
                                 '<div class="flex flex-col gap-3">' +
-                                    '<button type="submit" class="w-full btn-modern btn-amber py-4 text-base">' +
-                                        'Send STK Push' +
+                                    '<button type="submit" class="w-full btn-modern btn-amber py-4 text-base font-semibold tracking-wide">' +
+                                        '<span class="flex items-center gap-2 justify-center">' +
+                                            '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                                                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>' +
+                                            '</svg>' +
+                                            'Send STK Push' +
+                                        '</span>' +
                                     '</button>' +
-                                    '<button type="button" id="cancel-phone-btn" class="w-full btn-modern btn-outline py-3 border-none hover:bg-slate-50">' +
+                                    '<button type="button" id="cancel-phone-btn" class="w-full btn-modern btn-cancel py-3 text-sm font-medium">' +
                                         'Cancel' +
                                     '</button>' +
                                 '</div>' +
@@ -83,7 +88,7 @@
                                 '<div id="payment-status" class="text-xs font-bold text-amber-500 uppercase tracking-widest animate-pulse">Waiting for M-Pesa...</div>' +
                             '</div>' +
                             
-                            '<button id="cancel-payment-btn" class="w-full btn-modern btn-outline py-3 border-none text-slate-400 hover:text-slate-600">' +
+                            '<button id="cancel-payment-btn" class="w-full btn-modern btn-cancel py-3 text-sm font-medium">' +
                                 'Cancel Payment' +
                             '</button>' +
                         '</div>' +
