@@ -139,6 +139,15 @@ class SubscriptionManager extends ComponentBase
         $this->page['currentPlan'] = $this->currentPlan;
         $this->page['availablePlans'] = $this->availablePlans;
         $this->page['seller'] = $this->seller;
+        // Also pass sellerName as a separate safe variable
+        $sellerName = '';
+        if ($this->seller) {
+            $sellerName = $this->seller->fullName ?? $this->seller->name ?? '';
+            if (is_array($sellerName)) {
+                $sellerName = '';
+            }
+        }
+        $this->page['sellerName'] = is_string($sellerName) ? $sellerName : (string)$sellerName;
         $this->page['trialUsed'] = $this->subscriptionService->hasUsedTrial($this->seller);
         $this->page['freeUsed'] = $this->subscriptionService->hasUsedFreePlan($this->seller);
         $this->page['tenantName'] = $this->seller->tenant ? $this->seller->tenant->name : '';
@@ -148,7 +157,19 @@ class SubscriptionManager extends ComponentBase
 
         // Get Stripe Public Key for the frontend
         $stripeConfig = \Majos\Sellers\Classes\Payments\PaymentFactory::getSettingsConfig('stripe');
-        $this->page['stripePubKey'] = $stripeConfig['publishable_key'] ?? '';
+        $stripeKey = $stripeConfig['publishable_key'] ?? '';
+        // Ensure it's a string, not an array - use force conversion for safety
+        $this->page['stripePubKey'] = is_string($stripeKey) ? $stripeKey : (is_array($stripeKey) ? '' : strval($stripeKey));
+        
+        // Safely get seller name
+        $sellerName = '';
+        if ($this->seller) {
+            $sellerName = $this->seller->fullName ?? $this->seller->name ?? '';
+            if (is_array($sellerName)) {
+                $sellerName = '';
+            }
+        }
+        $this->page['sellerName'] = is_string($sellerName) ? $sellerName : strval($sellerName);
         
         // Inject explicit paths for JS loaders to prevent path resolution issues
         $this->page['sellerAssetPath'] = url('/plugins/majos/sellers/components/subscriptionmanager/assets/js');

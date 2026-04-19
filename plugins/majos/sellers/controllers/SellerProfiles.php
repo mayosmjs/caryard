@@ -11,7 +11,6 @@ class SellerProfiles extends Controller
     public $implement = [
         'Backend\Behaviors\ListController',
         'Backend\Behaviors\FormController',
-        'Backend\Behaviors\DeleteController',
     ];
 
     public $listConfig = 'config_list.yaml';

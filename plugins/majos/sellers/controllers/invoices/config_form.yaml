@@ -1,0 +1,17 @@
+name: Invoice
+form: $/majos/sellers/models/invoice/fields.yaml
+modelClass: Majos\Sellers\Models\Invoice
+defaultRedirect: majos/sellers/invoices
+
+create:
+    title: Create Invoice
+    redirect: majos/sellers/invoices/update/:id
+    redirectClose: majos/sellers/invoices
+
+update:
+    title: Edit Invoice
+    redirect: majos/sellers/invoices
+    redirectClose: majos/sellers/invoices
+
+preview:
+    title: Preview Invoice

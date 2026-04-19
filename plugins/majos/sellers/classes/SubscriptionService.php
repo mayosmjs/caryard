@@ -301,7 +301,9 @@ class SubscriptionService
             $this->activateSubscription($subscription);
 
             try {
-                $this->sendReceiptEmail($subscription, $transaction);
+                // Create invoice and send receipt
+                $invoice = \Majos\Sellers\Models\Invoice::createFromTransaction($transaction);
+                $this->sendInvoiceReceipt($invoice);
             } catch (\Throwable $e) {
                 Log::error('Subscription receipt email failed: '.$e->getMessage());
             }
@@ -360,16 +362,37 @@ class SubscriptionService
     }
 
     /**
-     * Send receipt email to customer
+     * Send invoice receipt email (for resending invoice receipts)
      */
-    protected function sendReceiptEmail(SellerSubscription $subscription, SubscriptionTransaction $transaction): void
+    public function sendInvoiceReceipt($invoice): void
     {
         try {
+            // Get the invoice
+            if (!$invoice instanceof \Majos\Sellers\Models\Invoice) {
+                $invoice = \Majos\Sellers\Models\Invoice::find($invoice);
+            }
+            
+            if (!$invoice) {
+                throw new Exception('Invoice not found');
+            }
+
+            // Get the transaction and subscription
+            $transaction = $invoice->transaction;
+            $subscription = $invoice->subscription;
+            
+            if (!$transaction) {
+                throw new Exception('Transaction not found for invoice');
+            }
+            
+            if (!$subscription) {
+                throw new Exception('Subscription not found for invoice');
+            }
+
             // Get the seller profile and user
             $seller = $subscription->seller;
             if (!$seller || !$seller->user) {
-                Log::warning('Cannot send receipt email: seller or user not found', [
-                    'subscription_id' => $subscription->id
+                Log::warning('Cannot send invoice receipt: seller or user not found', [
+                    'invoice_id' => $invoice->id
                 ]);
                 return;
             }
@@ -388,9 +411,13 @@ class SubscriptionService
 
             $plan = $subscription->plan;
             
-            // Prepare email variables
+            // Prepare email variables - get active theme for logo path
+            $themeCode = \Cms\Classes\Theme::getActiveThemeCode() ?? 'default';
+            $logoUrl = url('themes/' . $themeCode . '/assets/images/logos/logow.png');
+            
             $vars = [
                 'brand' => config('app.name', 'Car Yard'),
+                'logo_url' => $logoUrl,
                 'receipt_badge' => 'RECEIPT',
                 'amount_label' => 'Amount Paid',
                 'amount_integer' => floor($transaction->amount),
@@ -401,7 +428,7 @@ class SubscriptionService
                 'payment_method' => ucfirst($transaction->provider),
                 'provider_name' => strtoupper($transaction->provider),
                 'transaction_date' => $transaction->created_at->format('M d, Y'),
-                'invoice_number' => 'INV-' . $subscription->id . '-' . time(),
+                'invoice_number' => $invoice->invoice_number,
                 'invoice_date' => $transaction->created_at->format('M d, Y'),
                 'customer_name' => $user->name ?? $user->full_name ?? 'Customer',
                 'transaction_id' => $transaction->transaction_id,
@@ -428,21 +455,26 @@ class SubscriptionService
             ];
 
             // Send email using October CMS mail
-            Mail::queue('majos.sellers::mail.subscription-receipt', $vars, function ($message) use ($email, $user) {
+            Mail::queue('majos.sellers::mail.subscription-receipt', $vars, function ($message) use ($email, $user, $invoice) {
                 $message->to($email, $user->name ?? $user->full_name ?? 'Customer');
-                $message->subject('Your Subscription Receipt');
+                $message->subject('Your Subscription Receipt - ' . $invoice->invoice_number);
             });
 
             Log::info('Receipt email sent successfully', [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
                 'subscription_id' => $subscription->id,
                 'email' => $email
             ]);
 
         } catch (Exception $e) {
             Log::error('Failed to send receipt email: ' . $e->getMessage(), [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
                 'subscription_id' => $subscription->id,
                 'trace' => $e->getTraceAsString()
             ]);
+            throw $e;
         }
     }
 

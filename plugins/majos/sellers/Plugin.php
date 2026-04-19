@@ -55,12 +55,12 @@ class Plugin extends PluginBase
                 'permissions' => ['majos.sellers.*'],
                 'order'       => 600,
                 'sideMenu' => [
-                    // 'sellerprofiles' => [
-                    //     'label'       => 'Seller Profiles',
-                    //     'icon'        => 'icon-user',
-                    //     'url'         => \Backend::url('majos/sellers/sellerprofiles'),
-                    //     'permissions' => ['majos.sellers.access_profiles'],
-                    // ],
+                    'sellerprofiles' => [
+                        'label'       => 'Seller Profiles',
+                        'icon'        => 'icon-user',
+                        'url'         => \Backend::url('majos/sellers/sellerprofiles'),
+                        'permissions' => ['majos.sellers.access_profiles'],
+                    ],
                     'sellersubscriptions' => [
                         'label'       => 'Subscriptions',
                         'icon'        => 'icon-credit-card',
@@ -78,6 +78,12 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-exchange',
                         'url'         => \Backend::url('majos/sellers/subscriptiontransactions'),
                         'permissions' => ['majos.sellers.access_transactions'],
+                    ],
+                    'invoices' => [
+                        'label'       => 'Invoices',
+                        'icon'        => 'icon-file-text',
+                        'url'         => \Backend::url('majos/sellers/invoices'),
+                        'permissions' => ['majos.sellers.access_invoices'],
                     ],
                 ],
             ],

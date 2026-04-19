@@ -1,4 +1,15 @@
-1.0.1: Initialize Sellers plugin - Base seller profile setup
-1.0.2: Add subscription functionality - Plans, subscriptions, transactions
-1.0.3: Add description to subscription plans - Plan descriptions
-1.0.4: Add seller loan settings - Seller-specific loan configs
+1.0.1:
+    - Initialize Sellers plugin - Base seller profile setup
+    - create_seller_profiles_table.php
+1.0.2:
+    - Add subscription functionality - Plans, subscriptions, transactions
+    - create_subscription_plans_table.php
+    - create_seller_subscriptions_table.php
+    - create_subscription_transactions_table.php
+    - seed_subscription_plans.php
+1.0.3:
+    - Add description to subscription plans - Plan descriptions
+    - add_description_to_subscription_plans.php
+1.0.4:
+    - Add invoicing system - Invoices table and auto-invoice creation on payment
+    - create_invoices_table.php

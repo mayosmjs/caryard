@@ -1,7 +1,7 @@
 <script>
     window.stripePubKey = '{{ stripePubKey }}';
     window.sellerName = '{{ seller.fullName }}';
-    
+
     function downloadCsv(data) {
         if (data.error) {
             alert(data.error);
@@ -155,15 +155,17 @@
                         <strong>{{ plan.vehicle_limit == 0 ? 'Unlimited' : plan.vehicle_limit }}</strong> active vehicle listings
                     </span>
                 </div>
-                
-                {% for feature in plan.features %}
-                <div class="feature-item">
-                    <div class="feature-tick">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg>
+
+                {% if plan.features|length %}
+                    {% for feature in plan.features %}
+                    <div class="feature-item">
+                        <div class="feature-tick">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg>
+                        </div>
+                        <span class="text-sm text-slate-600">{{ feature.feature }}</span>
                     </div>
-                    <span class="text-sm text-slate-600">{{ feature }}</span>
-                </div>
-                {% endfor %}
+                    {% endfor %}
+                {% endif %}
             </div>
 
             <div class="pt-6 border-t border-slate-100">
