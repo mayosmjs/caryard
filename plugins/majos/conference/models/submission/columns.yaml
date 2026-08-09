@@ -1,0 +1,54 @@
+
+columns:
+    id:
+        label: ID
+        searchable: true
+        sortable: true
+    author_name:
+        label: Presenter
+        searchable: true
+        sortable: true
+    email:
+        label: Email
+        searchable: true
+    title:
+        label: Title
+        searchable: true
+        truncate: 50
+    research_area:
+        label: Research Area
+        searchable: true
+        sortable: true
+        truncate: 40
+    research_topic:
+        label: Research Topic
+        searchable: true
+        sortable: true
+        truncate: 40
+    presentation_type:
+        label: Presentation Type
+        searchable: true
+        sortable: true
+    status:
+        label: Status
+        type: partial
+        path: ~/plugins/majos/conference/partials/_list_status
+        sortable: true
+    reviewer_id:
+        label: Reviewer
+        relation: reviewer
+        select: name
+        sortable: true
+    created_at:
+        label: Submitted
+        type: datetime
+        sortable: true
+        format: d/m/Y H:i
+
+recordUrl: majos/conference/submissions/preview/:id
+
+defaultSort:
+    column: created_at
+    direction: desc
+
+recordsPerPage: 30

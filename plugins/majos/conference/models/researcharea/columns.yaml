@@ -1,0 +1,28 @@
+columns:
+    id:
+        label: ID
+        sortable: true
+    code:
+        label: Code
+        searchable: true
+        sortable: true
+    name:
+        label: Name
+        searchable: true
+        sortable: true
+    parent:
+        label: Parent Area
+        relation: parent
+        select: name
+        searchable: true
+        sortable: true
+    description:
+        label: Description
+        truncate: 60
+    sort_order:
+        label: Order
+        sortable: true
+    created_at:
+        label: Created
+        type: datetime
+        sortable: true

@@ -1,0 +1,145 @@
+<span data-current-step="{{ step }}" style="display:none;"></span>
+
+{% if step == 1 %}
+<!-- Step 1: Email Entry (Fallback/Redundancy) -->
+<div class="paper-form-card">
+    {% if error %}
+    <div class="paper-alert paper-alert-danger">
+        <i class="fa fa-exclamation-triangle"></i> {{ error }}
+    </div>
+    {% endif %}
+    <p class="paper-hint">
+        Enter your email address to receive a 6-character verification code.
+        The code expires in 15 minutes.
+    </p>
+    <form data-request="onEmailSubmit" data-request-flash>
+        <div class="form-group">
+            <label for="ps-email">Email Address</label>
+            <input type="email" id="ps-email" name="email" required value="{{ email }}" placeholder="you@example.com"
+                autocomplete="email" class="theme-input">
+            {% if errors.has('email') %}
+            <div class="paper-field-error">{{ errors.first('email') }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group" style="margin: 20px 0; display: flex; justify-content: center;">
+            {% if turnstile_site_key %}
+                <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+            {% else %}
+                <div class="paper-alert paper-alert-danger" style="font-size:0.8rem;">
+                    <i class="fa fa-warning"></i> Turnstile Site Key is missing. Check your .env file.
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="paper-btn-primary" data-attach-loading>
+            Send Verification Code
+        </button>
+    </form>
+</div>
+
+{% elseif step == 2 %}
+<!-- Step 2: Code Verification -->
+<div class="paper-form-card">
+    {% if error %}
+    <div class="paper-alert paper-alert-danger">
+        <i class="fa fa-exclamation-triangle"></i> {{ error }}
+    </div>
+    {% endif %}
+    <div class="paper-alert paper-alert-info">
+        <i class="fa fa-info-circle"></i>
+        We've sent a 6-character code to <strong>{{ email }}</strong>.
+    </div>
+    <form data-request="onVerifyCode" data-request-flash>
+        <input type="hidden" name="email" value="{{ email }}">
+        <div class="form-group">
+            <label for="ps-code">Verification Code</label>
+            <input type="text" id="ps-code" name="code" required maxlength="6" placeholder="XXXXXX" class="theme-input"
+                style="text-align:center; font-size: 1.5rem; letter-spacing: 5px;">
+        </div>
+        <button type="submit" class="paper-btn-primary" data-attach-loading>
+            Verify & Continue
+        </button>
+    </form>
+    <div style="margin-top:15px; text-align:center;">
+        <a href="javascript:;" data-request="onGoBack" data-request-data="email: '{{ email }}'" class="id-color"
+            style="font-size:0.8rem; font-weight:700; text-transform:uppercase;">
+            Change Email Address
+        </a>
+    </div>
+</div>
+
+{% elseif step == 3 %}
+<!-- Step 3: Final Submission Form -->
+<div class="paper-form-card">
+    {% if error %}
+    <div class="paper-alert paper-alert-danger">
+        <i class="fa fa-exclamation-triangle"></i> {{ error }}
+    </div>
+    {% endif %}
+    <p class="paper-hint">Verified: <strong>{{ email }}</strong></p>
+    <form data-request="onPaperSubmit" data-request-files data-request-flash>
+        <input type="hidden" name="email" value="{{ email }}">
+
+        <div class="form-group">
+            <label for="ps-name">Full Name</label>
+            <input type="text" id="ps-name" name="full_name" required class="theme-input">
+            {% if errors.has('full_name') %}
+            <div class="paper-field-error">{{ errors.first('full_name') }}</div>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ps-phone">Phone Number</label>
+                    <input type="text" id="ps-phone" name="phone_number" required class="theme-input">
+                    {% if errors.has('phone_number') %}
+                    <div class="paper-field-error">{{ errors.first('phone_number') }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ps-country">Country</label>
+                    <input type="text" id="ps-country" name="country" required class="theme-input">
+                    {% if errors.has('country') %}
+                    <div class="paper-field-error">{{ errors.first('country') }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="ps-file">Upload Paper (PDF only)</label>
+            <input type="file" id="ps-file" name="paper_file" required accept=".pdf" class="theme-input">
+            {% if errors.has('paper_file') %}
+            <div class="paper-field-error">{{ errors.first('paper_file') }}</div>
+            {% endif %}
+            <small class="ps-text-dim" style="font-size:0.7rem; margin-top:5px; display:block;">
+                Max file size: 5MB. PDF format only.
+            </small>
+        </div>
+
+        <button type="submit" class="paper-btn-primary" data-attach-loading>
+            Finalize Submission
+        </button>
+    </form>
+</div>
+
+{% elseif step == 4 %}
+<!-- Step 4: Success Message -->
+<div class="paper-form-card paper-success-ui">
+    <i class="fa fa-check-circle success-check"></i>
+    <h3 style="color:#fff; margin-bottom:10px;">Submission Received!</h3>
+    <p class="paper-hint">Thank you for your submission. Your reference number is:</p>
+    <div class="ref-number">{{ reference_number }}</div>
+    <p class="paper-hint" style="font-size:0.8rem;">
+        Please keep this number for your records. A confirmation email has been sent to your address.
+    </p>
+    <div class="spacer-single"></div>
+    <button type="button" class="paper-btn-primary" onclick="closePaperSubmissionModal()">
+        Close Window
+    </button>
+</div>
+{% endif %}

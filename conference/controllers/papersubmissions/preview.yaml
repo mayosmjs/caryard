@@ -1,0 +1,30 @@
+# ===================================
+#  Preview Behavior Config
+# ===================================
+
+name: Paper Submission Preview
+
+# Model Form Field configuration
+# ==============================
+preview: $/majos/conference/models/papersubmission/preview.yaml
+
+# Model Class name
+# ================
+modelClass: Majos\Conference\Models\PaperSubmission
+
+# Toolbar widget configuration
+# ============================
+toolbar:
+    # Buttons
+    buttons:
+        back:
+            label: backend::lang.form.back_to_list
+            icon: oc-icon-arrow-left
+            class: btn btn-default
+            data-request: back
+        delete:
+            label: backend::lang.form.delete
+            icon: oc-icon-trash-o
+            class: btn btn-danger
+            data-request: delete
+            data-request-data: confirm: "backend::lang.form.delete_confirm"

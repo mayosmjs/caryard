@@ -1,0 +1,40 @@
+<?php
+/**
+ * Example Conference Schedule Page
+ *
+ * This is an example of how to use the Conference plugin components
+ * on a CMS page. Copy this to your theme or create a new page.
+ */
+
+// Page title
+$this->page->title = 'Conference Schedule';
+?>
+
+<h1>Conference Schedule</h1>
+
+<div class="row">
+    <div class="col-12">
+        {# Main schedule with filters #}
+        {% component 'schedule' showFilters="true" %}
+    </div>
+</div>
+
+<hr>
+
+<h2>Featured Speakers</h2>
+<div class="row">
+    <div class="col-12">
+        {# Show only featured speakers, limited to 8 #}
+        {% component 'speakers' showFeaturedOnly="true" limit="8" %}
+    </div>
+</div>
+
+<hr>
+
+<h2>AI & Machine Learning Sessions</h2>
+<div class="row">
+    <div class="col-12">
+        {# Filter sessions by track #}
+        {% component 'sessionList' track="ai" limit="10" %}
+    </div>
+</div>

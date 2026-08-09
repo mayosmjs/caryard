@@ -1,0 +1,18 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+name: Speaker
+modelClass: Majos\Conference\Models\Speaker
+form: $/majos/conference/models/Speaker/fields.yaml
+defaultRedirect: majos/conference/speakers
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/conference/speakers/update/:id
+    redirectClose: majos/conference/speakers
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/conference/speakers
+    redirectClose: majos/conference/speakers
+preview:
+    title: backend::lang.form.preview_title

@@ -1,0 +1,131 @@
+<?php if (!$this->fatalError): ?>
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a href="<?= Backend::url('majos/conference/submissions') ?>" class="text-decoration-none">Submissions</a></li>
+                        <li class="breadcrumb-item active">ID: <?= e($formModel->id) ?></li>
+                    </ol>
+                </nav>
+                <h2 class="fw-bold">Submission Report</h2>
+                <p class="text-muted small">Submitted on <?= e($formModel->created_at->format('d M Y, H:i')) ?></p>
+            </div>
+            <div class="btn-group">
+                <a href="<?= Backend::url('majos/conference/submissions') ?>" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+                <button class="btn btn-primary btn-sm" onclick="window.print()">
+                    <i class="bi bi-printer"></i> Print Report
+                </button>
+                <?php if ($formModel->canBeDecided()): ?>
+                    <button type="button" class="btn btn-success btn-sm" data-request="onAccept" data-request-data='{"id": <?= $formModel->id ?>}' data-request-confirm="Accept this submission and email the author?">
+                        <i class="bi bi-check"></i> Accept
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" data-request="onReject" data-request-data='{"id": <?= $formModel->id ?>}' data-request-confirm="Reject this submission and email the author?">
+                        <i class="bi bi-x"></i> Reject
+                    </button>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="mb-0 fw-bold">Author Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="label-text">Presenter</div>
+                            <div class="data-text"><?= e($formModel->author_name) ?></div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="label-text">Email</div>
+                            <div class="data-text"><?= e($formModel->email) ?></div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="label-text">Affiliation</div>
+                            <div class="data-text"><?= e($formModel->affiliation) ?></div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="label-text">Department</div>
+                            <div class="data-text"><?= e($formModel->department) ?></div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="label-text">Institution</div>
+                            <div class="data-text"><?= e($formModel->institution) ?></div>
+                        </div>
+                        <div class="mb-0">
+                            <div class="label-text">Location</div>
+                            <div class="data-text text-truncate"><?= e($formModel->city) ?>, <?= e($formModel->country) ?></div>
+                        </div>
+                    </div>
+                </div>
+
+                <?php if ($formModel->decided_at): ?>
+                <div class="card bg-dark text-white">
+                    <div class="card-body p-4">
+                        <h6 class="label-text text-white-50 mb-3">Decision Status</h6>
+                        <div class="mb-3">
+                            <div class="small opacity-75">Decided At</div>
+                            <div class="fw-bold"><?= e($formModel->decided_at->format('d M Y, H:i')) ?></div>
+                        </div>
+                        <div>
+                            <div class="small opacity-75">Decided By</div>
+                            <div class="fw-bold">Admin User (ID: <?= e($formModel->decided_by) ?>)</div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <span class="badge bg-primary-subtle text-primary badge-custom mb-2"><?= e($formModel->category) ?></span>
+                            <h3 class="fw-bold"><?= e($formModel->title) ?></h3>
+                            <p class="text-muted">Authors: <?= e($formModel->authors) ?></p>
+                        </div>
+                        
+                        <hr class="my-4 opacity-25">
+                        
+                        <div class="mb-4">
+                            <h6 class="label-text mb-3">Abstract</h6>
+                            <p class="data-text lh-lg"><?= nl2br(e($formModel->abstract)) ?></p>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <?php foreach ((array) $formModel->keywords as $keyword): ?>
+                                <span class="badge bg-light text-dark border"><?= e($keyword) ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <?php if ($formModel->paper_file): ?>
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h6 class="label-text mb-3">Attached Documents</h6>
+                        <div class="d-flex align-items-center p-3 border rounded-3 bg-light">
+                            <i class="bi bi-file-earmark-pdf-fill text-danger fs-3 me-3"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold"><?= e($formModel->paper_file->file_name) ?></div>
+                                <div class="small text-muted"><?= e($formModel->paper_file->size . ' bytes') ?></div>
+                            </div>
+                            <a href="<?= $formModel->paper_file->getPath() ?>" class="btn btn-sm btn-outline-primary" target="_blank">Download</a>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
+        </div>
+    </div>
+
+   
+<?php else: ?>
+    <p class="flash-message static error"><?= e($this->fatalError) ?></p>
+<?php endif; ?>

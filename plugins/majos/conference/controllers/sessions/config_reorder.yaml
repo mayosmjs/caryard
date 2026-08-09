@@ -1,0 +1,24 @@
+# ===================================
+#  Reorder Behavior Config
+# ===================================
+
+# Model Class name
+modelClass: Majos\Conference\Models\Session
+
+# Reorder column
+column: sort_order
+
+# Reorder scope (optional)
+scope: onDay
+
+# Custom scope definition
+onDay:
+    type: where
+    column: conference_day_id
+    value: :dayId
+
+# Group records by (optional)
+group: conference_day_id
+
+# Prompt message
+prompt: Drag and drop sessions to reorder them within the same day.

@@ -1,0 +1,179 @@
+{% set scheduleItems = schedule|default([]) %}
+{% set dayCount = scheduleItems|length %}
+{% set fallbackSpeakerImage = '/plugins/majos/conference/assets/images/default-speaker.svg' %}
+
+<div class="container">
+    <div class="row g-4 gx-5 justify-content-center">
+        <div class="col-lg-6 text-center">
+            <div class="subtitle s2 mb-3 wow fadeInUp" data-wow-delay=".0s">Event Schedule</div>
+            <h2 class="wow fadeInUp" data-wow-delay=".2s">
+                {% if dayCount %}
+                    {{ dayCount }} Days of Nuclear Energy Excellence
+                {% else %}
+                    Conference Schedule
+                {% endif %}
+            </h2>
+        </div>
+    </div>
+
+    <div class="row g-4 gx-5 justify-content-center wow fadeInUp">
+        <div class="col-lg-12">
+            {% if __SELF__.property('showFilters') %}
+                <form data-request="onFilter" class="row g-3 align-items-end mb-4 pb-2">
+                    {% if __SELF__.property('showDayFilter') %}
+                        <div class="col-lg-4 col-md-6">
+                            <label for="filter-day" class="form-label text-light">Day</label>
+                            <select name="day" id="filter-day" class="form-control">
+                                {% for value, label in days %}
+                                    <option value="{{ value }}" {% if currentFilters.day == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+
+                    {% if __SELF__.property('showTrackFilter') %}
+                        <div class="col-lg-3 col-md-6">
+                            <label for="filter-track" class="form-label text-light">Track</label>
+                            <select name="track" id="filter-track" class="form-control">
+                                <option value="">All Tracks</option>
+                                {% for value, label in tracks %}
+                                    <option value="{{ value }}" {% if currentFilters.track == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+
+                    {% if __SELF__.property('showTypeFilter') %}
+                        <div class="col-lg-3 col-md-6">
+                            <label for="filter-type" class="form-label text-light">Type</label>
+                            <select name="type" id="filter-type" class="form-control">
+                                <option value="">All Types</option>
+                                {% for value, label in sessionTypes %}
+                                    <option value="{{ value }}" {% if currentFilters.type == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+
+                    <div class="col-lg-2 col-md-6">
+                        <button type="submit" class="btn-main fx-slide w-100">
+                            <span>Filter Schedule</span>
+                        </button>
+                    </div>
+                </form>
+            {% endif %}
+
+            {% if not dayCount %}
+                <div class="border-white-bottom-op-2 pb-5 mb-0 text-center">
+                    <h3 class="mb-3">No sessions available yet</h3>
+                    <p class="fs-15 mb-0">Check back soon for the latest conference schedule.</p>
+                </div>
+            {% else %}
+                <div class="de-tab plain schedule-tab-wrap">
+                    <ul class="d-tab-nav schedule-tab-nav mb-4 pb-4 d-flex justify-content-between">
+                        {% for dayData in scheduleItems %}
+                            <li class="{% if loop.first %}active-tab{% endif %}">
+                                <h3>Day {{ loop.index }}</h3>
+                                {% if dayData.day and dayData.day.date %}
+                                    {{ dayData.day.date|date('M j, Y') }}
+                                {% else %}
+                                    Date TBD
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <ul class="d-tab-content pt-3 wow fadeInUp">
+                        {% for dayData in scheduleItems %}
+                            <li>
+                                {% if dayData.sessions is empty %}
+                                    <div class="border-white-bottom-op-2 pb-5 mb-5">
+                                        <div class="row g-4 align-items-center">
+                                            <div class="col-md-12">
+                                                <h3 class="mb-2">{{ dayData.day.title }}</h3>
+                                                <p class="fs-15 mb-0">No sessions scheduled for this day yet.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    {% for session in dayData.sessions %}
+                                        {% set primarySpeaker = session.speakers|first %}
+                                        {% set speakerCount = session.speakers|length %}
+                                        {% set extraSpeakerCount = speakerCount > 1 ? speakerCount - 1 : 0 %}
+                                        {% set speakerImage = primarySpeaker ? __SELF__.getSpeakerImageUrl(primarySpeaker) : fallbackSpeakerImage %}
+                                        {% set sessionLabel = (session.session_type and sessionTypes[session.session_type] is defined) ? sessionTypes[session.session_type] : 'Session' %}
+                                        {% set timeRange = 'Time TBD' %}
+                                        {% if session.starts_at and session.ends_at %}
+                                            {% set timeRange = session.starts_at|date('g:i A') ~ ' - ' ~ session.ends_at|date('g:i A') %}
+                                        {% endif %}
+                                        {% set cardClasses = not loop.last ? 'border-white-bottom-op-2 pb-5 mb-5' : 'pb-5 mb-5' %}
+
+                                        <div class="{{ cardClasses }}">
+                                            <div class="row g-4 align-items-center">
+                                                <div class="col-md-2">
+                                                    {{ timeRange }}
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="d-flex align-items-center">
+                                                        {% if primarySpeaker %}
+                                                            <button
+                                                                type="button"
+                                                                class="speaker-popup-trigger p-0 border-0 bg-transparent me-4"
+                                                                data-speaker-popup-trigger
+                                                                data-speaker-popup="{{ __SELF__.getSpeakerPopupData(primarySpeaker)|e('html_attr') }}"
+                                                                aria-label="Open {{ primarySpeaker.full_name }} profile"
+                                                            >
+                                                                <img src="{{ speakerImage }}" class="w-100px rounded-1" alt="{{ primarySpeaker.full_name }}">
+                                                            </button>
+                                                        {% else %}
+                                                            <img src="{{ speakerImage }}" class="w-100px rounded-1 me-4" alt="{{ session.title }}">
+                                                        {% endif %}
+                                                        <div>
+                                                            <h5 class="mb-0">{{ primarySpeaker ? primarySpeaker.full_name : 'Speaker TBA' }}</h5>
+                                                            {% if primarySpeaker and (primarySpeaker.title or primarySpeaker.company) %}
+                                                                {% if primarySpeaker.title %}{{ primarySpeaker.title }}
+                                                                {% endif %}
+                                                                {% if primarySpeaker.title and primarySpeaker.company %}, <br>
+                                                                {% endif %}
+                                                                {% if primarySpeaker.company %}
+                                                                {{ primarySpeaker.company }}
+                                                                {% endif %}
+                                                            {% elseif session.venue %}
+                                                                {{ session.venue.name }}
+                                                            {% else %}
+                                                                Conference Speaker
+                                                            {% endif %}
+                                                            {% if extraSpeakerCount %}
+                                                                <br> <span style="color: #FFD60A">+{{ extraSpeakerCount }} more speaker </span>{% if extraSpeakerCount > 1 %}s{% endif %}
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h3>{{ sessionLabel }}: {{ session.title }}</h3>
+                                                    <p class="fs-15 mb-0">
+                                                        {% if session.description %}
+                                                            {{ session.description|striptags|trim }}
+                                                        {% else %}
+                                                            Session details coming soon.
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

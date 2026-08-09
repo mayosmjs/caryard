@@ -1,0 +1,13 @@
+1.0.1:
+    - Create conference plugin tables and seed initial data.
+    - 2025.01.01.000000_create_conference_days_table.php
+    - 2025.01.01.000001_create_venues_table.php
+    - 2025.01.01.000002_create_speakers_table.php
+    - 2025.01.01.000003_create_sessions_table.php
+    - 2025.01.01.000004_create_session_speaker_table.php
+    - 2025.01.01.000005_create_paper_submissions_table.php
+    - ConferenceDataSeeder.php
+
+1.0.2:
+    - Add verification codes table for paper submission email verification.
+    - 2025.01.01.000006_create_verification_codes_table.php

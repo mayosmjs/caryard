@@ -1,0 +1,80 @@
+<?php
+/**
+ * SessionList Component Template
+ *
+ * Displays a list of sessions
+ */
+?>
+<div class="session-list">
+    <?php if (empty($sessions)): ?>
+        <div class="alert alert-info">
+            No sessions found.
+        </div>
+    <?php else: ?>
+        <div class="list-group">
+            <?php foreach ($sessions as $session): ?>
+                <div class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">
+                            <a href="<?= $this->pageUrl('sessions', ['slug' => $session->slug]) ?>">
+                                <?= e($session->title) ?>
+                            </a>
+                        </h5>
+                        <small class="text-muted">
+                            <?= $session->starts_at->format('H:i') ?>
+                        </small>
+                    </div>
+
+                    <div class="session-meta mb-2">
+                        <?php if ($session->session_type): ?>
+                            <span class="badge badge-primary mr-1">
+                                <?= e(ucfirst(str_replace('_', ' ', $session->session_type))) ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <?php if ($session->track): ?>
+                            <span class="badge badge-secondary mr-1">
+                                <?= e(ucfirst($session->track)) ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <?php if ($session->day): ?>
+                            <span class="badge badge-info">
+                                <?= e($session->day->title) ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <?php if ($session->venue): ?>
+                            <span class="badge badge-dark">
+                                <?= e($session->venue->name) ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if ($session->speakers->count() > 0): ?>
+                        <div class="speakers mb-2">
+                            <small class="text-muted">Speakers:
+                                <?php foreach ($session->speakers as $speaker): ?>
+                                    <a href="<?= $this->pageUrl('speakers', ['slug' => $speaker->slug]) ?>">
+                                        <?= e($speaker->full_name) ?>
+                                    </a>
+                                        <?php if (!$loop->last): ?>, <?php endif; ?>
+                                <?php endforeach; ?>
+                            </small>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($session->description): ?>
+                        <p class="mb-1 text-muted">
+                            <?= Str::limit(strip_tags($session->description), 150) ?>
+                        </p>
+                    <?php endif; ?>
+
+                    <small class="text-muted">
+                        Duration: <?= $session->getDurationInMinutes() ?> minutes
+                    </small>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>

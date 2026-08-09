@@ -1,0 +1,9 @@
+<?php
+$statusLabels = [
+    'submitted' => ['label' => 'Submitted', 'class' => 'badge badge-warning'],
+    'accepted' => ['label' => 'Accepted', 'class' => 'badge badge-success'],
+    'rejected' => ['label' => 'Rejected', 'class' => 'badge badge-danger'],
+];
+$info = $statusLabels[$record->status] ?? ['label' => 'Unknown', 'class' => 'badge badge-secondary'];
+?>
+<span class="<?= e($info['class']) ?>"><?= e($info['label']) ?></span>

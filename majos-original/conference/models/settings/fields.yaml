@@ -1,0 +1,54 @@
+# ===================================
+#  Conference Plugin Settings
+# ===================================
+
+fields:
+    submission_deadline:
+        label: Submission Deadline
+        type: datepicker
+        mode: datetime
+        span: left
+        comment: The deadline for abstract submissions (YYYY-MM-DD HH:MM:SS).
+
+    max_file_size_kb:
+        label: Max File Size (KB)
+        type: number
+        span: right
+        min: 100
+        max: 20480
+        default: 5120
+        comment: 'Maximum allowed PDF file size in kilobytes (default: 5120 KB = 5 MB).'
+
+    token_expiry_days:
+        label: Edit Link Expiry (Days)
+        type: number
+        span: left
+        min: 1
+        max: 365
+        default: 30
+        comment: Number of days the edit link remains valid.
+
+    unique_email:
+        label: Unique Email Submissions
+        type: checkbox
+        span: right
+        default: true
+        comment: Prevent multiple submissions from the same email address.
+
+    turnstile_site_key:
+        label: Turnstile Site Key
+        type: text
+        span: left
+        comment: Cloudflare Turnstile site key (leave empty to disable).
+
+    turnstile_secret_key:
+        label: Turnstile Secret Key
+        type: text
+        span: right
+        comment: Cloudflare Turnstile secret key (leave empty to disable).
+
+    notification_email:
+        label: Notification Email
+        type: text
+        span: left
+        comment: Email address for admin notifications (optional).

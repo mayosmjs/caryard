@@ -1,0 +1,36 @@
+# ===================================
+#  List Column Configuration
+# ===================================
+
+columns:
+    id:
+        label: ID
+        type: number
+        searchable: true
+    name:
+        label: Name
+        type: text
+        searchable: true
+    location:
+        label: Location
+        type: text
+        searchable: true
+    capacity:
+        label: Capacity
+        type: number
+    slug:
+        label: Slug
+        type: text
+        searchable: true
+    sort_order:
+        label: Sort Order
+        type: number
+    is_published:
+        label: Published
+        type: switch
+    created_at:
+        label: Created
+        type: datetime
+    updated_at:
+        label: Updated
+        type: datetime

@@ -1,8 +1,0 @@
-{
-    "name": "raviraj/rjgallery-plugin",
-    "type": "october-plugin",
-    "description": "None",
-    "require": {
-        "composer/installers": "~1.0"
-    }
-}

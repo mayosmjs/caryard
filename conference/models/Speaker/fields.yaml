@@ -1,0 +1,74 @@
+# ===================================
+#  Form Field Configuration
+# ===================================
+
+fields:
+    full_name:
+        label: Full Name
+        type: text
+        span: left
+        required: true
+    title:
+        label: Title / Position
+        type: text
+        span: right
+    slug:
+        label: Slug
+        type: text
+        span: left
+        required: true
+        preset:
+            field: full_name
+            type: slug
+    company:
+        label: Company
+        type: text
+        span: right
+    country:
+        label: Country
+        type: text
+        span: left
+    expertise:
+        label: Expertise
+        type: text
+        span: right
+        comment: Comma-separated areas of expertise
+    email:
+        label: Email
+        type: email
+        span: left
+    linkedin_url:
+        label: LinkedIn URL
+        type: text
+        span: right
+        comment: https://linkedin.com/in/username
+    website_url:
+        label: Website URL
+        type: text
+        span: left
+    photo_file:
+        label: Photo
+        type: fileupload
+        mode: image
+        span: right
+        imageWidth: 200
+        imageHeight: 200
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+    biography:
+        label: Biography
+        type: richeditor
+        size: large
+        span: full
+    is_featured:
+        label: Featured
+        type: switch
+        span: left
+        default: false
+    is_published:
+        label: Published
+        type: switch
+        span: right
+        default: true

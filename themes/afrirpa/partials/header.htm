@@ -1,0 +1,78 @@
+<header data-header class="fixed left-0 right-0 top-0 z-50 transition-all duration-300 bg-transparent">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
+        <!-- Logo -->
+        <a href="{{ 'home'|page }}" class="relative z-10 flex items-center gap-3">
+            <!-- <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 text-white"> -->
+                <!-- <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                    </path>
+                </svg> -->
+                <img src="{{ 'assets/images/logo.png'|theme }}" alt="AFRIRPA Logo" class="h-14 w-14">
+
+            <!-- </div> -->
+            <div class=" sm:block">
+                <span class="text-lg font-bold text-white">AFRIRPA 2027</span>
+                <!-- <span class="hidden sm:block ml-2 rounded-full bg-accent-500/20 px-2 py-0.5 text-xs font-medium text-accent-300">2nd to 5th February 2027</span> -->
+            </div>
+        </a>
+
+        <div class="hidden items-center gap-8 lg:flex" data-nav>
+            <div class="site-about-menu">
+                <a href="{{ 'about'|page }}" class="text-sm font-medium text-white/80 transition-colors hover:text-white">About ▾</a>
+                <div class="site-about-dropdown">
+                    <a href="{{ 'about'|page }}">About Conference</a>
+                    <a href="{{ 'committee'|page }}">Committee</a>
+                    <a href="{{ 'guideline'|page }}">Guidelines</a>
+                    <a href="{{ 'terms'|page }}">Terms and conditions</a>
+                </div>
+            </div>
+            {% if not siteSettings.hide_speakers_nav %}
+            <a href="{{ 'home'|page }}#speakers" data-nav-link="speakers" class="text-sm font-medium text-white/80 transition-colors hover:text-white">Speakers</a>
+            {% endif %}
+            <a href="{{ 'home'|page }}#schedule" data-nav-link="schedule" class="text-sm font-medium text-white/80 transition-colors hover:text-white">Schedule</a>
+            <a href="{{ 'committee'|page }}" data-nav-link="committee" class="text-sm font-medium text-white/80 transition-colors hover:text-white">Committee</a>
+            <a href="{{ 'registration'|page }}" class="text-sm font-medium text-white/80 transition-colors hover:text-white">Abstract Submission</a>
+            {% if not siteSettings.hide_sponsors_nav %}
+            <a href="{{ 'home'|page }}#sponsors" data-nav-link="sponsors" class="text-sm font-medium text-white/80 transition-colors hover:text-white">Sponsors</a>
+            {% endif %}
+            <a href="{{ 'home'|page }}#venue" data-nav-link="venue" class="text-sm font-medium text-white/80 transition-colors hover:text-white">Venue</a>
+            <a href="#contact" data-nav-link="contact" class="text-sm font-medium text-white/80 transition-colors hover:text-white">Contact Us</a>
+        </div>
+
+        <!-- Right Side Actions -->
+        <div class="flex items-center gap-4">
+            <!-- Mobile Menu Button -->
+            <button type="button" id="mobile-menu-toggle"
+                class="rounded-lg p-2 text-white hover:bg-white/10 lg:hidden"
+                aria-label="Toggle mobile menu"
+                aria-expanded="false">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path class="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                    <path class="close-icon hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden border-t border-white/10 bg-gray-900/95 px-4 py-6 backdrop-blur-xl lg:hidden">
+        <div class="flex flex-col gap-4" data-nav-mobile>
+            <a href="{{ 'about'|page }}" class="text-lg font-medium text-white transition-colors hover:text-primary-400">About</a>
+            <a href="{{ 'committee'|page }}" class="text-base font-medium text-white/80 transition-colors hover:text-primary-400">Committee</a>
+            <a href="{{ 'guideline'|page }}" class="text-base font-medium text-white/80 transition-colors hover:text-primary-400">Guidelines</a>
+            {% if not siteSettings.hide_speakers_nav %}
+            <a href="{{ 'home'|page }}#speakers" data-nav-link="speakers" class="text-lg font-medium text-white transition-colors hover:text-primary-400">Speakers</a>
+            {% endif %}
+            <a href="{{ 'home'|page }}#schedule" data-nav-link="schedule" class="text-lg font-medium text-white transition-colors hover:text-primary-400">Schedule</a>
+            <a href="{{ 'registration'|page }}" class="text-lg font-medium text-white transition-colors hover:text-primary-400">Abstract Submission</a>
+            {% if not siteSettings.hide_sponsors_nav %}
+            <a href="{{ 'home'|page }}#sponsors" data-nav-link="sponsors" class="text-lg font-medium text-white transition-colors hover:text-primary-400">Sponsors</a>
+            {% endif %}
+            <a href="{{ 'home'|page }}#venue" data-nav-link="venue" class="text-lg font-medium text-white transition-colors hover:text-primary-400">Venue</a>
+            <a href="#contact" data-nav-link="contact" class="text-lg font-medium text-white transition-colors hover:text-primary-400">Contact Us</a>
+        </div>
+    </div>
+</header>

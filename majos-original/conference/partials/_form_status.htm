@@ -1,0 +1,29 @@
+<?php
+$statusLabels = [
+    'submitted' => ['label' => 'Submitted', 'class' => 'badge badge-warning'],
+    'accepted' => ['label' => 'Accepted', 'class' => 'badge badge-success'],
+    'rejected' => ['label' => 'Rejected', 'class' => 'badge badge-danger'],
+];
+$info = $statusLabels[$model->status ?? 'submitted'] ?? ['label' => 'Unknown', 'class' => 'badge badge-secondary'];
+?>
+<span class="<?= e($info['class']) ?>"><?= e($info['label']) ?></span>
+
+<div class="form-buttons" style="margin-top: 16px;">
+    <a href="<?= Backend::url('majos/conference/submissions/preview/' . $model->id) ?>" class="btn btn-info">
+        <i class="icon-eye"></i> Preview Report
+    </a>
+</div>
+
+<?php if ($model->canBeDecided()): ?>
+     <div class="form-buttons" style="margin-top: 8px;">
+         <button type="button" class="btn btn-success" data-request="onAccept" data-request-data='{"id": <?= $model->id ?>}' data-request-confirm="Accept this submission and email the author?">
+             <i class="icon-check"></i> Accept
+         </button>
+         <button type="button" class="btn btn-danger" data-request="onReject" data-request-data='{"id": <?= $model->id ?>}' data-request-confirm="Reject this submission and email the author?">
+             <i class="icon-close"></i> Reject
+         </button>
+     </div>
+ <?php endif; ?>
+
+
+ 

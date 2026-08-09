@@ -1,0 +1,53 @@
+# ===================================
+#  Form Field Configuration
+# ===================================
+
+fields:
+    name:
+        label: Name
+        type: text
+        span: left
+        required: true
+    designation:
+        label: Designation
+        type: text
+        span: right
+        required: true
+        comment: Chair, Secretary, Member, Conference President, etc.
+    committee_type:
+        label: Committee Type
+        type: dropdown
+        span: left
+        required: true
+        options:
+            Scientific Committee: Scientific Committee
+            Finance Committee: Finance Committee
+            Logistics Committee: Logistics Committee
+            Publicity and Marketing Committee: Publicity and Marketing Committee
+            Expatriate Team: Expatriate Team
+    sort_order:
+        label: Sort Order
+        type: number
+        span: right
+        default: 0
+    image:
+        label: Image
+        type: fileupload
+        mode: image
+        span: right
+        imageWidth: 220
+        imageHeight: 260
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+    description:
+        label: Description
+        type: textarea
+        size: small
+        span: left
+    is_published:
+        label: Published
+        type: switch
+        span: left
+        default: true

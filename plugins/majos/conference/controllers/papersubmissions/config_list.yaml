@@ -1,0 +1,44 @@
+# ===================================
+#  List Behavior Config
+# ===================================
+
+# Model Class name
+modelClass: Majos\Conference\Models\PaperSubmission
+
+# List Title
+title: Paper Submissions
+
+# Model List Column configuration
+list: $/majos/conference/models/papersubmission/columns.yaml
+
+# Toolbar widget configuration
+toolbar:
+    # Partial for toolbar buttons
+    buttons: list_toolbar
+    # Search widget configuration
+    search:
+        prompt: backend::lang.list.search_prompt
+
+# Link URL for each record
+recordUrl: majos/conference/papersubmissions/update/:id
+
+# Message to display if the list is empty
+noRecordsMessage: backend::lang.list.no_records
+
+# Records to display per page
+recordsPerPage: 20
+
+# Display page numbers with pagination, disable to improve performance
+showPageNumbers: true
+
+# Displays the list column set up button
+showSetup: true
+
+# Displays the sorting link on each column
+showSorting: true
+
+# Displays checkboxes next to each record
+showCheckboxes: true
+
+# Displays the search box
+showSearch: true

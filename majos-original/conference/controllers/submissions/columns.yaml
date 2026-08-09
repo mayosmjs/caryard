@@ -1,0 +1,78 @@
+modelClass: Majos\Conference\Models\Submission
+
+list:
+    columns:
+        id:
+            label: ID
+            searchable: true
+            sortable: true
+        author_name:
+            label: Presenter
+            searchable: true
+            sortable: true
+        email:
+            label: Email
+            searchable: true
+        title:
+            label: Title
+            searchable: true
+            truncate: 50
+        category:
+            label: Category
+            searchable: true
+            sortable: true
+        status:
+            label: Status
+            type: partial
+            path: ~/plugins/majos/conference/partials/_list_status
+            sortable: true
+        created_at:
+            label: Submitted
+            type: datetime
+            sortable: true
+            format: d/m/Y H:i
+
+    recordUrl: majos/conference/submissions/preview/:id
+
+    toolbar:
+        buttons:
+            create: false
+            delete: false
+
+    # ✅ MUST be inside list
+    massActions:
+        delete: true
+
+    filters:
+        scopes:
+            status:
+                label: Status
+                type: group
+                conditions: status in (:value)
+                options:
+                    submitted: Submitted
+                    accepted: Accepted
+                    rejected: Rejected
+                default: submitted
+
+            category:
+                label: Category
+                type: group
+                conditions: category in (:value)
+                options:
+                    'Artificial Intelligence': Artificial Intelligence
+                    'Brachytherapy': Brachytherapy
+                    'Nuclear Medicine': Nuclear Medicine
+                    'Particle Therapy': Particle Therapy
+                    'Quality Assurance': Quality Assurance
+                    'Radiation Biology': Radiation Biology
+                    'Radiation Imaging': Radiation Imaging
+                    'Radiation Protection': Radiation Protection
+                    'Radiation Therapy': Radiation Therapy
+                    'Others': Others
+
+    defaultSort:
+        column: created_at
+        direction: desc
+
+    recordsPerPage: 30

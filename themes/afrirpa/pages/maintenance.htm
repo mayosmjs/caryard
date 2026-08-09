@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFRIRPA 2027 | Under Maintenance</title>
+    <meta name="robots" content="noindex">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            margin: 0;
+            font-family: "Space Grotesk", Arial, sans-serif;
+            color: #e9d5ff;
+            background-color: #1a0534;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 18% 12%, rgba(168, 85, 247, 0.28), transparent 35%),
+                radial-gradient(circle at 86% 20%, rgba(192, 132, 252, 0.20), transparent 38%),
+                linear-gradient(135deg, rgba(26, 5, 52, 0.95) 0%, rgba(45, 14, 107, 0.88) 45%, rgba(26, 5, 52, 0.95) 100%);
+            background-size: 64px 64px, 64px 64px, auto, auto, auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            -webkit-font-smoothing: antialiased;
+        }
+        .card {
+            max-width: 560px;
+            width: 100%;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(192, 132, 252, 0.25);
+            border-radius: 24px;
+            padding: 48px 32px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+        }
+        .mark {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 22px;
+            display: grid;
+            place-items: center;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #c084fc, #a855f7);
+            box-shadow: 0 12px 32px rgba(168, 85, 247, 0.35);
+            animation: pulse 2.4s ease-in-out infinite;
+        }
+        .mark svg { width: 40px; height: 40px; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(168, 85, 247, 0.45);
+            background: rgba(168, 85, 247, 0.11);
+            color: #c084fc;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-radius: 999px;
+            padding: 6px 16px;
+            margin-bottom: 18px;
+        }
+        .badge .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #c084fc;
+            box-shadow: 0 0 0 4px rgba(192, 132, 252, 0.18);
+        }
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 700;
+            line-height: 1.1;
+            color: #ffffff;
+        }
+        h1 span {
+            background-image: linear-gradient(90deg, #e9d5ff, #a855f7, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        p {
+            margin: 0 auto 6px;
+            max-width: 420px;
+            color: rgba(233, 213, 255, 0.72);
+            font-size: 15px;
+            line-height: 1.65;
+        }
+        .status {
+            margin: 26px auto 0;
+            max-width: 380px;
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            background: rgba(26, 5, 52, 0.5);
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 13.5px;
+            color: #e9d5ff;
+        }
+        .status .spinner {
+            width: 16px;
+            height: 16px;
+            flex: none;
+            border-radius: 50%;
+            border: 2px solid rgba(192, 132, 252, 0.3);
+            border-top-color: #c084fc;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        a {
+            display: inline-block;
+            margin-top: 22px;
+            color: #c084fc;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        a:hover { color: #e9d5ff; }
+        @media (max-width: 480px) {
+            .card { padding: 36px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"></path>
+                <path d="M9 12l2 2 4-4"></path>
+            </svg>
+        </div>
+        <div class="badge"><span class="dot"></span>Maintenance</div>
+        <h1>We'll be <span>right back.</span></h1>
+        <p>The AFRIRPA 2027 website is undergoing scheduled maintenance to improve your experience.</p>
+        <p>Please check back shortly. Thank you for your patience.</p>
+        <div class="status"><span class="spinner"></span>Routine maintenance in progress</div>
+        <a href="mailto:afrirpa@eaarp.co.ke">Contact the organizing team</a>
+    </div>
+</body>
+</html>

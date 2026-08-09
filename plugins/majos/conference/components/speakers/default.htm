@@ -1,0 +1,96 @@
+<section id="speakers" class="bg-white py-20 brown:bg-gray-950 lg:py-28">
+  <div class="mx-auto max-w-7xl px-4 lg:px-8">
+    <!-- Section header -->
+    <div class="mx-auto max-w-3xl text-center">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-4 py-1.5 text-sm font-medium text-primary-700 brown:border-primary-800 brown:bg-primary-900/30 brown:text-primary-300">
+        World-Class Speakers
+      </div>
+      <h2 class="text-3xl font-bold tracking-tight text-gray-900 brown:text-white sm:text-4xl lg:text-5xl">
+        Guest <span class="text-gradient">Speakers</span>
+      </h2>
+      <p class="mt-4 text-lg text-gray-600 brown:text-gray-400">
+        Industry leaders and innovators sharing their insights and expertise.
+      </p>
+    </div>
+
+    {% set featuredSpeakers = speakers|filter(s => s.is_featured) %}
+    {% set otherSpeakers = speakers|filter(s => not s.is_featured) %}
+
+    <!-- Featured Speakers -->
+    {% if featuredSpeakers|length %}
+    <div class="mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+      {% for speaker in featuredSpeakers %}
+      <div
+        class="group relative overflow-hidden rounded-2xl bg-gray-100 brown:bg-gray-900 animated cursor-pointer"
+        data-animate=""
+        style="animation-delay: {{ loop.index0 * 100 }}ms"
+        data-speaker-popup-trigger
+        data-speaker-popup="{{ __SELF__.getSpeakerPopupData(speaker)|e('html_attr') }}"
+        tabindex="0"
+        aria-label="Open {{ speaker.full_name }} profile"
+      >
+        <div class="aspect-[4/5] overflow-hidden">
+          <img src="{{ __SELF__.getPhotoUrl(speaker) }}" alt="{{ speaker.full_name }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6">
+          {% if speaker.topic %}
+            <p class="mb-2 text-sm font-medium text-primary-400">{{ speaker.topic }}</p>
+          {% endif %}
+          <h3 class="text-xl font-bold text-white">{{ speaker.full_name }}</h3>
+          <p class="text-sm text-gray-300">
+            {% if speaker.title %}{{ speaker.title }}{% endif %}
+            {% if speaker.company %}, {{ speaker.company }}{% endif %}
+          </p>
+          <div class="mt-4 flex gap-3">
+            {% if speaker.linkedin_url %}
+              <a href="{{ speaker.linkedin_url }}" class="text-gray-400 transition-colors hover:text-white" target="_blank" rel="noopener">
+                <i class="icon-linkedin h-5 w-5"></i>
+              </a>
+            {% endif %}
+            {% if speaker.website_url %}
+              <a href="{{ speaker.website_url }}" class="text-gray-400 transition-colors hover:text-white" target="_blank" rel="noopener">
+                <i class="icon-globe h-5 w-5"></i>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Other Speakers -->
+    {% if otherSpeakers|length %}
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {% for speaker in otherSpeakers %}
+      <div
+        class="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-primary-200 hover:shadow-lg brown:border-gray-800 brown:bg-gray-900 brown:hover:border-primary-800 animated cursor-pointer"
+        data-animate=""
+        style="animation-delay: {{ 300 + loop.index0 * 100 }}ms"
+        data-speaker-popup-trigger
+        data-speaker-popup="{{ __SELF__.getSpeakerPopupData(speaker)|e('html_attr') }}"
+        tabindex="0"
+        aria-label="Open {{ speaker.full_name }} profile"
+      >
+        <img src="{{ __SELF__.getPhotoUrl(speaker) }}" alt="{{ speaker.full_name }}" class="h-16 w-16 rounded-full object-cover" loading="lazy">
+        <div>
+          <h4 class="font-semibold text-gray-900 brown:text-white">{{ speaker.full_name }}</h4>
+          <p class="text-sm text-gray-600 brown:text-gray-400">
+            {% if speaker.title %}{{ speaker.title }}{% endif %}
+            {% if speaker.company %}, {{ speaker.company }}{% endif %}
+          </p>
+          {% if speaker.topic %}
+            <p class="mt-1 text-xs text-primary-500">{{ speaker.topic }}</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+
+  </div>
+</section>
+{% partial 'speakers::partials/speaker-modal.htm' %}
+<script src="{{ 'speakers/assets/js/speaker-modal.js'|theme }}"></script>

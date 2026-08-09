@@ -1,0 +1,393 @@
+title = "About"
+url = "/about2"
+layout = "default"
+is_hidden = false
+==
+
+<section class="about-hero relative overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="{{ 'assets/images/nairobilandscape.jpg'|theme }}" alt="" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-850 via-gray-850 to-accent-900"></div>
+        <div class="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-primary-500/30 blur-[120px]"></div>
+        <div class="absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-accent-500/30 blur-[120px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+    </div>
+    <div class="about-hero-inner relative z-10">
+        <span class="about-pill">7th African Regional Congress of IRPA</span>
+        <h1>About the <span class="about-gradient">Conference</span></h1>
+        <p>Yes, Africa Can through collective action. No Human is Limited through individual excellence.</p>
+    </div>
+</section>
+
+<style>
+/* ── About-copy page redesign ─────────────────────────────── */
+.ac-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 56px 20px 80px;
+}
+
+/* Facts strip */
+.ac-facts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(45,27,105,.07);
+  margin-bottom: 48px;
+}
+.ac-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 24px;
+  border-right: 1px solid var(--line);
+}
+.ac-fact:last-child { border-right: none; }
+.ac-fact-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--purple-soft);
+  color: var(--navy);
+  display: grid;
+  place-items: center;
+  margin-bottom: 4px;
+}
+.ac-fact span {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+}
+.ac-fact strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.3;
+}
+
+/* Main theme */
+.ac-theme {
+  text-align: center;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #2d1b69 0%, #3d2485 60%, #1e3a5f 100%);
+  padding: 52px 40px;
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.ac-theme::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(196,181,253,.25), transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(245,158,11,.18), transparent 40%);
+}
+.ac-theme-kicker {
+  position: relative;
+  display: inline-block;
+  border: 1px solid rgba(196,181,253,.4);
+  background: rgba(196,181,253,.12);
+  border-radius: 999px;
+  padding: 6px 16px;
+  color: #e9d5ff;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 20px;
+}
+.ac-theme blockquote {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  font-size: clamp(20px, 3.2vw, 34px);
+  font-weight: 800;
+  line-height: 1.25;
+  color: #fff;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.ac-theme blockquote::before {
+  content: "C";
+  font-size: 72px;
+  line-height: 0;
+  vertical-align: -28px;
+  color: rgba(196,181,253,.35);
+  margin-right: 6px;
+}
+
+/* Sub-themes section */
+.ac-st-section-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.ac-st-section-head h2 {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 32px);
+  color: var(--navy);
+}
+.ac-st-section-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  padding-bottom: 3px;
+}
+
+/* Individual sub-theme card */
+.ac-st {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 24px rgba(45,27,105,.05);
+  transition: box-shadow .2s;
+}
+.ac-st:hover { box-shadow: 0 12px 40px rgba(45,27,105,.1); }
+
+.ac-st-num-col {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 0 0;
+  background: var(--purple-soft);
+  border-right: 1px solid var(--line);
+}
+.ac-st-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.ac-st-content {
+  padding: 26px 28px 28px;
+}
+.ac-st-content h3 {
+  margin: 0 0 10px;
+  color: var(--navy);
+  font-size: 19px;
+  line-height: 1.25;
+}
+.ac-st-content > p {
+  margin: 0 0 6px;
+  color: #334155;
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+.ac-st-topics-label {
+  margin: 16px 0 10px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--muted);
+}
+.ac-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ac-topics li {
+  border: 1px solid rgba(167,139,250,.3);
+  border-radius: 999px;
+  background: rgba(167,139,250,.07);
+  padding: 5px 13px;
+  font-size: 13px;
+  color: var(--navy);
+  line-height: 1.4;
+}
+
+/* Accent colours per card */
+.ac-st:nth-child(1) .ac-st-num-col { background: #ede9fe; }
+.ac-st:nth-child(1) .ac-st-num     { background: #5b21b6; }
+.ac-st:nth-child(2) .ac-st-num-col { background: #ecfdf5; }
+.ac-st:nth-child(2) .ac-st-num     { background: #065f46; }
+.ac-st:nth-child(3) .ac-st-num-col { background: #fff7ed; }
+.ac-st:nth-child(3) .ac-st-num     { background: #92400e; }
+.ac-st:nth-child(4) .ac-st-num-col { background: #eff6ff; }
+.ac-st:nth-child(4) .ac-st-num     { background: #1e40af; }
+.ac-st:nth-child(5) .ac-st-num-col { background: #fdf2f8; }
+.ac-st:nth-child(5) .ac-st-num     { background: #86198f; }
+
+.ac-st:nth-child(1) .ac-topics li { border-color: rgba(91,33,182,.25); background: rgba(91,33,182,.05); }
+.ac-st:nth-child(2) .ac-topics li { border-color: rgba(6,95,70,.25);   background: rgba(6,95,70,.05); }
+.ac-st:nth-child(3) .ac-topics li { border-color: rgba(146,64,14,.25); background: rgba(146,64,14,.05); }
+.ac-st:nth-child(4) .ac-topics li { border-color: rgba(30,64,175,.25); background: rgba(30,64,175,.05); }
+.ac-st:nth-child(5) .ac-topics li { border-color: rgba(134,25,143,.25);background: rgba(134,25,143,.05); }
+
+@media (max-width: 700px) {
+  .ac-facts { grid-template-columns: repeat(2, 1fr); }
+  .ac-st { grid-template-columns: 60px 1fr; }
+  .ac-st-num-col { padding-top: 22px; }
+  .ac-st-num { width: 36px; height: 36px; font-size: 14px; }
+}
+@media (max-width: 480px) {
+  .ac-facts { grid-template-columns: 1fr; }
+  .ac-fact { border-right: none; border-bottom: 1px solid var(--line); }
+  .ac-fact:last-child { border-bottom: none; }
+  .ac-theme { padding: 36px 20px; }
+}
+</style>
+
+<div class="ac-wrap">
+
+  <!-- Congress at a glance -->
+  <div class="ac-facts">
+    <div class="ac-fact">
+      <div class="ac-fact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <span>Type</span>
+      <strong>Hybrid Conference<br>(In-person &amp; Online)</strong>
+    </div>
+    <div class="ac-fact">
+      <div class="ac-fact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <span>Pre-Congress Workshop</span>
+      <strong>2nd February 2027</strong>
+    </div>
+    <div class="ac-fact">
+      <div class="ac-fact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+      </div>
+      <span>Congress Dates</span>
+      <strong>3rd – 5th February 2027</strong>
+    </div>
+    <div class="ac-fact">
+      <div class="ac-fact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <span>Venue</span>
+      <strong>Nairobi, Kenya</strong>
+    </div>
+  </div>
+
+  <!-- Main theme -->
+  <div class="ac-theme">
+    <div class="ac-theme-kicker">Main Theme</div>
+    <blockquote>Radiation Sciences and Protection for Sustainable Development in Africa.</blockquote>
+  </div>
+
+  <!-- Sub-themes -->
+  <div class="ac-st-section-head">
+    <h2>Sub-Themes &amp; Abstract Topics</h2>
+    <p>Select a theme below and submit your abstract.</p>
+  </div>
+
+  <!-- 1 -->
+  <div class="ac-st">
+    <div class="ac-st-num-col"><div class="ac-st-num">01</div></div>
+    <div class="ac-st-content">
+      <h3>Radiation Protection in Healthcare</h3>
+      <p>Worldwide, radiation is used in medicine more than 10 million times every day — from large urban hospitals to small rural clinics. Full integration of radiation protection into healthcare ensures we do not compromise safety and quality for quantity <em>(Bonn Call for Action 2025)</em>.</p>
+      <p>Abstracts may address justification, optimization, diagnostic reference levels and use of AI in any of the following topics:</p>
+      <p class="ac-st-topics-label">Topics</p>
+      <ul class="ac-topics">
+        <li>Standards, Regulations, QC &amp; QA</li>
+        <li>Diagnostic radiography, fluoroscopy, mammography, dental &amp; CT</li>
+        <li>Radiotherapy &amp; brachytherapy</li>
+        <li>Nuclear medicine &amp; hybrid imaging</li>
+        <li>Children &amp; pregnant women</li>
+        <li>Fluoroscopy-guided interventional &amp; cardiology</li>
+        <li>Unintended &amp; accidental medical exposures</li>
+        <li>Non-Ionizing Radiation (MRI, Ultrasound, Laser)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="ac-st">
+    <div class="ac-st-num-col"><div class="ac-st-num">02</div></div>
+    <div class="ac-st-content">
+      <h3>Radiation Protection in Industrial and Other Practices</h3>
+      <p>Radiation technologies are utilised extensively across the continent in industry, agriculture, veterinary medicine, and the military. Their use must be safeguarded and optimised across all practices.</p>
+      <p>Abstracts may address innovations, new technologies, research and development in any of these practices:</p>
+      <p class="ac-st-topics-label">Topics</p>
+      <ul class="ac-topics">
+        <li>Standards, Directives &amp; Regulations</li>
+        <li>Non-destructive testing, gauging &amp; sterilization</li>
+        <li>Veterinary diagnostic &amp; treatment procedures</li>
+        <li>Aerospace &amp; air/space travel</li>
+        <li>Military applications &amp; security screening</li>
+        <li>Safety &amp; security of radioactive sources</li>
+        <li>Transportation of radioactive material</li>
+        <li>Dosimetry &amp; measurements</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="ac-st">
+    <div class="ac-st-num-col"><div class="ac-st-num">03</div></div>
+    <div class="ac-st-content">
+      <h3>RADON and Naturally Occurring Radiation (NORM)</h3>
+      <p>RADON is the second leading cause of lung cancer, with exposure occurring both at home and in workplaces. NORM poses a significant challenge in managing human exposure and environmental contamination.</p>
+      <p>Abstracts may cover any of the following areas on protection and exposure:</p>
+      <p class="ac-st-topics-label">Topics</p>
+      <ul class="ac-topics">
+        <li>Legal aspects, standards &amp; regulations</li>
+        <li>Radon &amp; Thoron in workplaces &amp; wider environment</li>
+        <li>NORM &amp; natural background radiation</li>
+        <li>Use, recovery &amp; re-use of NORM-containing materials</li>
+        <li>Transport of NORM materials</li>
+        <li>Emerging industries or geographical areas with NORM</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="ac-st">
+    <div class="ac-st-num-col"><div class="ac-st-num">04</div></div>
+    <div class="ac-st-content">
+      <h3>Communication, Stakeholder Involvement and Capacity Building</h3>
+      <p>Effective communication of radiation risks is a well-recognised challenge. Training the next generation of professionals — utilising e-learning and new technologies — is essential for building a robust safety culture. Communication must address stakeholder concerns with honesty, clarity and timeliness.</p>
+      <p>Abstracts may cover any of these areas or a combination:</p>
+      <p class="ac-st-topics-label">Topics</p>
+      <ul class="ac-topics">
+        <li>Education research &amp; qualification standardization</li>
+        <li>Knowledge management &amp; knowledge transfer</li>
+        <li>Experience from radiation protection societies</li>
+        <li>Stakeholder participation &amp; ethical considerations</li>
+        <li>Risk perception &amp; communication</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="ac-st">
+    <div class="ac-st-num-col"><div class="ac-st-num">05</div></div>
+    <div class="ac-st-content">
+      <h3>Radiation Protection in Non-Ionizing Radiation Applications</h3>
+      <p>Non-Ionizing Radiation has wide-reaching applications in industry, healthcare and daily life. Adequate protection from exposure to NIR must be considered, evaluated and optimised.</p>
+      <p>Abstracts may cover measurement, innovation, exposure of the public and workers, protection and regulations, ethics, justification, training and education in:</p>
+      <p class="ac-st-topics-label">Topics</p>
+      <ul class="ac-topics">
+        <li>Standards, Directives &amp; Regulations</li>
+        <li>Electromagnetic &amp; Static Fields: power transmission, 5G, electromobility &amp; radar</li>
+        <li>Optical Radiation: UV, Infrared, LEDs, data transmission, laser &amp; wellness applications</li>
+      </ul>
+    </div>
+  </div>
+
+</div>

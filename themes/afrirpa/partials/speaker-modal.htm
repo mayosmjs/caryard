@@ -1,0 +1,41 @@
+<div class="modal fade" id="speakerProfileModal" tabindex="-1" aria-labelledby="speakerProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content speaker-profile-modal">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <div class="row g-4 align-items-start">
+                    <div class="col-lg-4">
+                        <div class="speaker-modal-media">
+                            <img src="" alt="" data-speaker-modal-image class="img-fluid rounded-1 w-100">
+                            <div class="speaker-modal-badges mt-3">
+                                <span class="badge badge-warning d-none" data-speaker-modal-featured>Featured Speaker</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="speaker-modal-copy">
+                            <div class="subtitle mb-2">Speaker Profile</div>
+                            <h2 id="speakerProfileModalLabel" class="mb-2" data-speaker-modal-name></h2>
+                            <p class="lead mb-2" data-speaker-modal-role></p>
+                            <p class="text-light opacity-75 mb-4" data-speaker-modal-country></p>
+
+                            <div class="speaker-modal-socials d-flex flex-wrap gap-2 mb-4" data-speaker-modal-socials></div>
+
+                            <div class="speaker-modal-expertise mb-4">
+                                <h5 class="mb-3">Expertise</h5>
+                                <div class="d-flex flex-wrap gap-2" data-speaker-modal-expertise></div>
+                            </div>
+
+                            <div class="speaker-modal-biography">
+                                <h5 class="mb-3">Biography</h5>
+                                <div class="fs-15" data-speaker-modal-biography></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

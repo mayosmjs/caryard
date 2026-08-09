@@ -1,6 +1,0 @@
-plugin:
-    name: 'majos.caryard::lang.plugin.name'
-    description: 'majos.caryard::lang.plugin.description'
-    author: majos
-    icon: oc-icon-car
-    homepage: ''

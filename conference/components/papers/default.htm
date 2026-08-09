@@ -1,0 +1,587 @@
+<button class="btn-main mx-2 fx-slide paper-submission-trigger" onclick="openPaperSubmissionModal()">
+    <span>Submit Your Paper</span>
+</button>
+
+<!-- Modal Overlay -->
+<div id="paperSubmissionModal" class="paper-modal-overlay" style="display:none;">
+    <div class="paper-modal-content">
+
+        <!-- Header -->
+        <div class="paper-modal-header">
+            <div class="paper-modal-header-left">
+                <i class="fa fa-file-pdf-o id-color"></i>
+                <h5 class="paper-modal-title">Paper Submission</h5>
+            </div>
+            <button type="button" class="paper-modal-close" onclick="closePaperSubmissionModal()">
+                &times;
+            </button>
+        </div>
+
+        <!-- Step indicator -->
+        <div class="paper-step-bar">
+            <div class="paper-step active" data-step="1"><span>1</span><label>Email</label></div>
+            <div class="paper-step-divider"></div>
+            <div class="paper-step" data-step="2"><span>2</span><label>Verify</label></div>
+            <div class="paper-step-divider"></div>
+            <div class="paper-step" data-step="3"><span>3</span><label>Submit</label></div>
+            <div class="paper-step-divider"></div>
+            <div class="paper-step" data-step="4"><span>4</span><label>Done</label></div>
+        </div>
+
+        <!-- Dynamic content area -->
+        <div class="paper-modal-body">
+            <div id="paper-submission-content" class="paper-content-fade">
+                <!-- Step 1: Email entry — hardcoded for reliable initial render -->
+                <span data-current-step="1" style="display:none;"></span>
+                <div class="paper-form-card">
+                    <p class="paper-hint">
+                        Enter your email address to receive a 6-character verification code.
+                        The code expires in 15 minutes.
+                    </p>
+                    <form data-request="onEmailSubmit" data-request-flash>
+                        <div class="form-group">
+                            <label for="ps-email">Email Address</label>
+                            <input type="email" id="ps-email" name="email" required placeholder="you@example.com"
+                                autocomplete="email" class="theme-input">
+                        </div>
+                        <div class="form-group" style="margin: 20px 0; display: flex; justify-content: center;">
+                            {% if turnstile_site_key %}
+                            <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+                            {% else %}
+                            <div class="paper-alert paper-alert-danger" style="font-size:0.8rem;">
+                                <i class="fa fa-warning"></i> Turnstile Site Key is missing. Check your .env file.
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit" class="paper-btn-primary" data-attach-loading>
+                            Send Verification Code
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* -----------------------------------------------------------------------
+   Theme Variables (Sync with AIvent)
+----------------------------------------------------------------------- */
+    :root {
+        --ps-primary: #FFD60A;
+        --ps-secondary: #FFB703;
+        --ps-bg-dark: #101435;
+        --ps-bg-card: #1A1E42;
+        --ps-text-light: rgba(255, 255, 255, 0.85);
+        --ps-text-dim: rgba(255, 255, 255, 0.5);
+        --ps-border: rgba(255, 255, 255, 0.1);
+    }
+
+    /* -----------------------------------------------------------------------
+   Modal Overlay
+----------------------------------------------------------------------- */
+    .paper-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .paper-modal-overlay.is-open {
+        opacity: 1;
+    }
+
+    /* -----------------------------------------------------------------------
+   Modal Content
+----------------------------------------------------------------------- */
+    .paper-modal-content {
+        background: var(--ps-bg-dark);
+        border: 1px solid var(--ps-border);
+        border-radius: 12px;
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+        max-width: 800px;
+        width: 100%;
+        overflow: hidden;
+        animation: paperModalZoom 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes paperModalZoom {
+        from {
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* -----------------------------------------------------------------------
+   Header
+----------------------------------------------------------------------- */
+    .paper-modal-header {
+        background: var(--ps-bg-card);
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--ps-border);
+    }
+
+    .paper-modal-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .paper-modal-header-left i {
+        font-size: 1.4rem;
+        color: var(--ps-primary);
+    }
+
+    .paper-modal-title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .paper-modal-close {
+        background: none;
+        border: none;
+        color: var(--ps-text-dim);
+        font-size: 2rem;
+        cursor: pointer;
+        transition: color 0.2s;
+        line-height: 1;
+    }
+
+    .paper-modal-close:hover {
+        color: #fff;
+    }
+
+    /* -----------------------------------------------------------------------
+   Step Bar
+----------------------------------------------------------------------- */
+    .paper-step-bar {
+        display: flex;
+        align-items: center;
+        padding: 20px 30px;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .paper-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex: 0 0 auto;
+    }
+
+    .paper-step span {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid var(--ps-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--ps-text-dim);
+        transition: all 0.3s;
+        background: transparent;
+    }
+
+    .paper-step label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--ps-text-dim);
+        margin: 0;
+    }
+
+    .paper-step.active span {
+        border-color: var(--ps-primary);
+        color: var(--ps-primary);
+        box-shadow: 0 0 15px rgba(255, 214, 10, 0.3);
+    }
+
+    .paper-step.active label {
+        color: var(--ps-primary);
+    }
+
+    .paper-step.done span {
+        background: var(--ps-primary);
+        border-color: var(--ps-primary);
+        color: #000;
+    }
+
+    .paper-step.done label {
+        color: #fff;
+    }
+
+    .paper-step-divider {
+        flex: 1;
+        height: 1px;
+        background: var(--ps-border);
+        margin: -18px 10px 0;
+    }
+
+    /* -----------------------------------------------------------------------
+   Body & Card
+----------------------------------------------------------------------- */
+    .paper-modal-body {
+        padding: 40px;
+    }
+
+    .paper-form-card {
+        background: var(--ps-bg-card);
+        border: 1px solid var(--ps-border);
+        padding: 25px;
+        border-radius: 8px;
+    }
+
+    .paper-hint {
+        color: var(--ps-text-light);
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+        line-height: 1.6;
+    }
+
+    /* -----------------------------------------------------------------------
+   Forms
+----------------------------------------------------------------------- */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        color: var(--ps-text-dim);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .theme-input {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--ps-border);
+        border-radius: 6px;
+        padding: 12px 15px;
+        color: #fff;
+        width: 100%;
+        transition: all 0.3s;
+    }
+
+    .theme-input:focus {
+        outline: none;
+        border-color: var(--ps-primary);
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* -----------------------------------------------------------------------
+   Buttons
+----------------------------------------------------------------------- */
+    .paper-btn-primary {
+        width: 100%;
+        padding: 14px;
+        background: var(--ps-primary);
+        color: #000;
+        border: none;
+        border-radius: 6px;
+        font-weight: 800;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .paper-btn-primary:hover {
+        background: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .paper-btn-primary:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* -----------------------------------------------------------------------
+   Alerts
+----------------------------------------------------------------------- */
+    .paper-alert {
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+        border-left: 4px solid transparent;
+    }
+
+    .paper-alert-danger {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+        border-color: #e74c3c;
+    }
+
+    .paper-alert-info {
+        background: rgba(var(--primary-color-rgb), 0.1);
+        color: var(--ps-primary);
+        border-color: var(--ps-primary);
+    }
+
+    /* -----------------------------------------------------------------------
+   Field Errors
+----------------------------------------------------------------------- */
+    .paper-field-error {
+        color: #e74c3c;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 5px;
+        animation: paperErrorSlide 0.3s ease both;
+    }
+
+    @keyframes paperErrorSlide {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* -----------------------------------------------------------------------
+   Transitions
+----------------------------------------------------------------------- */
+    .paper-content-fade {
+        animation: paperContentIn 0.4s ease both;
+    }
+
+    @keyframes paperContentIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* -----------------------------------------------------------------------
+   Success State
+----------------------------------------------------------------------- */
+    .paper-success-ui {
+        text-align: center;
+    }
+
+    .success-check {
+        font-size: 4rem;
+        color: #27ae60;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .ref-number {
+        display: inline-block;
+        padding: 8px 20px;
+        background: rgba(255, 214, 10, 0.1);
+        color: var(--ps-primary);
+        border: 1px dashed var(--ps-primary);
+        font-weight: 800;
+        margin: 20px 0;
+        border-radius: 4px;
+    }
+</style>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+    (function () {
+        'use strict';
+
+        // Re-render Turnstile on AJAX update
+        function syncTurnstile() {
+            if (window.turnstile && document.querySelector('.cf-turnstile')) {
+                window.turnstile.render('.cf-turnstile');
+            }
+        }
+
+        window.openPaperSubmissionModal = function () {
+            var modal = document.getElementById('paperSubmissionModal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+            setTimeout(function () { modal.classList.add('is-open'); }, 10);
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closePaperSubmissionModal = function () {
+            var modal = document.getElementById('paperSubmissionModal');
+            if (!modal) return;
+            modal.classList.remove('is-open');
+            setTimeout(function () {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+                // Reset if submitted
+                if (document.querySelector('[data-current-step="4"]')) {
+                    location.reload();
+                }
+            }, 300);
+        };
+
+        // Close on escape/backdrop
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closePaperSubmissionModal();
+        });
+
+        // Step Sync
+        function syncPaperSteps() {
+            // Small timeout ensures the AJAX framework has finished swapping the DOM
+            setTimeout(function () {
+                var content = document.getElementById('paper-submission-content');
+                if (!content) return;
+                var stepIndicator = content.querySelector('[data-current-step]');
+                var currentStep = stepIndicator ? parseInt(stepIndicator.dataset.currentStep, 10) : 1;
+
+                document.querySelectorAll('.paper-step').forEach(function (el) {
+                    var s = parseInt(el.dataset.step, 10);
+                    el.classList.remove('active', 'done');
+                    if (s === currentStep) el.classList.add('active');
+                    if (s < currentStep) el.classList.add('done');
+                });
+
+                // Add fade animation class to new content
+                content.classList.remove('paper-content-fade');
+                void content.offsetWidth; // trigger reflow
+                content.classList.add('paper-content-fade');
+            }, 50);
+        }
+
+        // AJAX Loading States - Support both jQuery and Vanilla/October 3 events
+        function handleAjaxStart(event) {
+            var el = event.target;
+            var btn = el.querySelector('button.paper-btn-primary') || (el.classList.contains('paper-btn-primary') ? el : null);
+
+            if (btn) {
+                btn.disabled = true;
+                var text = btn.querySelector('.btn-text');
+                var spinner = btn.querySelector('.btn-spinner');
+                if (text) text.style.opacity = '0';
+                if (spinner) spinner.style.display = 'block';
+            }
+        }
+
+        function handleAjaxStop() {
+            // syncPaperSteps is already called by ajaxUpdate
+            document.querySelectorAll('.paper-btn-primary').forEach(function (btn) {
+                btn.disabled = false;
+                var text = btn.querySelector('.btn-text');
+                var spinner = btn.querySelector('.btn-spinner');
+                if (text) text.style.opacity = '1';
+                if (spinner) spinner.style.display = 'none';
+            });
+        }
+
+        // Modern events
+        document.addEventListener('ajaxPromise', function (event) {
+            handleAjaxStart(event);
+            // Explicitly capture Turnstile token if available
+            if (window.turnstile && event.detail && event.detail.options) {
+                var token = window.turnstile.getResponse();
+                if (token) {
+                    event.detail.options.data = event.detail.options.data || {};
+                    event.detail.options.data['cf-turnstile-response'] = token;
+                }
+            }
+        });
+        document.addEventListener('ajaxAlways', handleAjaxStop);
+
+        // October 3 events
+        document.addEventListener('oc:ajaxPromise', handleAjaxStart);
+        document.addEventListener('oc:ajaxAlways', handleAjaxStop);
+
+        // The key event that ensures the modal stays open and updates
+        document.addEventListener('ajaxUpdate', function (event) {
+            syncPaperSteps();
+            syncTurnstile();
+        });
+
+        // jQuery fallback
+        if (window.jQuery) {
+            $(document).on('ajaxPromise', function (event, context) {
+                handleAjaxStart(event);
+                if (window.turnstile) {
+                    context.options.data['cf-turnstile-response'] = window.turnstile.getResponse();
+                }
+            });
+            $(document).on('ajaxAlways', handleAjaxStop);
+            $(document).on('ajaxUpdate', function () {
+                syncPaperSteps();
+                syncTurnstile();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', syncPaperSteps);
+
+    })();
+</script>
+<style>
+    /* Ensure spinner is centered in button */
+    .paper-btn-primary {
+        position: relative;
+    }
+
+    .btn-spinner {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.2rem;
+    }
+
+    .paper-btn-primary:disabled {
+        opacity: 0.8;
+        cursor: not-allowed;
+        background: #fff !important;
+        animation: paperBtnPulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes paperBtnPulse {
+        0% {
+            opacity: 0.8;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            opacity: 0.8;
+        }
+    }
+</style>

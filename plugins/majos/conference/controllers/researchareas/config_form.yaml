@@ -1,0 +1,7 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+name: Research Area
+form: $/majos/conference/models/researcharea/fields.yaml
+modelClass: Majos\Conference\Models\ResearchArea

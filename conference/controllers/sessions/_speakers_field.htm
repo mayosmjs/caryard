@@ -1,0 +1,27 @@
+<?php
+// Get all published speakers
+$speakers = \Majos\Conference\Models\Speaker::isPublished()
+    ->orderBy('full_name', 'asc')
+    ->get();
+
+$selectedSpeakers = $this->formField->value ? $this->formField->value->pluck('id')->toArray() : [];
+?>
+
+<div class="form-group">
+    <label for="speakers">Speakers</label>
+    <select name="speakers[]" id="speakers" class="form-control" multiple="multiple" size="10">
+        <?php foreach ($speakers as $speaker): ?>
+            <option value="<?= $speaker->id ?>" <?= in_array($speaker->id, $selectedSpeakers) ? 'selected' : '' ?>>
+                <?= e($speaker->full_name) ?>
+                <?php if ($speaker->company): ?> (<?= e($speaker->company) ?>)<?php endif; ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    <p class="help-block">Hold Ctrl/Cmd to select multiple speakers</p>
+</div>
+
+<style>
+    select[multiple] {
+        min-height: 200px;
+    }
+</style>

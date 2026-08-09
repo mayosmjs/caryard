@@ -1,0 +1,108 @@
+subject = "AFRIRPA 2027 — Reviewer Decision Received: {{ submission.title|truncate(50) }}"
+==
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+    body         { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f7f9; margin: 0; padding: 0; }
+    .wrapper     { width: 100%; background: #f4f7f9; padding: 40px 0; }
+    .main        { background: #fff; margin: 0 auto; max-width: 620px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+    .hero-approve { background: #10b981; color: #fff; padding: 36px 30px; text-align: center; }
+    .hero-reject  { background: #64748b; color: #fff; padding: 36px 30px; text-align: center; }
+    .hero h1     { margin: 0; font-size: 22px; }
+    .content     { padding: 36px 30px; color: #334155; line-height: 1.7; }
+    .detail-box  { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin: 22px 0; }
+    .detail-row  { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #edf2f7; padding-bottom: 6px; }
+    .detail-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .dl          { color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; }
+    .dv          { color: #1e293b; font-weight: 500; text-align: right; }
+    .feedback-box { background: #f0fdf4; border-left: 4px solid #10b981; padding: 14px 18px; border-radius: 4px; margin: 18px 0; font-size: 14px; }
+    .feedback-box.reject { background: #fef2f2; border-color: #ef4444; }
+    .btn         { display: inline-block; padding: 13px 28px; background: #3b82f6; color: #fff !important; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 20px; }
+    .decision-badge-approve { display: inline-block; padding: 4px 12px; background: #10b981; color: #fff; border-radius: 20px; font-weight: 700; font-size: 14px; }
+    .decision-badge-reject  { display: inline-block; padding: 4px 12px; background: #ef4444; color: #fff; border-radius: 20px; font-weight: 700; font-size: 14px; }
+    .footer      { text-align: center; font-size: 11px; color: #94a3b8; padding: 20px 30px 30px; }
+    p            { margin: 10px 0; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="main">
+        <div class="{{ submission.reviewer_decision == 'approved' ? 'hero-approve' : 'hero-reject' }}">
+            <h1>
+                {% if submission.reviewer_decision == 'approved' %}
+                    ✅ Reviewer Approved the Submission
+                {% else %}
+                    ❌ Reviewer Rejected the Submission
+                {% endif %}
+            </h1>
+            <p style="margin: 6px 0 0; opacity: .9; font-size: 14px;">Action required — please send the final decision to the author</p>
+        </div>
+
+        <div class="content">
+            <p>Dear Administrator,</p>
+
+            <p>
+                <strong>{{ reviewer.full_name ?: reviewer.login }}</strong> has submitted their review decision
+                for the following abstract:
+            </p>
+
+            <div class="detail-box">
+                <div class="detail-row">
+                    <span class="dl">Title</span>
+                    <span class="dv">{{ submission.title }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="dl">Presenter</span>
+                    <span class="dv">{{ submission.author_name }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="dl">Research Area</span>
+                    <span class="dv">{{ submission.research_area ?: submission.category }}{% if submission.research_topic %} — {{ submission.research_topic }}{% endif %}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="dl">Reviewer</span>
+                    <span class="dv">{{ reviewer.full_name ?: reviewer.login }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="dl">Decision</span>
+                    <span class="dv">
+                        {% if submission.reviewer_decision == 'approved' %}
+                            <span class="decision-badge-approve">Approved</span>
+                        {% else %}
+                            <span class="decision-badge-reject">Rejected</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="dl">Reviewed On</span>
+                    <span class="dv">{{ submission.reviewed_at|date('d M Y, H:i') }}</span>
+                </div>
+            </div>
+
+            {% if submission.reviewer_feedback %}
+            <div class="feedback-box {{ submission.reviewer_decision == 'rejected' ? 'reject' : '' }}">
+                <strong>Reviewer Feedback:</strong><br>
+                {{ submission.reviewer_feedback|nl2br }}
+            </div>
+            {% else %}
+            <p style="color: #64748b; font-size: 14px; font-style: italic;">No additional feedback was provided by the reviewer.</p>
+            {% endif %}
+
+            <p>
+                <strong>Next step:</strong> Please review the decision and send your final acceptance or
+                rejection notification to the author.
+            </p>
+
+            <p><a href="{{ adminUrl }}" class="btn">View Submission &amp; Send Final Decision</a></p>
+        </div>
+
+        <div class="footer">
+            AFRIRPA 2027 Organizing Committee &nbsp;·&nbsp;
+            <a href="mailto:afrirpa@eaarp.co.ke" style="color: #94a3b8;">afrirpa@eaarp.co.ke</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

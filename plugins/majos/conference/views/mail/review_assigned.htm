@@ -1,0 +1,115 @@
+subject = "AFRIRPA 2027 — You Have Been Assigned Abstracts for Review"
+==
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+    body        { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f7f9; margin: 0; padding: 0; }
+    .wrapper    { width: 100%; background: #f4f7f9; padding: 40px 0; }
+    .main       { background: #fff; margin: 0 auto; max-width: 640px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+    .hero       { background: linear-gradient(135deg, #1e3a5f 0%, #2d6a9f 100%); color: #fff; padding: 40px 32px; }
+    .hero h1    { margin: 0 0 8px; font-size: 22px; font-weight: 700; }
+    .hero p     { margin: 0; opacity: .85; font-size: 14px; }
+    .content    { padding: 36px 32px; color: #334155; line-height: 1.7; font-size: 15px; }
+    .creds-box  { background: #1e293b; color: #f8fafc; border-radius: 10px; padding: 24px 28px; margin: 28px 0; }
+    .creds-box h3 { margin: 0 0 16px; font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; }
+    .cred-row   { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .cred-label { font-size: 13px; color: #94a3b8; }
+    .cred-value { font-family: 'Courier New', monospace; font-size: 15px; font-weight: 700; background: #0f172a; padding: 6px 14px; border-radius: 6px; letter-spacing: .06em; }
+    .cred-link  { font-size: 13px; word-break: break-all; color: #60a5fa; }
+    .btn        { display: inline-block; padding: 14px 30px; background: #1e3a5f; color: #fff !important; text-decoration: none; border-radius: 8px; font-weight: 700; margin-top: 20px; font-size: 15px; }
+    .note-box   { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 4px; margin: 20px 0; font-size: 14px; color: #78350f; }
+    .sub-list   { margin: 20px 0; padding: 0; list-style: none; }
+    .sub-item   { padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; background: #f8fafc; }
+    .sub-title  { font-weight: 700; color: #1e293b; font-size: 14px; margin-bottom: 4px; }
+    .sub-meta   { font-size: 12px; color: #64748b; }
+    .footer     { text-align: center; font-size: 12px; color: #94a3b8; padding: 20px 32px 32px; }
+    p           { margin: 12px 0; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="main">
+
+    <div class="hero">
+        <h1>📋 Abstract Review Assignment</h1>
+        <p>AFRIRPA 2027 — You have been assigned {{ count }} abstract{{ count != 1 ? 's' : '' }} for peer review.</p>
+    </div>
+
+    <div class="content">
+        <p>Dear <strong>{{ reviewer.name }}</strong>,</p>
+
+        <p>
+            You have been selected to review {{ count }} abstract{{ count != 1 ? 's' : '' }} for AFRIRPA 2027.
+            Please use the secure link below to access your personalised review portal — no backend account is required.
+        </p>
+
+        <!-- ── Access Credentials ─────────────────────────────── -->
+        <div class="creds-box">
+            <h3>Your Access Credentials</h3>
+            <div class="cred-row">
+                <span class="cred-label">Portal Password</span>
+                <span class="cred-value">{{ password }}</span>
+            </div>
+            <div style="margin-top:14px;">
+                <span class="cred-label">Review Portal Link</span><br>
+                <span class="cred-link">{{ reviewUrl }}</span>
+            </div>
+        </div>
+
+        <p style="text-align:center;">
+            <a href="{{ reviewUrl }}" class="btn">Open Review Portal</a>
+        </p>
+
+        <!-- ── Note from admin ────────────────────────────────── -->
+        {% if note %}
+        <div class="note-box">
+            <strong>Message from the Programme Committee:</strong><br>
+            {{ note }}
+        </div>
+        {% endif %}
+
+        <!-- ── Assigned abstracts ─────────────────────────────── -->
+        <p style="margin-top:28px;font-weight:700;">Abstracts Assigned to You ({{ count }}):</p>
+        <ul class="sub-list">
+            {% for submission in submissions %}
+            <li class="sub-item">
+                <div class="sub-title">{{ submission.title }}</div>
+                <div class="sub-meta">{{ submission.research_area ?: submission.category }}{% if submission.research_topic %} — {{ submission.research_topic }}{% endif %} &nbsp;·&nbsp; {{ submission.author_name }}</div>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <!-- ── Instructions ──────────────────────────────────── -->
+        <p style="margin-top:24px;">
+            <strong>How to review:</strong>
+        </p>
+        <ol style="padding-left:20px;font-size:14px;line-height:1.8;color:#475569;">
+            <li>Click the "Open Review Portal" button above (or copy the link into your browser).</li>
+            <li>Enter your password when prompted.</li>
+            <li>Read each abstract and select <em>Approve</em> or <em>Reject</em>.</li>
+            <li>Add your comments or feedback in the text box provided.</li>
+            <li>Submit your decision — the programme committee will be notified automatically.</li>
+        </ol>
+
+        <p style="font-size:13px;color:#64748b;border-top:1px solid #f1f5f9;padding-top:20px;margin-top:28px;">
+            <strong>Confidentiality:</strong> The content of these abstracts is confidential.
+            Please do not share them or your review decisions with anyone outside the programme committee.
+        </p>
+
+        <p style="font-size:14px;">
+            Best regards,<br>
+            <strong>AFRIRPA 2027 Programme Committee</strong>
+        </p>
+    </div>
+
+    <div class="footer">
+        Questions? Contact us at
+        <a href="mailto:afrirpa@eaarp.co.ke" style="color:#94a3b8;">afrirpa@eaarp.co.ke</a>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# ===================================
+#  List Behavior Config
+# ===================================
+
+modelClass: Majos\Conference\Models\PresentationType
+
+title: Presentation Types
+
+list: $/majos/conference/models/presentationtype/columns.yaml
+
+recordUrl: majos/conference/presentationtypes/update/:id
+
+noRecordsMessage: No presentation types found
+
+recordsPerPage: 30
+
+showPageNumbers: true
+
+showSetup: true
+
+showSorting: true
+
+showCheckboxes: true
+
+defaultSort:
+    column: name
+    direction: asc
+
+toolbar:
+    buttons: list_toolbar

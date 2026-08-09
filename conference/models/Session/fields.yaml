@@ -1,0 +1,91 @@
+# ===================================
+#  Form Field Configuration
+# ===================================
+
+fields:
+    title:
+        label: Title
+        type: text
+        span: left
+        required: true
+    slug:
+        label: Slug
+        type: text
+        span: right
+        required: true
+        preset:
+            field: title
+            type: slug
+    conference_day_id:
+        label: Conference Day
+        type: dropdown
+        span: left
+        required: true
+        emptyOption: -- select day --
+    venue_id:
+        label: Venue
+        type: dropdown
+        span: right
+        required: false
+        emptyOption: -- select venue --
+    session_type:
+        label: Session Type
+        type: dropdown
+        span: left
+        required: true
+        options:
+            keynote: Keynote
+            workshop: Workshop
+            panel: Panel
+            fireside_chat: Fireside Chat
+            break: Break
+            presentation: Presentation
+            qa: Q&A Session
+    track:
+        label: Track
+        type: dropdown
+        span: right
+        required: false
+        options:
+            ai: AI & Machine Learning
+            cybersecurity: Cybersecurity
+            energy: Energy & Sustainability
+            policy: Policy & Regulation
+            finance: Finance & FinTech
+            health: Health & Biotech
+            education: Education & EdTech
+            other: Other
+    starts_at:
+        label: Start Time
+        type: datepicker
+        mode: datetime
+        span: left
+        required: true
+        format: d/m/Y H:i
+    ends_at:
+        label: End Time
+        type: datepicker
+        mode: datetime
+        span: right
+        required: true
+        format: d/m/Y H:i
+    capacity:
+        label: Capacity
+        type: number
+        span: left
+        comment: Maximum number of attendees (optional)
+    sort_order:
+        label: Sort Order
+        type: number
+        span: right
+        default: 0
+    description:
+        label: Description
+        type: richeditor
+        size: large
+        span: full
+    is_published:
+        label: Published
+        type: switch
+        span: left
+        default: true

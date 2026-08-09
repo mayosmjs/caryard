@@ -1,0 +1,274 @@
+url = "/guidelines"
+title = "Guidelines"
+layout = "default"
+is_hidden = false
+==
+
+<style>
+/* ── Guideline page: purple consistency overrides ───────────── */
+
+/* Hero: replace amber radial glows with purple */
+.guide-hero {
+  background:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    radial-gradient(circle at 14% 12%, rgba(196,181,253,0.22), transparent 30%),
+    radial-gradient(circle at 84% 22%, rgba(167,139,250,0.18), transparent 32%),
+    linear-gradient(135deg, #2d1b69 0%, #3d2485 58%, #1e2d5f 100%) !important;
+  background-size: 56px 56px, 56px 56px, auto, auto, auto !important;
+}
+
+/* Hero pill: amber → purple */
+.guide-pill {
+  border: 1px solid rgba(196,181,253,0.38) !important;
+  background: rgba(196,181,253,0.12) !important;
+  color: #f3e8ff !important;
+}
+
+/* Card headers: remove amber tint, use pure purple */
+.guide-card-header {
+  background: linear-gradient(90deg, rgba(45,27,105,0.07), rgba(167,139,250,0.14)) !important;
+}
+
+/* Sidebar: active & hover with consistent purple */
+.guide-side {
+  border-top-color: #a78bfa !important;
+}
+.guide-side a.active,
+.guide-side a:hover {
+  background: #ede9fe !important;
+  color: #2d1b69 !important;
+  border-left: 3px solid #a78bfa;
+  padding-left: 15px;
+}
+
+/* List bullet: remove amber glow, use purple only */
+.guide-list li::before {
+  background: #a78bfa !important;
+  box-shadow: 0 0 0 5px rgba(167,139,250,0.18) !important;
+}
+
+/* Steps counter circle */
+.guide-steps li::before {
+  background: linear-gradient(135deg, #3d2485, #2d1b69) !important;
+  color: #c4b5fd !important;
+}
+
+/* Note block: purple tones */
+.guide-note {
+  border-left-color: #a78bfa !important;
+  background: #ede9fe !important;
+  color: #3b0764 !important;
+}
+
+/* Table header: consistent navy */
+.guide-table th {
+  background: linear-gradient(180deg, #f5f3ff, #ede9fe) !important;
+  color: #2d1b69 !important;
+}
+
+/* Sidebar active link highlight via JS-free scroll spy — anchor offset */
+.guide-side a[href="#overview"]:target,
+.guide-side a[href="#dates"]:target,
+.guide-side a[href="#submission"]:target,
+.guide-side a[href="#presentation"]:target,
+.guide-side a[href="#registration"]:target,
+.guide-side a[href="#contact"]:target {
+  background: #ede9fe;
+  color: #2d1b69;
+}
+
+@media (max-width: 780px) {
+  .guide-layout {
+    grid-template-columns: 1fr !important;
+  }
+  .guide-side {
+    position: static !important;
+  }
+  .guide-side nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .guide-side nav a {
+    flex: 1 1 auto;
+    text-align: center;
+    border-top: none !important;
+    border-right: 1px solid #edf2f7;
+    padding: 11px 10px;
+  }
+  .guide-side nav a:last-child { border-right: none; }
+}
+</style>
+
+<section class="guide-hero relative overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="{{ 'assets/images/gtc.png'|theme }}" alt="" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-850 via-gray-850 to-accent-900"></div>
+        <div class="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-primary-500/30 blur-[120px]"></div>
+        <div class="absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-accent-500/30 blur-[120px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+    </div>
+    <div class="guide-hero-inner relative z-10">
+        <span class="guide-pill">Submission & Participation Information</span>
+        <h1>Conference <span class="guide-gradient">Guidelines</span></h1>
+        <p>Review the key instructions for registration, research submission, presentation preparation, payment, and onsite participation before completing your application.</p>
+    </div>
+</section>
+
+    <section class="guide-main">
+      <div class="guide-layout">
+        <aside class="guide-side" aria-label="Guideline sections">
+          <h2>Contents</h2>
+          <nav>
+            <a href="#overview">Overview</a>
+            <a href="#dates">Important Dates</a>
+            <a href="#submission">Submission Rules</a>
+            <a href="#presentation">Presentation</a>
+            <a href="#registration">Registration</a>
+            <a href="#contact">Contact</a>
+          </nav>
+        </aside>
+
+        <div class="guide-content">
+          <article class="guide-card" id="overview">
+            <div class="guide-card-header">
+              <h2>Overview</h2>
+              <span class="guide-tag">Read First</span>
+            </div>
+            <div class="guide-card-body">
+              <table class="guide-table">
+                <tbody>
+                  <tr>
+                    <th scope="row">Event</th>
+                    <td>Afrirpa 2027 Conference</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Format</th>
+                    <td>In-person sessions with selected research presentations, workshops, and networking activities.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Language</th>
+                    <td>English. Submitted materials and presentation slides should be prepared in English.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Who Should Read This</th>
+                    <td>Participants submitting research text, presenters, students, speakers, and registered attendees.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="guide-note">Please complete registration before the applicable deadline. Research text and attendee information should match the details used on your registration form.</div>
+            </div>
+          </article>
+
+          <article class="guide-card" id="dates">
+            <div class="guide-card-header">
+              <h2>Important Dates</h2>
+              <span class="guide-tag">Timeline</span>
+            </div>
+            <div class="guide-card-body">
+              <table class="guide-table">
+                <tbody>
+                  {% set importantDates = siteSettings.importantDates() %}
+                  {% if importantDates|length %}
+                  {% for item in importantDates %}
+                  <tr>
+                    <th scope="row">{{ item.label }}</th>
+                    <td>{{ item.date|date('jS F Y') }}</td>
+                  </tr>
+                  {% endfor %}
+                  {% else %}
+                  <tr>
+                    <th scope="row">Abstract Submission Opens</th>
+                    <td>1st July 2026</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Abstract Submission Deadline</th>
+                    <td>30th September 2026</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Abstract Submission Extended Deadline</th>
+                    <td>31st October 2026</td>
+                  </tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="guide-card" id="submission">
+            <div class="guide-card-header">
+              <h2>Research Submission Rules</h2>
+              <span class="guide-tag">1000 Words</span>
+            </div>
+            <div class="guide-card-body">
+              <ul class="guide-list">
+                <li>Submit one research text per registration unless the programme committee grants an exception.</li>
+                <li>The research submission text must not exceed 1000 words and should be written clearly for peer review.</li>
+                <li>Use a concise structure: background, objective, methods, results, and conclusion.</li>
+                <li>Do not include promotional content, unrelated links, or confidential patient-identifying information.</li>
+                <li>The submitted title, author name, affiliation, and email should match the registration details.</li>
+                <li>Accepted submissions may be edited for formatting consistency before inclusion in the programme.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="guide-card" id="presentation">
+            <div class="guide-card-header">
+              <h2>Presentation Preparation</h2>
+              <span class="guide-tag">Presenter Guide</span>
+            </div>
+            <div class="guide-card-body">
+              <ol class="guide-steps">
+                <li><span><strong>Confirm acceptance.</strong><br>Check the notification email and confirm your attendance by the stated deadline.</span></li>
+                <li><span><strong>Prepare slides.</strong><br>Use widescreen format, readable type, and clear visuals. Avoid crowded slides and unlicensed media.</span></li>
+                <li><span><strong>Disclose interests.</strong><br>Include any relevant funding, commercial relationships, or conflicts of interest on your opening slide.</span></li>
+                <li><span><strong>Arrive early.</strong><br>Presenters should arrive at the assigned room at least 15 minutes before the session starts.</span></li>
+              </ol>
+              <div class="guide-note">Presentation duration and upload instructions may vary by session type. Final details will be sent after programme assignment.</div>
+            </div>
+          </article>
+
+          <article class="guide-card" id="registration">
+            <div class="guide-card-header">
+              <h2>Registration & Payment</h2>
+              <span class="guide-tag">Before Arrival</span>
+            </div>
+            <div class="guide-card-body">
+              <ul class="guide-list">
+                <li>Registration is considered complete only after payment or approved bank transfer confirmation.</li>
+                <li>Student registrations may require valid student identification at badge pickup.</li>
+                <li>Badge name and affiliation will be printed from your submitted registration details.</li>
+                <li>Gala dinner or special event attendance may be limited and handled on a first-come, first-served basis.</li>
+                <li>Requests for correction should be made before onsite badge printing begins.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="guide-card" id="contact">
+            <div class="guide-card-header">
+              <h2>Contact</h2>
+              <span class="guide-tag">Support</span>
+            </div>
+            <div class="guide-card-body">
+              <table class="guide-table">
+                <tbody>
+                  <tr>
+                    <th scope="row">Registration Desk</th>
+                    <td><a href="mailto:afrirpa@eaarp.co.ke">afrirpa@eaarp.co.ke</a></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Venue</th>
+                    <td>Argyle Grand Hotel,Nairobi,Kenya</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Related Page</th>
+                    <td><a href="{{'registration'|page}}">Open registration form</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>

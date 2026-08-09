@@ -1,0 +1,120 @@
+subject = "AFRIRPA 2027 - Submission Decision: {{ status|title }}"
+==
+
+    <style>
+        /* Base styles for email clients */
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f9; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #f4f7f9; padding-bottom: 40px; }
+        .main { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        
+        /* Status-specific Hero Styles */
+        .hero-accepted { background-color: #10b981; color: #ffffff; padding: 40px 20px; text-align: center; }
+        .hero-rejected { background-color: #64748b; color: #ffffff; padding: 40px 20px; text-align: center; }
+        
+        .content { padding: 40px 30px; color: #334155; line-height: 1.6; }
+        .details-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 25px 0; }
+        .details-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid #edf2f7; padding-bottom: 8px; }
+        .details-label { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        .details-value { color: #1e293b; font-weight: 500; text-align: right; }
+        
+        .btn { display: inline-block; padding: 14px 28px; background-color: #10b981; color: #ffffff !important; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 20px; }
+        .footer { text-align: center; font-size: 12px; color: #94a3b8; padding-top: 20px; }
+        
+        h1 { margin: 0; font-size: 24px; font-weight: 700; }
+        p { margin: 10px 0; }
+        .text-white { color: #ffffff; }
+    </style>
+
+    <div class="wrapper">
+        <div class="main">
+            <div class="{{ status == 'accepted' ? 'hero-accepted' : 'hero-rejected' }}">
+                {% if status == 'accepted' %}
+                    <h1>Congratulations!</h1>
+                    <p class="text-white">Your submission has been accepted for AFRIRPA 2027</p>
+                {% else %}
+                    <h1>Status Update</h1>
+                    <p class="text-white">Regarding your AFRIRPA 2027 submission</p>
+                {% endif %}
+            </div>
+
+            <div class="content">
+                <p>Dear <strong>{{ submission.author_name }}</strong>,</p>
+                
+                {% if status == 'accepted' %}
+                    <p>We are pleased to inform you that your abstract has been selected for
+                        {% if submission.approved_presentation_type %}
+                            a <strong>{{ submission.approved_presentation_type }}</strong>.
+                        {% else %}
+                            presentation.
+                        {% endif %}
+                         Your contribution is a valuable addition to this year's program.</p>
+                {% else %}
+                    <p>Thank you for giving us the opportunity to review your work. After a thorough peer-review process, 
+                        we regret to inform you that we are unable to include your submission in this year's conference.</p>
+                {% endif %}
+
+                <div class="details-card">
+                    <div class="details-row">
+                        <span class="details-label">Title</span>
+                        <span class="details-value">{{ submission.title }}</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-label">Research Area</span>
+                        <span class="details-value">{{ submission.research_area ?: submission.category }}</span>
+                    </div>
+                    {% if submission.research_topic %}
+                    <div class="details-row">
+                        <span class="details-label">Research Topic</span>
+                        <span class="details-value">{{ submission.research_topic }}</span>
+                    </div>
+                    {% endif %}
+                    {% if status == 'accepted' and submission.approved_presentation_type %}
+                    <div class="details-row">
+                        <span class="details-label">Approved Presentation</span>
+                        <span class="details-value">{{ submission.approved_presentation_type }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="details-row" style="border: none;">
+                        <span class="details-label">Decided On</span>
+                        <span class="details-value">{{ submission.decided_at|date('F j, Y') }}</span>
+                    </div>
+                </div>
+
+                {% if posterTemplate %}
+                <div class="details-card" style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #2563eb; padding: 20px; margin-top: 20px;">
+                    <p style="margin: 0 0 10px; font-weight: 700; font-size: 15px; color: #1e3a8a;">
+                        Prepare Your {{ submission.approved_presentation_type }}
+                    </p>
+                    <p style="margin: 0 0 10px; font-size: 14px; color: #334155; line-height: 1.7;">
+                        Attached to this email is the official <strong>poster template</strong> you should use.
+                        Kindly prepare your poster using the provided template and
+                        <strong>reply to this email</strong> with your completed poster attached.
+                    </p>
+                    <p style="margin: 0; font-size: 14px; color: #b91c1c; font-weight: 600;">
+                        Maximum file size: {{ posterMaxSizeMb|default(25) }} MB.
+                    </p>
+                </div>
+                {% endif %}
+
+                {% if status == 'accepted' %}
+                    <p style="margin-top: 20px;">We look forward to seeing you present your work at AFRIRPA 2027. Further instructions regarding your presentation will follow.</p>
+                {% else %}
+                    <p style="margin-top: 20px;">We appreciate your interest in AFRIRPA. While we cannot accept all submissions, we encourage you to continue your research and consider submitting to our future calls.</p>
+                {% endif %}
+
+                <p style="margin-top: 30px; border-top: 1px solid #f1f5f9; padding-top: 20px; font-size: 14px;">
+                    Questions? Reach out at <a href="mailto:support@afrirpa.org" style="color: #3b82f6;">afrirpa@eaarp.co.ke</a>
+                </p>
+                
+                <p style="font-size: 14px;">
+                    Best regards,<br>
+                    <strong>AFRIRPA 2027 Organizing Committee</strong>
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            &copy; 2027 AFRIRPA Conference. All rights reserved. <br>
+            You are receiving this email because you submitted an abstract to our platform.
+        </div>
+    </div>

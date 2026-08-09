@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Paper Submission
+
+# Model Class name
+modelClass: Majos\Conference\Models\PaperSubmission
+
+# Model Form Field configuration
+form: $/majos/conference/models/papersubmission/fields.yaml
+
+# Default redirect location
+defaultRedirect: majos/conference/papersubmissions
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/conference/papersubmissions/update/:id
+    redirectClose: majos/conference/papersubmissions
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/conference/papersubmissions
+    redirectClose: majos/conference/papersubmissions
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

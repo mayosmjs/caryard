@@ -1,0 +1,63 @@
+# ===================================
+#  List Behavior Config
+# ===================================
+
+modelClass: Majos\Conference\Models\Submission
+
+title: Manage Submissions
+
+list: $/majos/conference/models/submission/columns.yaml
+
+recordUrl: majos/conference/submissions/preview/:id
+
+noRecordsMessage: No submissions found
+
+recordsPerPage: 30
+
+showPageNumbers: true
+
+showSetup: true
+
+showSorting: true
+
+defaultSort:
+    column: created_at
+    direction: desc
+
+showCheckboxes: true
+
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: Search submissions
+
+filter:
+    scopes:
+        status:
+            label: Status
+            type: group
+            conditions: status in (:value)
+            options:
+                submitted: Submitted
+                assigned_for_review: Pending Review
+                reviewed: Reviewed — Awaiting Decision
+                accepted: Accepted
+                rejected: Rejected
+
+        research_area:
+            label: Research Area
+            type: group
+            conditions: research_area in (:value)
+            options: getResearchAreaOptions
+
+        research_topic:
+            label: Research Topic
+            type: group
+            conditions: research_topic in (:value)
+            options: getResearchTopicOptions
+
+        presentation_type:
+            label: Presentation Type
+            type: group
+            conditions: presentation_type in (:value)
+            options: getPresentationTypeOptions

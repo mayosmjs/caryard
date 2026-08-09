@@ -85,3 +85,6 @@ plugins/majos/sellers/
     └── create_subscription_transactions_table.php
 
 
+    add permissions
+
+

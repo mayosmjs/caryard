@@ -1,0 +1,319 @@
+url = "/submission/edit/:token"
+title = "Edit Submission"
+layout = "default"
+
+[conferenceEditSubmission]
+useGlobalSettings = 1
+==
+<section class="submit-hero relative overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="{{ 'assets/images/gtc.png'|theme }}" alt="" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-850 via-gray-850 to-accent-900"></div>
+        <div class="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-primary-500/30 blur-[120px]"></div>
+        <div class="absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-accent-500/30 blur-[120px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+    </div>
+    <div class="submit-hero-inner relative z-10">
+        <span class="submit-pill">Secure Submission Edit</span>
+        <h1>Edit Your <span class="submit-gradient">Research Abstract</span></h1>
+        <p>Use the password sent by email to unlock and update your submission.</p>
+    </div>
+</section>
+
+<section class="reg-main">
+    {% flash %}
+    <div class="reg-alert reg-alert-{{ type }}">{{ message }}</div>
+    {% endflash %}
+
+    {# ── State 1: Invalid / expired token ─────────────────────────── #}
+    {% if not submission %}
+        <div class="reg-card" style="text-align:center; padding: 48px 32px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#3d2485,#2d1b69);display:grid;place-items:center;margin:0 auto 20px;">
+                <svg width="24" height="24" fill="none" stroke="#c4b5fd" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <h2 style="color:#2d1b69;margin:0 0 10px;">Submission Not Found</h2>
+            <p style="color:#64748b;margin:0;">This edit link is invalid or has expired. Please check your confirmation email for the correct link.</p>
+        </div>
+
+    {# ── State 2: Token valid — password unlock ─────────────────────── #}
+    {% elseif not canEditSubmission %}
+        <div class="reg-top-bar">
+            <a href="{{ 'guideline'|page }}" class="reg-guidelines-link">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Submission Guidelines
+            </a>
+            <p class="reg-required-note">Fields marked <span class="req">*</span> are required.</p>
+        </div>
+
+        <form class="reg-form"
+              data-request="conferenceEditSubmission::onAuthenticateEdit"
+              data-request-validate
+              data-request-flash
+              method="post">
+            <input type="hidden" name="_token" value="{{ csrfToken }}">
+
+            <div class="reg-card">
+                <h2 class="reg-card-title">
+                    <span class="reg-card-num">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </span>
+                    Unlock Submission
+                </h2>
+
+                <p style="color:#64748b;font-size:14.5px;margin:0 0 20px;">
+                    You are editing: <strong style="color:#2d1b69;">{{ submission.title }}</strong>
+                </p>
+
+                <div class="reg-field-row">
+                    <label class="reg-label" for="edit-password">Password <span class="req">*</span></label>
+                    <input class="reg-input" id="edit-password" type="password" name="password" required autofocus
+                           placeholder="Enter the password from your confirmation email">
+                    <span class="reg-error" data-validate-for="password"></span>
+                    <p class="reg-help">This is the generated password included in your submission confirmation email.</p>
+                </div>
+            </div>
+
+            <div class="reg-alert reg-alert-danger" data-validate-error>
+                <p data-message></p>
+            </div>
+
+            <button class="reg-submit-btn" type="submit" data-attach-loading>
+                <span class="reg-btn-text">Unlock &amp; Edit</span>
+                <svg class="reg-btn-spinner animate-spin" viewBox="0 0 24 24" style="display:none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+            </button>
+        </form>
+
+    {# ── State 3: Authenticated — edit form ────────────────────────── #}
+    {% else %}
+        <div class="reg-top-bar">
+            <a href="{{ 'guideline'|page }}" class="reg-guidelines-link">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Submission Guidelines
+            </a>
+            <p class="reg-required-note">Fields marked <span class="req">*</span> are required.</p>
+        </div>
+
+        <form class="reg-form"
+              data-request="conferenceEditSubmission::onUpdateSubmission"
+              data-request-files
+              data-request-validate
+              data-request-flash
+              method="post"
+              enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ csrfToken }}">
+
+            {# ── Card 1: Author Details ──────────────────────────────── #}
+            <div class="reg-card">
+                <h2 class="reg-card-title">
+                    <span class="reg-card-num">1</span> Author Details
+                </h2>
+
+                <div class="reg-field-row">
+                    <label class="reg-label" for="edit-author-name">Full Name <span class="req">*</span></label>
+                    <input class="reg-input" id="edit-author-name" type="text" name="author_name"
+                           value="{{ submission.author_name }}" required placeholder="Jane Doe">
+                    <span class="reg-error" data-validate-for="author_name"></span>
+                </div>
+
+                <div class="reg-field-row">
+                    <label class="reg-label" for="edit-email">Email Address <span class="req">*</span></label>
+                    <input class="reg-input" id="edit-email" type="email" name="email"
+                           value="{{ submission.email }}" required placeholder="name@example.org">
+                    <span class="reg-error" data-validate-for="email"></span>
+                    <p class="reg-help">Decision notices and edit links are sent to this address.</p>
+                </div>
+
+                <div class="reg-field-row">
+                    <label class="reg-label" for="edit-phone">Phone Number</label>
+                    <input class="reg-input" id="edit-phone" type="tel" name="tel1"
+                           value="{{ submission.phone }}" placeholder="+254 700 000 000">
+                </div>
+
+                <div class="reg-field-row">
+                    <label class="reg-label" for="edit-affiliation">Affiliation <span class="req">*</span></label>
+                    <textarea class="reg-textarea" id="edit-affiliation" name="affiliation" rows="2" required
+                              placeholder="e.g. University of Nairobi, Kenya">{{ submission.affiliation }}</textarea>
+                    <span class="reg-error" data-validate-for="affiliation"></span>
+                </div>
+
+                <div class="reg-field-group">
+                    <div class="reg-field-row">
+                        <label class="reg-label" for="edit-department">Department <span class="req">*</span></label>
+                        <input class="reg-input" id="edit-department" type="text" name="department"
+                               value="{{ submission.department }}" required placeholder="e.g. Medical Physics">
+                        <span class="reg-error" data-validate-for="department"></span>
+                    </div>
+                    <div class="reg-field-row">
+                        <label class="reg-label" for="edit-institution">Institution / Hospital <span class="req">*</span></label>
+                        <input class="reg-input" id="edit-institution" type="text" name="institution"
+                               value="{{ submission.institution }}" required placeholder="e.g. Kenyatta National Hospital">
+                        <span class="reg-error" data-validate-for="institution"></span>
+                    </div>
+                </div>
+
+                <div class="reg-field-group">
+                    <div class="reg-field-row">
+                        <label class="reg-label" for="edit-city">City <span class="req">*</span></label>
+                        <input class="reg-input" id="edit-city" type="text" name="city"
+                               value="{{ submission.city }}" required placeholder="e.g. Nairobi">
+                        <span class="reg-error" data-validate-for="city"></span>
+                    </div>
+                    <div class="reg-field-row">
+                        <label class="reg-label" for="edit-country">Country <span class="req">*</span></label>
+                        <select class="reg-select" id="edit-country" name="country" required>
+                            <option value="">Select country</option>
+                            {% for c in countries %}
+                                <option value="{{ c }}" {{ submission.country == c ? 'selected' : '' }}>{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                        <span class="reg-error" data-validate-for="country"></span>
+                    </div>
+                </div>
+            </div>
+
+            {# ── Card 2: Paper Details ───────────────────────────────── #}
+            <div class="reg-card">
+                <h2 class="reg-card-title">
+                    <span class="reg-card-num">2</span> Paper Details
+                </h2>
+
+                <div class="reg-field-row">
+                    <label class="reg-label" for="edit-title">Abstract Title <span class="req">*</span></label>
+                    <div class="reg-count-bar"><output id="title-count">0</output><span>/ 20 words</span></div>
+                    <textarea class="reg-textarea" id="edit-title" name="title" rows="2" required
+                              placeholder="Enter your abstract title">{{ submission.title }}</textarea>
+                    <span class="reg-error" data-validate-for="title"></span>
+                </div>
+
+                <div class="reg-field-row">
+                    <label class="reg-label" for="edit-authors">Author(s) <span class="req">*</span></label>
+                    <input class="reg-input" id="edit-authors" type="text" name="authors"
+                           value="{{ submission.authors }}" required placeholder="e.g. Jane Doe, John Smith">
+                    <span class="reg-error" data-validate-for="authors"></span>
+                    <p class="reg-help">Separate names with commas.</p>
+                </div>
+
+                <div class="reg-field-group">
+                    <div class="reg-field-row">
+                        <label class="reg-label" for="edit-presentation-type">Presentation Type <span class="req">*</span></label>
+                        <select class="reg-select" id="edit-presentation-type" name="presentation_type" required>
+                            <option value="">Select type</option>
+                            {% for opt in presentationTypes %}
+                                <option value="{{ opt }}" {{ submission.presentation_type == opt ? 'selected' : '' }}>{{ opt }}</option>
+                            {% endfor %}
+                        </select>
+                        <span class="reg-error" data-validate-for="presentation_type"></span>
+                    </div>
+                    <div class="reg-field-row">
+                        <label class="reg-label" for="edit-research-area">Research Area <span class="req">*</span></label>
+                        <select class="reg-select" id="edit-research-area" name="research_area" required>
+                            <option value="">Select area</option>
+                            {% for area in researchAreas %}
+                                <option value="{{ area.label }}" {{ submission.research_area == area.label ? 'selected' : '' }}>{{ area.label }}</option>
+                            {% endfor %}
+                        </select>
+                        <span class="reg-error" data-validate-for="research_area"></span>
+                    </div>
+                </div>
+
+                <div class="reg-field-row">
+                    <label class="reg-label" for="edit-research-topic">Research Topic <span class="req">*</span></label>
+                    <select class="reg-select" id="edit-research-topic" name="research_topic" required disabled data-current-topic="{{ submission.research_topic }}">
+                        <option value="">Select an area first</option>
+                    </select>
+                    <span class="reg-error" data-validate-for="research_topic"></span>
+                </div>
+
+                <script type="application/json" id="research-topics-data">{{ researchTopicsByArea|json_encode|raw }}</script>
+
+                <div class="reg-field-row">
+                    <label class="reg-label" for="edit-abstract">Abstract <span class="req">*</span></label>
+                    <div class="reg-count-bar"><output id="abstract-count">0</output><span>/ 500 words</span></div>
+                    <textarea class="reg-textarea reg-textarea-lg" id="edit-abstract" name="abstract" rows="10" required
+                              placeholder="Write your abstract here...">{{ submission.abstract }}</textarea>
+                    <span class="reg-error" data-validate-for="abstract"></span>
+                </div>
+            </div>
+
+            {# ── Card 3: Replace PDF (optional) ─────────────────────── #}
+           
+
+            <div class="reg-alert reg-alert-danger" data-validate-error>
+                <p data-message></p>
+            </div>
+
+            <button class="reg-submit-btn" type="submit" data-attach-loading>
+                <span class="reg-btn-text">Save Changes</span>
+                <svg class="reg-btn-spinner animate-spin" viewBox="0 0 24 24" style="display:none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+            </button>
+        </form>
+    {% endif %}
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('.reg-form');
+    if (!form) return;
+
+    function words(value) {
+        return (value.trim().match(/\S+/g) || []).length;
+    }
+
+    function updateCounts() {
+        var title    = form.querySelector('[name="title"]');
+        var abstract = form.querySelector('[name="abstract"]');
+        var titleOut = document.getElementById('title-count');
+        var abstrOut = document.getElementById('abstract-count');
+
+        if (title && titleOut) {
+            var tw = words(title.value);
+            titleOut.textContent = tw;
+            titleOut.parentElement.classList.toggle('reg-count-bar--warn', tw > 20);
+        }
+        if (abstract && abstrOut) {
+            var aw = words(abstract.value);
+            abstrOut.textContent = aw;
+            abstrOut.parentElement.classList.toggle('reg-count-bar--warn', aw > 500);
+        }
+    }
+
+    form.addEventListener('input', updateCounts);
+    updateCounts();
+
+    var topicsData = document.getElementById('research-topics-data');
+    var areaSelect = form.querySelector('[name="research_area"]');
+    var topicSelect = form.querySelector('[name="research_topic"]');
+    var topicsByArea = topicsData ? JSON.parse(topicsData.textContent) : {};
+    var currentTopic = topicSelect.getAttribute('data-current-topic') || '';
+
+    function populateTopics() {
+        var area = areaSelect.value;
+        topicSelect.innerHTML = '';
+        var first = document.createElement('option');
+        first.value = '';
+        first.textContent = 'Select topic';
+        topicSelect.appendChild(first);
+
+        (topicsByArea[area] || []).forEach(function (topic) {
+            var opt = document.createElement('option');
+            opt.value = topic;
+            opt.textContent = topic;
+            topicSelect.appendChild(opt);
+        });
+
+        topicSelect.disabled = !area;
+        if (currentTopic && topicsByArea[area] && topicsByArea[area].indexOf(currentTopic) !== -1) {
+            topicSelect.value = currentTopic;
+        }
+    }
+
+    areaSelect.addEventListener('change', populateTopics);
+    populateTopics();
+});
+</script>

@@ -1,0 +1,253 @@
+url = "/registration"
+title = "Submit Abstract"
+layout = "default"
+
+[conferenceRegistration]
+editPage = "submission-edit"
+useGlobalSettings = 1
+==
+<section class="submit-hero relative overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="{{ 'assets/images/gtc.png'|theme }}" alt="" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-850 via-gray-850 to-accent-900"></div>
+        <div class="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-primary-500/30 blur-[120px]"></div>
+        <div class="absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-accent-500/30 blur-[120px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]">
+        </div>
+    </div>
+    <div class="submit-hero-inner relative z-10">
+        <span class="submit-pill">Abstract Submission</span>
+        <h1>Submit Your <span class="submit-gradient">Research Abstract</span></h1>
+        <p class="reg-hero-sub">Fill in the form below and submit before <strong>{{ submissionDeadline }}</strong>.</p>
+
+    </div>
+</section>
+
+<section class="reg-main">
+    {% flash %}
+    <div class="reg-alert reg-alert-{{ type }}">{{ message }}</div>
+    {% endflash %}
+
+    <div class="reg-top-bar">
+        <a href="{{ 'guideline'|page }}" class="reg-guidelines-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Submission Guidelines
+        </a>
+        <p class="reg-required-note">Fields marked <span class="req">*</span> are required.</p>
+    </div>
+
+    <form class="reg-form" data-request="conferenceRegistration::onSubmit" data-request-files
+        data-request-validate data-request-flash method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrfToken }}">
+
+        <!-- Author Details -->
+        <div class="reg-card">
+            <h2 class="reg-card-title">
+                <span class="reg-card-num">1</span> Author Details
+            </h2>
+
+            <div class="reg-field-group">
+                <div class="reg-field-row">
+                    <label class="reg-label" for="fname">First Name <span class="req">*</span></label>
+                    <input class="reg-input" id="fname" type="text" name="fname" placeholder="Jane" required>
+                    <span class="reg-error" data-validate-for="fname"></span>
+                </div>
+                <div class="reg-field-row">
+                    <label class="reg-label" for="lname">Last Name <span class="req">*</span></label>
+                    <input class="reg-input" id="lname" type="text" name="lname" placeholder="Doe" required>
+                    <span class="reg-error" data-validate-for="lname"></span>
+                </div>
+            </div>
+
+            <div class="reg-field-row">
+                <label class="reg-label" for="email">Email Address <span class="req">*</span></label>
+                <input class="reg-input" id="email" type="email" name="email" placeholder="name@example.org" required>
+                <span class="reg-error" data-validate-for="email"></span>
+                <p class="reg-help">Decision notices and edit links are sent to this address.</p>
+            </div>
+
+            <div class="reg-field-row">
+                <label class="reg-label" for="phone">Phone Number</label>
+                <input class="reg-input" id="phone" type="tel" name="tel1" placeholder="+254 700 000 000">
+            </div>
+
+            <div class="reg-field-row">
+                <label class="reg-label" for="abstract-affiliation">Affiliation <span class="req">*</span></label>
+                <textarea class="reg-textarea" id="abstract-affiliation" name="affiliation" rows="2" required placeholder="e.g. University of Nairobi, Kenya"></textarea>
+                <span class="reg-error" data-validate-for="affiliation"></span>
+            </div>
+
+            <div class="reg-field-group">
+                <div class="reg-field-row">
+                    <label class="reg-label" for="department">Department <span class="req">*</span></label>
+                    <input class="reg-input" id="department" type="text" name="department" placeholder="e.g. Medical Physics" required>
+                    <span class="reg-error" data-validate-for="department"></span>
+                </div>
+                <div class="reg-field-row">
+                    <label class="reg-label" for="institution">Institution / Hospital <span class="req">*</span></label>
+                    <input class="reg-input" id="institution" type="text" name="institution" placeholder="e.g. Kenyatta National Hospital" required>
+                    <span class="reg-error" data-validate-for="institution"></span>
+                </div>
+            </div>
+
+            <div class="reg-field-group">
+                 <div class="reg-field-row">
+                    <label class="reg-label" for="country">Country <span class="req">*</span></label>
+                    <select class="reg-select" id="country" name="country" required>
+                        <option value="">Select country</option>
+                        {% for c in countries %}
+                            <option value="{{ c }}">{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="reg-error" data-validate-for="country"></span>
+                </div>
+                <div class="reg-field-row">
+                    <label class="reg-label" for="city">City <span class="req">*</span></label>
+                    <input class="reg-input" id="city" type="text" name="city" placeholder="e.g. Nairobi" required>
+                    <span class="reg-error" data-validate-for="city"></span>
+                </div>
+               
+            </div>
+        </div>
+
+        <!-- Paper Details -->
+        <div class="reg-card">
+            <h2 class="reg-card-title">
+                <span class="reg-card-num">2</span> Paper Details
+            </h2>
+
+            <div class="reg-field-row">
+                <label class="reg-label" for="abstract-title">Abstract Title <span class="req">*</span></label>
+                <div class="reg-count-bar"><output id="title-count">0</output><span>/ 20 words</span></div>
+                <textarea class="reg-textarea" id="abstract-title" name="title" rows="2" required placeholder="Enter your abstract title"></textarea>
+                <span class="reg-error" data-validate-for="title"></span>
+            </div>
+
+            <div class="reg-field-row">
+                <label class="reg-label" for="authors">Author(s) <span class="req">*</span></label>
+                <input class="reg-input" id="authors" type="text" name="authors" placeholder="e.g. Jane Doe, John Smith" required>
+                <span class="reg-error" data-validate-for="authors"></span>
+                <p class="reg-help">Separate names with commas.</p>
+            </div>
+
+            <div class="reg-field-group">
+                <div class="reg-field-row">
+                    <label class="reg-label" for="presentation-type">Presentation Type <span class="req">*</span></label>
+                    <select class="reg-select" id="presentation-type" name="presentation_type" required>
+                        <option value="">Select type</option>
+                        {% for opt in presentationTypes %}
+                            <option value="{{ opt }}">{{ opt }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="reg-error" data-validate-for="presentation_type"></span>
+                </div>
+                <div class="reg-field-row">
+                    <label class="reg-label" for="research-area">Research Area <span class="req">*</span></label>
+                    <select class="reg-select" id="research-area" name="research_area" required>
+                        <option value="">Select area</option>
+                        {% for area in researchAreas %}
+                            <option value="{{ area.label }}">{{ area.label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="reg-error" data-validate-for="research_area"></span>
+                </div>
+            </div>
+
+            <div class="reg-field-row">
+                <label class="reg-label" for="research-topic">Research Topic <span class="req">*</span></label>
+                <select class="reg-select" id="research-topic" name="research_topic" required disabled>
+                    <option value="">Select an area first</option>
+                </select>
+                <span class="reg-error" data-validate-for="research_topic"></span>
+            </div>
+
+            <script type="application/json" id="research-topics-data">{{ researchTopicsByArea|json_encode|raw }}</script>
+
+            <div class="reg-field-row">
+                <label class="reg-label" for="abstract">Abstract <span class="req">*</span></label>
+                <div class="reg-count-bar"><output id="abstract-count">0</output><span>/ 500 words</span></div>
+                <textarea class="reg-textarea reg-textarea-lg" id="abstract" name="abstract" rows="10" required placeholder="Write your abstract here..."></textarea>
+                <span class="reg-error" data-validate-for="abstract"></span>
+            </div>
+        </div>
+
+        <!-- Bot Protection -->
+        <div class="reg-card reg-card-flat">
+            {% if turnstileSiteKey %}
+            <div class="cf-turnstile" data-sitekey="{{ turnstileSiteKey }}"></div>
+            {% else %}
+            <p class="reg-help reg-help-warn">Add your Cloudflare Turnstile site key and secret key to the page component settings before launch.</p>
+            <input type="hidden" name="cf-turnstile-response" value="development-placeholder">
+            {% endif %}
+        </div>
+
+        <div class="reg-alert reg-alert-danger" data-validate-error>
+            <p data-message></p>
+        </div>
+
+        <button class="reg-submit-btn" type="submit" data-attach-loading>
+            <span class="reg-btn-text">Submit Abstract</span>
+            <svg class="reg-btn-spinner animate-spin" viewBox="0 0 24 24" style="display:none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+        </button>
+    </form>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.querySelector('.reg-form');
+        if (!form) return;
+
+        function words(value) {
+            return (value.trim().match(/\S+/g) || []).length;
+        }
+
+        function updateCounts() {
+            var title = form.querySelector('[name="title"]');
+            var abstract = form.querySelector('[name="abstract"]');
+            var titleCount = document.getElementById('title-count');
+            var abstractCount = document.getElementById('abstract-count');
+            if (title && titleCount) {
+                var tw = words(title.value);
+                titleCount.textContent = tw;
+                titleCount.parentElement.classList.toggle('reg-count-bar--warn', tw > 20);
+            }
+            if (abstract && abstractCount) {
+                var aw = words(abstract.value);
+                abstractCount.textContent = aw;
+                abstractCount.parentElement.classList.toggle('reg-count-bar--warn', aw > 500);
+            }
+        }
+
+        form.addEventListener('input', updateCounts);
+        updateCounts();
+
+        var topicsData = document.getElementById('research-topics-data');
+        var areaSelect = form.querySelector('[name="research_area"]');
+        var topicSelect = form.querySelector('[name="research_topic"]');
+        var topicsByArea = topicsData ? JSON.parse(topicsData.textContent) : {};
+
+        function populateTopics() {
+            var area = areaSelect.value;
+            topicSelect.innerHTML = '';
+            var first = document.createElement('option');
+            first.value = '';
+            first.textContent = 'Select topic';
+            topicSelect.appendChild(first);
+
+            (topicsByArea[area] || []).forEach(function (topic) {
+                var opt = document.createElement('option');
+                opt.value = topic;
+                opt.textContent = topic;
+                topicSelect.appendChild(opt);
+            });
+
+            topicSelect.disabled = !area;
+        }
+
+        areaSelect.addEventListener('change', populateTopics);
+        populateTopics();
+    });
+</script>

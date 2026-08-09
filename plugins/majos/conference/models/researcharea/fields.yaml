@@ -1,0 +1,29 @@
+fields:
+    name:
+        label: Name
+        span: left
+        required: true
+        placeholder: e.g. Radiation Protection in Healthcare
+    code:
+        label: Code
+        span: right
+        placeholder: e.g. A or A1
+        comment: Shown before the name on the public form, e.g. "A1. Standards, ...".
+    parent:
+        label: Parent Area
+        type: dropdown
+        span: left
+        options: getParentOptions
+        emptyOption: None (Top Level)
+        comment: Leave empty to make this a top-level research area.
+    sort_order:
+        label: Sort Order
+        type: number
+        span: right
+        default: 0
+        comment: Lower numbers appear first.
+    description:
+        label: Description
+        type: textarea
+        size: small
+        span: full

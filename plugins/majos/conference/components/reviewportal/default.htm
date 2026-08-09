@@ -1,0 +1,288 @@
+{% set statusColor = {'assigned_for_review': 'warning', 'reviewed': 'success'} %}
+
+<style>
+/* ── Review Portal — self-contained styles ─────────────────────────────── */
+.rp-wrap { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; min-height: 100vh; padding: 0 0 60px; }
+.rp-header { background: linear-gradient(135deg, #1e3a5f 0%, #2d6a9f 100%); color: #fff; padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.rp-header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -.3px; }
+.rp-header p  { margin: 4px 0 0; opacity: .8; font-size: .9rem; }
+.rp-body  { max-width: 900px; margin: 0 auto; padding: 40px 20px 0; }
+
+/* Login card */
+.rp-login-card { background: #fff; border-radius: 12px; padding: 48px 40px; box-shadow: 0 4px 20px rgba(0,0,0,.08); max-width: 420px; margin: 60px auto 0; }
+.rp-login-card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; color: #1e3a5f; }
+.rp-login-card p  { color: #64748b; margin-bottom: 28px; line-height: 1.6; }
+.rp-login-card .password-hint { font-size: .8rem; color: #94a3b8; margin-top: 6px; }
+
+/* Stats bar */
+.rp-stats { background: #fff; border-radius: 10px; padding: 18px 24px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); display: flex; gap: 32px; flex-wrap: wrap; }
+.rp-stat  { text-align: center; }
+.rp-stat-num   { font-size: 1.8rem; font-weight: 800; color: #1e3a5f; line-height: 1; }
+.rp-stat-label { font-size: .75rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-top: 4px; }
+
+/* Submission card */
+.rp-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.07); margin-bottom: 28px; overflow: hidden; }
+.rp-card.reviewed { border-left: 5px solid #10b981; }
+.rp-card.pending  { border-left: 5px solid #f59e0b; }
+.rp-card-header { padding: 20px 28px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.rp-card-body   { padding: 24px 28px; }
+.rp-card-footer { background: #f8fafc; padding: 20px 28px; border-top: 1px solid #f1f5f9; }
+.rp-category { display: inline-block; padding: 3px 10px; background: #e0f0ff; color: #1d4ed8; border-radius: 20px; font-size: .78rem; font-weight: 600; margin-bottom: 8px; }
+.rp-title  { font-size: 1.15rem; font-weight: 700; color: #1e293b; margin: 0 0 4px; }
+.rp-authors { color: #64748b; font-size: .88rem; }
+.rp-section-label { font-size: .75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.rp-abstract  { color: #334155; line-height: 1.75; font-size: .95rem; white-space: pre-wrap; }
+.rp-meta { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #f1f5f9; }
+.rp-meta-item { font-size: .85rem; color: #64748b; }
+.rp-meta-item strong { color: #334155; }
+
+/* Decision form */
+.rp-decision-form .rp-radio-group { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0 18px; }
+.rp-radio-btn { flex: 1; min-width: 140px; }
+.rp-radio-btn input[type=radio] { display: none; }
+.rp-radio-btn label { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: .9rem; color: #64748b; transition: all .18s; }
+.rp-radio-btn input:checked + label.approve { border-color: #10b981; background: #f0fdf4; color: #059669; }
+.rp-radio-btn input:checked + label.reject  { border-color: #ef4444; background: #fef2f2; color: #dc2626; }
+.rp-radio-btn label:hover { border-color: #94a3b8; }
+
+/* Reviewed badge */
+.rp-decision-badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: .9rem; }
+.rp-decision-badge.approved { background: #f0fdf4; color: #059669; border: 1px solid #6ee7b7; }
+.rp-decision-badge.rejected { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+.rp-feedback-box { background: #f8fafc; border-left: 3px solid #94a3b8; padding: 12px 16px; border-radius: 4px; font-size: .9rem; color: #475569; margin-top: 12px; white-space: pre-wrap; }
+
+/* Utility */
+.rp-btn-primary { background: #1e3a5f; color: #fff; border: none; padding: 12px 28px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: .95rem; transition: background .18s; }
+.rp-btn-primary:hover { background: #2d6a9f; }
+.rp-btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.6); padding: 7px 16px; border-radius: 6px; font-size: .85rem; cursor: pointer; transition: all .18s; }
+.rp-btn-outline:hover { background: rgba(255,255,255,.15); }
+.rp-alert-danger { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; padding: 16px 20px; border-radius: 8px; margin: 40px auto; max-width: 520px; text-align: center; }
+.rp-form-control { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: .95rem; color: #334155; outline: none; transition: border .18s; }
+.rp-form-control:focus { border-color: #2d6a9f; box-shadow: 0 0 0 3px rgba(45,106,159,.15); }
+.rp-form-group { margin-bottom: 16px; }
+.rp-form-group label { display: block; font-weight: 600; font-size: .88rem; color: #334155; margin-bottom: 6px; }
+</style>
+
+<div class="rp-wrap">
+
+    {# ── Header ─────────────────────────────────────────────────────────── #}
+    <div class="rp-header">
+        <div>
+            <h1>Abstract Review Portal</h1>
+            <p>AFRIRPA 2027 — Confidential Peer Review System</p>
+        </div>
+        {% if isAuthenticated %}
+        <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:.9rem;opacity:.85;">{{ reviewer.name }}</span>
+            <form data-request="onLogout" style="margin:0">
+                <input type="hidden" name="token" value="{{ token }}">
+                <button type="submit" class="rp-btn-outline">Sign Out</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="rp-body">
+
+    {# ── Token error ─────────────────────────────────────────────────────── #}
+    {% if tokenError %}
+        <div class="rp-alert-danger">
+            <strong>Access Denied</strong><br>
+            {{ tokenError }}
+        </div>
+
+    {# ── Password login form ──────────────────────────────────────────────── #}
+    {% elseif not isAuthenticated %}
+        <div class="rp-login-card">
+            <h2>Reviewer Login</h2>
+            <p>Enter the password from your assignment email to access and review your assigned abstracts.</p>
+
+            {% flash %}
+                <div class="alert alert-{{ type == 'error' ? 'danger' : type }}" style="margin-bottom:16px;">{{ message }}</div>
+            {% endflash %}
+
+            <form data-request="onLogin" data-request-loading="#login-loading">
+                <input type="hidden" name="token" value="{{ token }}">
+
+                <div class="rp-form-group">
+                    <label for="rp-password">Password</label>
+                    <input type="password" id="rp-password" name="password" class="rp-form-control"
+                           placeholder="e.g. ABX-5821-KQZ" required autofocus
+                           autocomplete="current-password">
+                    <p class="password-hint">Your password was included in the assignment email from the AFRIRPA organisers.</p>
+                </div>
+
+                <button type="submit" id="login-loading" class="rp-btn-primary" style="width:100%">
+                    Access Review Portal
+                </button>
+            </form>
+        </div>
+
+    {# ── Authenticated — Review dashboard ─────────────────────────────────── #}
+    {% else %}
+
+        {# Flash messages #}
+        {% flash %}
+            <div class="alert alert-{{ type == 'error' ? 'danger' : 'success' }}" style="margin-bottom:20px;">
+                {{ message }}
+            </div>
+        {% endflash %}
+
+        {# Stats bar #}
+        <div class="rp-stats">
+            <div class="rp-stat">
+                <div class="rp-stat-num">{{ submissions|length }}</div>
+                <div class="rp-stat-label">Total Assigned</div>
+            </div>
+            <div class="rp-stat">
+                <div class="rp-stat-num" style="color:#f59e0b;">{{ pendingCount }}</div>
+                <div class="rp-stat-label">Pending Review</div>
+            </div>
+            <div class="rp-stat">
+                <div class="rp-stat-num" style="color:#10b981;">{{ reviewedCount }}</div>
+                <div class="rp-stat-label">Reviewed</div>
+            </div>
+        </div>
+
+        {% if submissions|length == 0 %}
+            <div style="text-align:center;padding:60px 20px;color:#64748b;">
+                <p style="font-size:1.1rem;">No abstracts are currently assigned to you.</p>
+                <p>If you believe this is an error, please contact the conference organisers.</p>
+            </div>
+        {% endif %}
+
+        {# ── Submission cards ─────────────────────────────────────────────── #}
+        {% for submission in submissions %}
+        {% set isPending = (submission.status == 'assigned_for_review') %}
+
+        <div class="rp-card {{ isPending ? 'pending' : 'reviewed' }}" id="submission-{{ submission.id }}">
+
+            {# Card header #}
+            <div class="rp-card-header">
+                <div style="flex:1">
+                    <span class="rp-category">{{ submission.research_area ?: submission.category }}{% if submission.research_topic %} — {{ submission.research_topic }}{% endif %}</span>
+                    <h3 class="rp-title">{{ submission.title }}</h3>
+                    <p class="rp-authors">{{ submission.authors }}</p>
+                </div>
+                <div style="text-align:right;white-space:nowrap;">
+                    {% if isPending %}
+                        <span class="badge" style="background:#f59e0b;color:#fff;padding:5px 12px;border-radius:20px;font-size:.8rem;font-weight:600;">Pending Review</span>
+                    {% else %}
+                        <span class="badge" style="background:#d1fae5;color:#065f46;padding:5px 12px;border-radius:20px;font-size:.8rem;font-weight:600;">Decision Submitted</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Card body — abstract #}
+            <div class="rp-card-body">
+                <div class="rp-section-label">Abstract</div>
+                <p class="rp-abstract">{{ submission.abstract }}</p>
+
+                <div class="rp-meta">
+                    <div class="rp-meta-item">
+                        <strong>Presentation Type</strong><br>{{ submission.presentation_type }}
+                    </div>
+                    <div class="rp-meta-item">
+                        <strong>Presenter</strong><br>{{ submission.author_name }}
+                    </div>
+                    <div class="rp-meta-item">
+                        <strong>Institution</strong><br>{{ submission.institution }}
+                    </div>
+                    <div class="rp-meta-item">
+                        <strong>Country</strong><br>{{ submission.country }}
+                    </div>
+                </div>
+
+                {% if submission.paper_file %}
+                <div style="margin-top:16px;padding-top:16px;border-top:1px solid #f1f5f9;">
+                    <div class="rp-section-label">Attached Document</div>
+                    <a href="{{ submission.paper_file.getPath() }}"
+                       target="_blank"
+                       style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid #e2e8f0;border-radius:6px;color:#1d4ed8;text-decoration:none;font-size:.88rem;font-weight:600;background:#f8fafc;">
+                        📄 {{ submission.paper_file.file_name }} — Download PDF
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            {# Card footer — decision form or read-only decision #}
+            <div class="rp-card-footer">
+
+                {% if isPending %}
+                {# ── Review form ── #}
+                <div class="rp-decision-form">
+                    <div class="rp-section-label">Your Decision</div>
+
+                    <form data-request="onSubmitReview"
+                          data-request-confirm="Submit this review decision? This cannot be changed afterwards."
+                          data-request-loading="#submit-btn-{{ submission.id }}">
+                        <input type="hidden" name="token" value="{{ token }}">
+                        <input type="hidden" name="submission_id" value="{{ submission.id }}">
+
+                        <div class="rp-radio-group">
+                            <div class="rp-radio-btn">
+                                <input type="radio" id="approve-{{ submission.id }}"
+                                       name="decision" value="approved" required>
+                                <label class="approve" for="approve-{{ submission.id }}">
+                                    ✔ Approve
+                                </label>
+                            </div>
+                            <div class="rp-radio-btn">
+                                <input type="radio" id="reject-{{ submission.id }}"
+                                       name="decision" value="rejected" required>
+                                <label class="reject" for="reject-{{ submission.id }}">
+                                    ✘ Reject
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="rp-form-group">
+                            <label for="feedback-{{ submission.id }}">
+                                Comments &amp; Feedback
+                                <span style="font-weight:400;color:#94a3b8;">(recommended)</span>
+                            </label>
+                            <textarea id="feedback-{{ submission.id }}"
+                                      name="feedback"
+                                      class="rp-form-control"
+                                      rows="4"
+                                      placeholder="Provide your reasoning, suggestions for improvement, or any relevant observations…"></textarea>
+                        </div>
+
+                        <button type="submit" id="submit-btn-{{ submission.id }}" class="rp-btn-primary">
+                            Submit Review Decision
+                        </button>
+                    </form>
+                </div>
+
+                {% else %}
+                {# ── Read-only decision summary ── #}
+                <div>
+                    <div class="rp-section-label">Your Decision</div>
+                    <div class="rp-decision-badge {{ submission.reviewer_decision }}">
+                        {% if submission.reviewer_decision == 'approved' %}✔ Approved{% else %}✘ Rejected{% endif %}
+                    </div>
+                    {% if submission.reviewed_at %}
+                        <p style="font-size:.8rem;color:#94a3b8;margin:6px 0 0;">
+                            Submitted on {{ submission.reviewed_at|date('d M Y, H:i') }}
+                        </p>
+                    {% endif %}
+                    {% if submission.reviewer_feedback %}
+                        <div style="margin-top:12px;">
+                            <div class="rp-section-label">Your Comments</div>
+                            <div class="rp-feedback-box">{{ submission.reviewer_feedback }}</div>
+                        </div>
+                    {% endif %}
+                    <p style="margin-top:14px;font-size:.85rem;color:#64748b;">
+                        The conference administrator has been notified and will send the final decision to the author.
+                    </p>
+                </div>
+                {% endif %}
+
+            </div><!-- /.rp-card-footer -->
+        </div><!-- /.rp-card -->
+        {% endfor %}
+
+    {% endif %}
+
+    </div><!-- /.rp-body -->
+</div><!-- /.rp-wrap -->

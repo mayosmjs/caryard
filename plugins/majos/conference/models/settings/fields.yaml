@@ -1,0 +1,246 @@
+# ===================================
+#  Conference Plugin Settings
+# ===================================
+
+fields:
+    submission_deadline:
+        label: Submission Deadline
+        type: datepicker
+        mode: datetime
+        span: left
+        comment: The deadline for abstract submissions (YYYY-MM-DD HH:MM:SS).
+
+    max_file_size_kb:
+        label: Max File Size (KB)
+        type: number
+        span: right
+        min: 100
+        max: 20480
+        default: 5120
+        comment: 'Maximum allowed PDF file size in kilobytes (default: 5120 KB = 5 MB).'
+
+    token_expiry_days:
+        label: Edit Link Expiry (Days)
+        type: number
+        span: left
+        min: 1
+        max: 365
+        default: 30
+        comment: Number of days the edit link remains valid.
+
+    unique_email:
+        label: Unique Email Submissions
+        type: checkbox
+        span: right
+        default: true
+        comment: Prevent multiple submissions from the same email address.
+
+    turnstile_site_key:
+        label: Turnstile Site Key
+        type: text
+        span: left
+        comment: Cloudflare Turnstile site key (leave empty to disable).
+
+    turnstile_secret_key:
+        label: Turnstile Secret Key
+        type: text
+        span: right
+        comment: Cloudflare Turnstile secret key (leave empty to disable).
+
+    notification_email:
+        label: Notification Email
+        type: text
+        span: left
+        comment: Email address for admin notifications when a reviewer submits a decision.
+
+    reviewer_portal_page:
+        label: Reviewer Portal Page
+        type: text
+        span: right
+        default: review-portal
+        comment: "CMS page slug for the front-end reviewer portal (e.g. 'review-portal'). Used to build the secure review link sent by email."
+
+    poster_section:
+        label: Poster / Oral-Poster Presentation
+        type: section
+        comment: Configure which approved presentation types receive a poster template and upload instructions in their acceptance email.
+
+    poster_template_types:
+        label: Presentation Types Requiring Template
+        type: checkboxlist
+        span: left
+        options: getPresentationTypeOptions
+        comment: Accepted authors of the checked presentation types will receive the template attached to their acceptance email.
+
+    poster_max_size_mb:
+        label: Max Poster Size (MB)
+        type: number
+        span: right
+        min: 1
+        max: 100
+        default: 25
+        comment: Maximum poster file size communicated to authors (MB).
+
+    poster_template:
+        label: Poster Template File
+        type: fileupload
+        mode: file
+        span: left
+        comment: 'The file attached to acceptance emails for the presentation types checked above. Leave empty to use the bundled default template.'
+
+    homepage_visibility:
+        label: Homepage & Navigation Visibility
+        type: section
+        comment: Control which home page sections are shown and which links appear in the navigation bar.
+
+    hide_speakers_section:
+        label: Hide Speakers Section
+        type: checkbox
+        span: left
+        default: false
+        comment: Hide the guest speakers section on the home page.
+
+    hide_sponsors_section:
+        label: Hide Sponsors Section
+        type: checkbox
+        span: right
+        default: false
+        comment: Hide the sponsors/partners section on the home page.
+
+    hide_speakers_nav:
+        label: Hide Speakers Nav Link
+        type: checkbox
+        span: left
+        default: false
+        comment: Hide the "Speakers" link in the navigation bar.
+
+    hide_sponsors_nav:
+        label: Hide Sponsors Nav Link
+        type: checkbox
+        span: right
+        default: false
+        comment: Hide the "Sponsors" link in the navigation bar.
+
+    conference_details:
+        label: Conference Details
+        type: section
+        comment: Configure the conference date range and the public contact email shown on the home page.
+
+    conference_start_date:
+        label: Conference Start Date
+        type: datepicker
+        mode: date
+        span: left
+        default: 2027-02-02
+        comment: The first day of the conference (e.g. 2nd February 2027).
+
+    conference_end_date:
+        label: Conference End Date
+        type: datepicker
+        mode: date
+        span: right
+        default: 2027-02-05
+        comment: The last day of the conference (e.g. 5th February 2027).
+
+    contact_email:
+        label: Public Contact Email
+        type: text
+        span: left
+        default: afrirpa@eaarp.co.ke
+        comment: 'The email address the public can use to contact the organisers (used by the "Contact Us" button on the home page).'
+
+    important_dates:
+        label: Important Dates
+        type: section
+        comment: Dates shown in the "Important Dates" timeline on the home page and the guidelines page. Add as many as you need.
+
+    important_dates_list:
+        label: Timeline Entries
+        type: repeater
+        prompt: Add another date
+        comment: Each entry is shown on both the home page timeline and the guidelines page.
+        form:
+            fields:
+                date:
+                    label: Date
+                    type: datepicker
+                    mode: date
+                    span: left
+                    comment: e.g. 2026-09-30
+                label:
+                    label: Label
+                    type: text
+                    span: right
+                    comment: e.g. Abstract Submission Deadline
+                note:
+                    label: Note (Optional)
+                    type: text
+                    comment: e.g. Deadline, Extended Deadline
+
+    contact_details:
+        label: Contact Details
+        type: section
+        comment: Phones and emails shown in the site footer contact section. Add as many as you need.
+
+    contact_entries:
+        label: Contact Entries
+        type: repeater
+        prompt: Add another contact
+        comment: 'Each entry appears in the site footer with a mailto: or tel: link.'
+        form:
+            fields:
+                type:
+                    label: Type
+                    type: dropdown
+                    span: left
+                    options:
+                        email: Email
+                        phone: Phone
+                label:
+                    label: Label
+                    type: text
+                    span: right
+                    comment: e.g. Conference Secretariat, Registration Desk
+                value:
+                    label: Value
+                    type: text
+                    comment: 'Email address or phone number, e.g. afrirpa@eaarp.co.ke or +254 700 000 000'
+
+    payment_section:
+        label: Ticket Payment Details
+        type: section
+        comment: Bank and payment details shown in the popup when a ticket card is clicked on the home page. Add as many rows as you need.
+
+    payment_instructions:
+        label: Payment Instructions
+        type: textarea
+        size: small
+        comment: Optional note shown in the payment popup, e.g. "Use your full name as the M-PESA payment reference."
+
+    payment_details:
+        label: Payment Detail Entries
+        type: repeater
+        prompt: Add another detail
+        comment: 'Each entry is shown as a label/value row in the popup, e.g. Bank, Branch, Account Number, Paybill.'
+        form:
+            fields:
+                type:
+                    label: Type
+                    type: dropdown
+                    span: left
+                    options:
+                        bank: Bank
+                        branch: Branch
+                        paybill: Paybill
+                        account: Account
+                        swift: SWIFT
+                        other: Other
+                label:
+                    label: Label
+                    type: text
+                    span: right
+                    comment: e.g. Bank Name, Branch, Paybill Number
+                value:
+                    label: Value
+                    type: text
+                    comment: 'e.g. Equity Bank, Nairobi, 522533'

@@ -1,0 +1,11 @@
+<?php
+$statusLabels = [
+    'submitted'           => ['label' => 'Submitted',      'class' => 'badge badge-warning'],
+    'assigned_for_review' => ['label' => 'Pending Review', 'class' => 'badge badge-warning'],
+    'reviewed'            => ['label' => 'Reviewed',       'class' => 'badge', 'style' => 'background:#7c3aed;color:#fff;'],
+    'accepted'            => ['label' => 'Accepted',       'class' => 'badge badge-success'],
+    'rejected'            => ['label' => 'Rejected',       'class' => 'badge badge-danger'],
+];
+$info = $statusLabels[$record->status] ?? ['label' => ucfirst(str_replace('_', ' ', $record->status)), 'class' => 'badge badge-secondary'];
+?>
+<span class="<?= e($info['class']) ?>"<?= isset($info['style']) ? ' style="' . e($info['style']) . '"' : '' ?>><?= e($info['label']) ?></span>

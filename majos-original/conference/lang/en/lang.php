@@ -1,0 +1,18 @@
+<?php return [
+    'majos.conference::lang.id' => 'ID',
+    'majos.conference::lang.title' => 'Title',
+    'majos.conference::lang.presenter' => 'Presenter',
+    'majos.conference::lang.email' => 'Email',
+    'majos.conference::lang.category' => 'Category',
+    'majos.conference::lang.status' => 'Status',
+    'majos.conference::lang.submitted' => 'Submitted',
+    'majos.conference::lang.actions' => 'Actions',
+    'majos.conference::lang.deadline_passed' => 'The submission deadline has passed.',
+    'majos.conference::lang.too_many_attempts' => 'Too many attempts. Please try again later.',
+    'majos.conference::lang.turnstile_required' => 'Please complete the bot protection.',
+    'majos.conference::lang.invalid_token' => 'Invalid or expired edit link.',
+    'majos.conference::lang.incorrect_password' => 'Incorrect password.',
+    'majos.conference::lang.submission_success' => 'Submission received successfully!',
+    'majos.conference::lang.edit_unlocked' => 'Submission unlocked.',
+    'majos.conference::lang.update_success' => 'Submission updated successfully.',
+];

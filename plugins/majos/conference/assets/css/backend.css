@@ -1,0 +1,71 @@
+/* Backend styling for Conference plugin */
+.scoreboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.scoreboard-item {
+    flex: 1;
+    min-width: 150px;
+    background: #fff;
+    border: 1px solid #d1d6d9;
+    border-radius: 4px;
+    padding: 16px;
+    text-align: center;
+}
+
+.scoreboard-item h4 {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.scoreboard-item p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.status-pending {
+    background-color: #fff8e1;
+}
+
+.status-accepted {
+    background-color: #e8f5e9;
+}
+
+.status-rejected {
+    background-color: #ffebee;
+}
+
+.abstract-container {
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.8;
+    color: #333;
+}
+
+.decision-accepted {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.decision-rejected {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.badge-success { background: #22c55e; color: white; }
+.badge-danger { background: #ef4444; color: white; }
+.badge-warning { background: #f59e0b; color: white; }
+.badge-secondary { background: #6b7280; color: white; }

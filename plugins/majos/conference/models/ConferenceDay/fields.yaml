@@ -1,0 +1,33 @@
+# ===================================
+#  Form Field Configuration
+# ===================================
+
+fields:
+    title:
+        label: Title
+        type: text
+        span: left
+        required: true
+    date:
+        label: Date
+        type: datepicker
+        span: right
+        required: true
+    slug:
+        label: Slug
+        type: text
+        span: left
+        required: true
+        preset:
+            field: title
+            type: slug
+    sort_order:
+        label: Sort Order
+        type: number
+        span: right
+        default: 0
+    is_published:
+        label: Published
+        type: switch
+        default: true
+        span: full

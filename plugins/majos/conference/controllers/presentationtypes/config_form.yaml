@@ -1,0 +1,7 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+name: Presentation Type
+form: $/majos/conference/models/presentationtype/fields.yaml
+modelClass: Majos\Conference\Models\PresentationType

@@ -1,0 +1,43 @@
+# ===================================
+#  List Column Configuration
+# ===================================
+
+columns:
+    id:
+        label: ID
+        type: number
+        searchable: true
+    title:
+        label: Title
+        type: text
+        searchable: true
+    day:
+        label: Day
+        type: text
+        searchable: true
+        relation: day
+        valueFrom: title
+    venue:
+        label: Venue
+        type: text
+        searchable: true
+        relation: venue
+        valueFrom: name
+    session_type:
+        label: Type
+        type: text
+        searchable: true
+    track:
+        label: Track
+        type: text
+        searchable: true
+    starts_at:
+        label: Start Time
+        type: datetime
+        format: d/m/Y H:i
+    is_published:
+        label: Published
+        type: switch
+    created_at:
+        label: Created
+        type: datetime

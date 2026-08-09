@@ -1,0 +1,21 @@
+# ===================================
+#  List Behavior Config
+# ===================================
+
+modelClass: Majos\Conference\Models\Session
+title: Manage Sessions
+list: $/majos/conference/models/Session/columns.yaml
+recordUrl: majos/conference/sessions/update/:id
+noRecordsMessage: backend::lang.list.no_records
+recordsPerPage: 20
+showPageNumbers: true
+showSetup: true
+showSorting: true
+defaultSort:
+    column: sort_order
+    direction: asc
+showCheckboxes: true
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: backend::lang.list.search_prompt

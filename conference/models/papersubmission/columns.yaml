@@ -1,0 +1,42 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    reference_number:
+        label: "Reference Number"
+        searchable: true
+        sortable: true
+    email:
+        label: "Email"
+        searchable: true
+        sortable: true
+    full_name:
+        label: "Full Name"
+        searchable: true
+        sortable: true
+    phone_number:
+        label: "Phone Number"
+        searchable: true
+    country:
+        label: "Country"
+        searchable: true
+        sortable: true
+    original_filename:
+        label: "Original Filename"
+        searchable: true
+    submission_date:
+        label: "Submission Date"
+        type: date
+        searchable: true
+        sortable: true
+    # status:
+    #     label: 'Status'
+    #     type: dropdown
+    #     options:
+    #         pending: 'Pending'
+    #         verified: 'Verified'
+    #         completed: 'Completed'
+    #         rejected: 'Rejected'
+    #     searchable: true
+    #     sortable: true

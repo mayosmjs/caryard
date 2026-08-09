@@ -1,0 +1,39 @@
+1.0.1:
+    - Create conference plugin tables and seed initial data.
+    - 2025.01.01.000000_create_conference_days_table.php
+    - 2025.01.01.000001_create_venues_table.php
+    - 2025.01.01.000002_create_speakers_table.php
+    - 2025.01.01.000003_create_sessions_table.php
+    - 2025.01.01.000004_create_session_speaker_table.php
+    - 2025.01.01.000005_create_paper_submissions_table.php
+    - ConferenceDataSeeder.php
+1.0.2:
+    - Add verification codes table for paper submission email verification.
+    - 2025.01.01.000006_create_verification_codes_table.php
+1.0.3:
+    - Create conference submissions table
+    - create_submissions_table.php
+
+1.0.4:
+    - Add review workflow fields to submissions table (reviewer assignment, decision, feedback).
+    - add_review_fields_to_submissions_table.php
+
+1.0.5:
+    - Create reviewers table for front-end token-based reviewer portal (no backend access required).
+    - create_reviewers_table.php
+
+1.0.6:
+    - Create committee members table.
+    - 2026.06.25.000001_create_committees_table.php
+
+1.0.7:
+    - Add approved presentation type field to submissions table.
+    - add_approved_presentation_type_to_submissions.php
+
+1.0.8:
+    - Create presentation types table and seed the default types.
+    - create_presentation_types_table.php
+
+1.0.9:
+    - Create research areas table (parent/child hierarchy) and add research area fields to submissions.
+    - 2026.08.04.000001_create_research_areas_table.php

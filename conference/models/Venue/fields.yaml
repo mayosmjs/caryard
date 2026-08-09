@@ -1,0 +1,42 @@
+# ===================================
+#  Form Field Configuration
+# ===================================
+
+fields:
+    name:
+        label: Name
+        type: text
+        span: left
+        required: true
+    location:
+        label: Location
+        type: text
+        span: right
+        required: true
+    slug:
+        label: Slug
+        type: text
+        span: left
+        required: true
+        preset:
+            field: name
+            type: slug
+    capacity:
+        label: Capacity
+        type: number
+        span: right
+    description:
+        label: Description
+        type: textarea
+        size: large
+        span: full
+    sort_order:
+        label: Sort Order
+        type: number
+        span: left
+        default: 0
+    is_published:
+        label: Published
+        type: switch
+        span: right
+        default: true

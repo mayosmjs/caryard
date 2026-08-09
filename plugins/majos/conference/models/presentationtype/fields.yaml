@@ -1,0 +1,11 @@
+fields:
+    name:
+        label: Name
+        span: full
+        placeholder: e.g. Oral Presentation
+        comment: Shown in the submission form and used as the stored value.
+    description:
+        label: Description
+        type: textarea
+        size: small
+        span: full

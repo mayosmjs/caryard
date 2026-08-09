@@ -1,0 +1,18 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+name: Committee Member
+modelClass: Majos\Conference\Models\Committee
+form: $/majos/conference/models/Committee/fields.yaml
+defaultRedirect: majos/conference/committees
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/conference/committees/update/:id
+    redirectClose: majos/conference/committees
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/conference/committees
+    redirectClose: majos/conference/committees
+preview:
+    title: backend::lang.form.preview_title

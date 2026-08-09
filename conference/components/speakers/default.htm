@@ -1,0 +1,171 @@
+{% if speaker %}
+    <div class="speakers-container">
+        <div class="speaker-detail card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <button
+                            type="button"
+                            class="speaker-popup-trigger p-0 border-0 bg-transparent"
+                            data-speaker-popup-trigger
+                            data-speaker-popup="{{ __SELF__.getSpeakerPopupData(speaker)|e('html_attr') }}"
+                            aria-label="Open {{ speaker.full_name }} profile"
+                        >
+                            <img
+                                src="{{ __SELF__.getPhotoUrl(speaker) }}"
+                                alt="{{ speaker.full_name }}"
+                                class="img-fluid rounded-circle mb-3"
+                                style="max-width: 200px; max-height: 200px; object-fit: cover;"
+                            >
+                        </button>
+
+                        {% if speaker.is_featured %}
+                            <span class="badge badge-warning">Featured Speaker</span>
+                        {% endif %}
+
+                        {% if speaker.company %}
+                            <p class="mt-2">
+                                <strong>{{ speaker.company }}</strong>
+                            </p>
+                        {% endif %}
+
+                        {% if speaker.linkedin_url %}
+                            <a href="{{ speaker.linkedin_url }}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+                                <i class="icon-linkedin"></i> LinkedIn
+                            </a>
+                        {% endif %}
+
+                        {% if speaker.website_url %}
+                            <a href="{{ speaker.website_url }}" target="_blank" class="btn btn-outline-secondary btn-sm mt-2">
+                                <i class="icon-globe"></i> Website
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-9">
+                        <h2>{{ speaker.full_name }}</h2>
+
+                        {% if speaker.title %}
+                            <h4 class="text-muted">{{ speaker.title }}</h4>
+                        {% endif %}
+
+                        {% if speaker.country %}
+                            <p><i class="icon-map-marker"></i> {{ speaker.country }}</p>
+                        {% endif %}
+
+                        {% if speaker.biography %}
+                            <div class="biography mt-3">
+                                {{ speaker.biography|raw }}
+                            </div>
+                        {% endif %}
+
+                        {% if speaker.expertise %}
+                            <div class="expertise mt-3">
+                                <strong>Expertise:</strong>
+                                {% for area in speaker.expertise|split(',') %}
+                                    {% set trimmedArea = area|trim %}
+                                    {% if trimmedArea %}
+                                        <span class="badge badge-light mr-1 mb-1">
+                                            {{ trimmedArea }}
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if sessions is defined and sessions|length %}
+                            <div class="sessions mt-4">
+                                <h4>Sessions</h4>
+                                <ul class="list-group">
+                                    {% for session in sessions %}
+                                        <li class="list-group-item">
+                                            {{ session.title }}
+                                            <br>
+                                            <small class="text-muted">
+                                                {{ session.day ? session.day.title : 'TBD' }}
+                                                {% if session.starts_at %}
+                                                    at {{ session.starts_at|date('H:i') }}
+                                                {% endif %}
+                                                {% if session.venue %}
+                                                    in {{ session.venue.name }}
+                                                {% endif %}
+                                            </small>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <section id="section-speakers" class="bg-dark section-dark text-light">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-6 relative z-3">
+                    <div class="text-center">
+                        <div class="subtitle wow fadeInUp" data-wow-delay=".0s">Speakers</div>
+                        <h2 class="wow fadeInUp" data-wow-delay=".2s">Meet the Nuclear Experts</h2>
+                        <p class="lead wow fadeInUp">Whether it's a quick refresh or a deep clean transformation, our expert touch leaves your home or office shining.</p>
+                    </div>
+                </div>
+            </div>
+
+            {% if speakers is empty %}
+                <div class="row g-4">
+                    <div class="col-lg-12">
+                        <div class="alert alert-info mb-0">
+                            No speakers found.
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="swiper speakers-swiper mt-5">
+                    <div class="swiper-wrapper">
+                    {% for speaker in speakers %}
+                        {% set speakerLine = [] %}
+                        {% if speaker.title %}
+                            {% set speakerLine = speakerLine|merge([speaker.title]) %}
+                        {% endif %}
+                        {% if speaker.company %}
+                            {% set speakerLine = speakerLine|merge([speaker.company]) %}
+                        {% endif %}
+                        <div class="swiper-slide">
+                            <div
+                                class="speaker-popup-trigger hover relative rounded-1 overflow-hidden wow fadeIn scale-in-mask"
+                                data-speaker-popup-trigger
+                                data-speaker-popup="{{ __SELF__.getSpeakerPopupData(speaker)|e('html_attr') }}"
+                                role="button"
+                                tabindex="0"
+                                aria-label="Open {{ speaker.full_name }} profile"
+                            >
+                                <img src="{{ __SELF__.getPhotoUrl(speaker) }}" class="w-100 hover-scale-1-1" alt="{{ speaker.full_name }}">
+                                <div class="abs w-100 h-100 start-0 top-0 hover-op-1 radial-gradient-color"></div>
+                                <div class="abs w-100 start-0 bottom-0 z-3">
+                                    <div class="bg-blur p-4 m-4 rounded-1 text-light text-center relative z-2">
+                                        <h3 class="mb-0">{{ speaker.full_name }}</h3>
+                                        <span>
+                                            {% if speakerLine %}
+                                                {{ speakerLine|join(', ') }}
+                                            {% elseif speaker.country %}
+                                                {{ speaker.country }}
+                                            {% else %}
+                                                Conference Speaker
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="gradient-edge-bottom h-100 op-8"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <div class="swiper-button-prev speakers-swiper-prev"></div>
+                    <div class="swiper-button-next speakers-swiper-next"></div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endif %}

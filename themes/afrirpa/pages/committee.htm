@@ -1,0 +1,320 @@
+url = "/committee"
+title = "Committee"
+layout = "default"
+is_hidden = false
+==
+use Majos\Conference\Models\Committee;
+
+function onStart()
+{
+    $members = Committee::isPublished()
+        ->orderBy('sort_order', 'desc')
+        ->orderBy('name', 'asc')
+        ->get();
+
+    $president = $members->first(function ($member) {
+        $designation = strtolower(trim($member->designation));
+
+        return strpos($designation, 'chair') !== false;
+    });
+
+    $committeeMembers = $president
+        ? $members->filter(function ($member) use ($president) {
+            return $member->id !== $president->id;
+        })
+        : $members;
+
+    $this['committeePresident'] = $president;
+    $this['committeeGroups'] = $committeeMembers->groupBy('committee_type');
+}
+==
+
+<style>
+/* ── Committee card redesign: overlay reveal ─────────────── */
+
+/* Override old card to be a tall portrait block */
+.committee-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  height: 320px;
+  border: none !important;
+  background: #1a1040 !important;
+  padding: 0 !important;
+  display: block !important;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(45,27,105,.18);
+  transition: box-shadow 300ms ease;
+}
+.committee-card:hover,
+.committee-card:focus-within {
+  box-shadow: 0 20px 52px rgba(45,27,105,.32) !important;
+  transform: none !important;
+  border-color: transparent !important;
+}
+
+/* Image fills the entire card */
+.committee-card > .committee-photo {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  border-radius: 0 !important;
+  border: none !important;
+  transition: transform 420ms cubic-bezier(.4,0,.2,1);
+}
+.committee-card:hover > .committee-photo,
+.committee-card:focus-within > .committee-photo {
+  transform: scale(1.06);
+}
+
+/* Overlay sits at the bottom, default 28% tall */
+.committee-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(
+    to top,
+    rgba(29,12,82,0.97)  0%,
+    rgba(45,27,105,0.93) 45%,
+    rgba(61,36,133,0.72) 72%,
+    transparent          100%
+  );
+  transition: height 380ms cubic-bezier(.4,0,.2,1),
+              background 380ms ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14px 18px 16px;
+  gap: 0;
+}
+.committee-card:hover .committee-card-overlay,
+.committee-card:focus-within .committee-card-overlay {
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(29,12,82,0.97)  0%,
+    rgba(45,27,105,0.92) 40%,
+    rgba(61,36,133,0.78) 68%,
+    rgba(29,12,82,0.50)  100%
+  );
+}
+
+/* Name – always visible at the overlay peek */
+.committee-card h3 {
+  margin: 0;
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Details hidden until expanded */
+.committee-card-details {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 340ms ease 60ms, opacity 300ms ease 80ms;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.committee-card:hover .committee-card-details,
+.committee-card:focus-within .committee-card-details {
+  max-height: 120px;
+  opacity: 1;
+}
+
+.committee-card p {
+  margin: 8px 0 0 !important;
+  color: rgba(196,181,253,.88) !important;
+  font-size: 13px !important;
+  line-height: 1.4;
+}
+
+.committee-card .committee-role {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-top: 6px;
+  border: 1px solid rgba(196,181,253,.4);
+  background: rgba(167,139,250,.18);
+  border-radius: 999px;
+  padding: 4px 11px;
+  color: #c4b5fd;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+/* ── Conference President ──────────────────────────────── */
+.committee-president {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  border: 1px solid rgba(167,139,250,.2);
+  border-top: 4px solid #a78bfa;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 12px 48px rgba(45,27,105,.12);
+  margin-bottom: 48px;
+}
+
+.committee-president-img {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.committee-president-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 44px;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(167,139,250,.1), transparent 55%),
+    #fff;
+}
+
+.committee-president-eyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  border: 1px solid rgba(167,139,250,.4);
+  background: #ede9fe;
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: #5b21b6;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.committee-president-body h2 {
+  margin: 0;
+  color: #2d1b69;
+  font-size: clamp(28px, 3.5vw, 44px);
+  line-height: 1.1;
+}
+
+.committee-president-body p {
+  margin: 0;
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 480px;
+}
+
+.committee-president-divider {
+  width: 48px;
+  height: 4px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #a78bfa, #c4b5fd);
+}
+
+@media (max-width: 780px) {
+  .committee-president { grid-template-columns: 1fr; }
+  .committee-president-img { min-height: 280px; max-height: 320px; }
+  .committee-president-body { padding: 28px 24px; }
+}
+
+/* Grid: larger columns */
+.committee-grid {
+  grid-template-columns: repeat(4, minmax(0,1fr)) !important;
+  gap: 20px !important;
+}
+
+/* Touch/mobile: keep expanded state accessible */
+@media (hover: none) {
+  .committee-card .committee-card-overlay { height: 30%; }
+  .committee-card:active .committee-card-overlay { height: 100%; }
+}
+
+@media (max-width: 1100px) {
+  .committee-grid { grid-template-columns: repeat(3, minmax(0,1fr)) !important; }
+}
+@media (max-width: 720px) {
+  .committee-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  .committee-card { height: 280px; }
+}
+@media (max-width: 420px) {
+  .committee-card { height: 240px; }
+}
+</style>
+<section class="committee-hero relative overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="{{ 'assets/images/gtc.png'|theme }}" alt="" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-850 via-gray-850 to-accent-900"></div>
+        <div class="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-primary-500/30 blur-[120px]"></div>
+        <div class="absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-accent-500/30 blur-[120px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+    </div>
+    <div class="committee-hero-inner relative z-10">
+        <span class="committee-pill">Conference Leadership</span>
+        <h1>Organizing <span class="committee-gradient">Committee</span></h1>
+        <p>Meet the leadership, committee chairs, secretaries, members, and external representatives supporting the planning and delivery of the conference.</p>
+    </div>
+</section>
+
+    <section class="committee-main">
+      {% if committeePresident %}
+        <div class="committee-president">
+          <img src="{{ committeePresident.getImageUrl(520, 620) }}" alt="{{ committeePresident.name }}" class="committee-president-img" loading="lazy">
+          <div class="committee-president-body">
+            <span class="committee-president-eyebrow">{{ committeePresident.designation }}</span>
+            <h2>{{ committeePresident.name }}</h2>
+            <div class="committee-president-divider"></div>
+            {% if committeePresident.description %}
+              <p>{{ committeePresident.description|nl2br }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% for committeeType, members in committeeGroups %}
+        <section class="committee-section" aria-labelledby="committee-{{ loop.index }}">
+          <div class="committee-section-head">
+            <h2 id="committee-{{ loop.index }}">{{ committeeType }}</h2>
+            <span class="committee-count">{{ members|length }} {{ members|length == 1 ? 'member' : 'members' }}</span>
+          </div>
+          <div class="committee-grid">
+            {% for member in members %}
+              <article class="committee-card">
+                <img src="{{ member.getImageUrl(360, 420) }}" alt="{{ member.name }}" class="committee-photo" loading="lazy">
+                <div class="committee-card-overlay">
+                  <h3>{{ member.name }}</h3>
+                  <div class="committee-card-details">
+                    {% if member.description %}
+                      <p>{{ member.description|nl2br }}</p>
+                    {% else %}
+                      <p>{{ member.committee_type }}</p>
+                    {% endif %}
+                    {% if member.designation %}
+                      <span class="committee-role">{{ member.designation }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      {% else %}
+        <section class="committee-section">
+          <div class="committee-section-head">
+            <h2>Committee</h2>
+            <span class="committee-count">No members yet</span>
+          </div>
+        </section>
+      {% endfor %}
+    </section>

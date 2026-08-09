@@ -1,0 +1,27 @@
+subject = "AFRIRPA 2027 - Abstract Submission Confirmation"
+==
+<p>Dear {{ submission.author_name }},</p>
+
+<p>Thank you for submitting your abstract "<strong>{{ submission.title }}</strong>" to AFRIRPA 2027. We have successfully received your submission and it is now under review.</p>
+
+<p><strong>Submission Details:</strong></p>
+<ul>
+    <li><strong>Title:</strong> {{ submission.title }}</li>
+    <li><strong>Research Area:</strong> {{ submission.research_area ?: submission.category }}</li>
+    {% if submission.research_topic %}<li><strong>Research Topic:</strong> {{ submission.research_topic }}</li>{% endif %}
+    <li><strong>Presentation Type:</strong> {{ submission.presentation_type }}</li>
+    <li><strong>Submitted:</strong> {{ submission.created_at|date('F j, Y H:i') }}</li>
+</ul>
+
+<p><strong>Edit Your Submission</strong></p>
+<p>You can make changes to your abstract until the submission deadline using the secure link below:</p>
+<p><a href="{{ editUrl }}">{{ editUrl }}</a></p>
+
+<p><strong>Your Edit Password:</strong> <code style="background: #f0f0f0; padding: 4px 8px; border-radius: 3px; font-size: 14px;">{{ password }}</code></p>
+
+<p><em>Note: This link will expire on <strong>{{ expiryDate }}</strong>. After that, you will not be able to edit your submission.</em></p>
+
+<p>If you did not make this submission, please contact us immediately at <a href="mailto:support@afrirpa.org">afrirpa@eaarp.co.ke</a>.</p>
+
+<p>Best regards,<br>
+AFRIRPA 2027 Organizing Committee</p>

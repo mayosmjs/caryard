@@ -1,0 +1,14 @@
+<?php
+// Used in the reviewer dashboard list to show per-row status
+$statusLabels = [
+    'assigned_for_review' => ['label' => 'Pending Review',      'class' => 'badge badge-warning'],
+    'reviewed'            => ['label' => 'Decision Submitted',  'class' => 'badge badge-success'],
+];
+$info = $statusLabels[$record->status] ?? ['label' => ucfirst(str_replace('_', ' ', $record->status)), 'class' => 'badge badge-secondary'];
+?>
+<span class="<?= e($info['class']) ?>"><?= e($info['label']) ?></span>
+<?php if ($record->reviewer_decision): ?>
+    &nbsp;<span class="badge badge-<?= $record->reviewer_decision === 'approved' ? 'success' : 'danger' ?>">
+        <?= ucfirst(e($record->reviewer_decision)) ?>
+    </span>
+<?php endif; ?>

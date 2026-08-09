@@ -1,0 +1,30 @@
+# ===================================
+#  List Behavior Config
+# ===================================
+
+modelClass: Majos\Conference\Models\ResearchArea
+
+title: Research Areas
+
+list: $/majos/conference/models/researcharea/columns.yaml
+
+recordUrl: majos/conference/researchareas/update/:id
+
+noRecordsMessage: No research areas found
+
+recordsPerPage: 30
+
+showPageNumbers: true
+
+showSetup: true
+
+showSorting: true
+
+showCheckboxes: true
+
+defaultSort:
+    column: sort_order
+    direction: asc
+
+toolbar:
+    buttons: list_toolbar

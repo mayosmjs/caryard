@@ -1,0 +1,76 @@
+# ===================================
+#  Preview Field Definitions
+# ===================================
+
+fields:
+    reference_number:
+        label: Reference Number
+        comment: Unique identifier for this submission
+        span: auto
+        disabled: true
+        type: text
+    email:
+        label: Email Address
+        comment: Submitter's email address
+        span: auto
+        type: email
+    verification_code:
+        label: Verification Code
+        comment: Email verification code
+        span: auto
+        disabled: true
+        type: text
+    verified_at:
+        label: Verified At
+        comment: When email was verified
+        span: auto
+        disabled: true
+        type: datepicker
+    full_name:
+        label: Full Name
+        comment: Submitter's full name
+        span: auto
+        type: text
+    phone_number:
+        label: Phone Number
+        comment: Submitter's phone number
+        span: auto
+        type: text
+    country:
+        label: Country
+        comment: Submitter's country
+        span: auto
+        type: text
+    original_filename:
+        label: Original Filename
+        comment: Name of the file as submitted
+        span: auto
+        disabled: true
+        type: text
+    stored_filename:
+        label: Stored Filename
+        comment: Secure filename used for storage
+        span: auto
+        disabled: true
+        type: text
+    submission_date:
+        label: Submission Date
+        comment: When the submission was made
+        span: auto
+        type: datepicker
+    status:
+        label: Status
+        comment: Current status of the submission
+        span: auto
+        type: dropdown
+        options:
+            pending: Pending
+            verified: Email Verified
+            completed: Submission Completed
+            rejected: Rejected
+    admin_notes:
+        label: Admin Notes
+        comment: Internal notes for administrators
+        span: full
+        type: textarea
+        size: large

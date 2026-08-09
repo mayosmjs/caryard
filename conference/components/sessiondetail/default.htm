@@ -1,0 +1,129 @@
+<?php
+/**
+ * SessionDetail Component Template
+ *
+ * Displays a single session
+ */
+?>
+<div class="session-detail">
+    <?php if (isset($session) && $session): ?>
+        <div class="session-card card">
+            <div class="card-body">
+                <div class="session-header mb-4">
+                    <h2><?= e($session->title) ?></h2>
+
+                    <div class="session-meta">
+                        <?php if ($day): ?>
+                            <span class="badge badge-primary">
+                                <?= e($day->title) ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <?php if ($session->session_type): ?>
+                            <span class="badge badge-secondary">
+                                <?= e(ucfirst(str_replace('_', ' ', $session->session_type))) ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <?php if ($session->track): ?>
+                            <span class="badge badge-info">
+                                <?= e(ucfirst($session->track)) ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <?php if ($venue): ?>
+                            <span class="badge badge-dark">
+                                <i class="icon-map-marker"></i> <?= e($venue->name) ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="session-time mt-2">
+                        <i class="icon-clock"></i>
+                        <?= $session->starts_at->format('H:i') ?> -
+                        <?= $session->ends_at->format('H:i') ?>
+                        (<?= $session->getDurationInMinutes() ?> minutes)
+                    </div>
+
+                    <?php if ($session->capacity): ?>
+                        <div class="session-capacity mt-1">
+                            <i class="icon-users"></i> Capacity: <?= $session->capacity ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php
+                    // Session status
+                    if ($this->isNow($session)):
+                    ?>
+                        <div class="session-status mt-2">
+                            <span class="badge badge-success">Happening Now</span>
+                        </div>
+                    <?php elseif ($this->isUpcoming($session)): ?>
+                        <div class="session-status mt-2">
+                            <span class="badge badge-primary">Upcoming</span>
+                        </div>
+                    <?php else: ?>
+                        <div class="session-status mt-2">
+                            <span class="badge badge-secondary">Completed</span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <?php if ($session->description): ?>
+                    <div class="session-description mb-4">
+                        <?= $session->description ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($speakers && $speakers->count() > 0): ?>
+                    <div class="session-speakers mb-4">
+                        <h4>Speakers</h4>
+                        <div class="row">
+                            <?php foreach ($speakers as $speaker): ?>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card speaker-mini-card">
+                                        <div class="card-body text-center">
+                                            <img src="<?= $this->getPhotoUrl($speaker) ?>"
+                                                 alt="<?= e($speaker->full_name) ?>"
+                                                 class="rounded-circle mb-2"
+                                                 style="width: 80px; height: 80px; object-fit: cover;">
+
+                                            <h6 class="card-title">
+                                                <a href="<?= $this->pageUrl('speakers', ['slug' => $speaker->slug]) ?>">
+                                                    <?= e($speaker->full_name) ?>
+                                                </a>
+                                            </h6>
+
+                                            <?php if ($speaker->title): ?>
+                                                <p class="small text-muted"><?= e($speaker->title) ?></p>
+                                            <?php endif; ?>
+
+                                            <?php if ($speaker->company): ?>
+                                                <p class="small"><?= e($speaker->company) ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <div class="session-footer text-muted small">
+                    <p>
+                        <i class="icon-calendar"></i>
+                        <?= $day ? $day->date->format('F j, Y') : 'Date TBD' ?>
+                        <?php if ($venue): ?>
+                            <br><i class="icon-map-marker"></i> <?= e($venue->location) ?>
+                        <?php endif; ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    <?php else: ?>
+        <div class="alert alert-warning">
+            Session not found.
+        </div>
+    <?php endif; ?>
+</div>

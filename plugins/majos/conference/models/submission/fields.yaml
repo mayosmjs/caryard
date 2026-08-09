@@ -1,0 +1,34 @@
+fields:
+    status:
+        label: Status
+        span: auto
+    author_name:
+        label: Presenter
+        span: auto
+    email:
+        label: Email
+        span: auto
+    title:
+        label: Title
+        span: full
+    authors:
+        label: Authors
+        type: textarea
+        size: small
+    research_area:
+        label: Research Area
+        span: auto
+    research_topic:
+        label: Research Topic
+        span: auto
+    presentation_type:
+        label: Presentation Type
+        span: auto
+    abstract:
+        label: Abstract
+        type: textarea
+        size: giant
+    paper_file:
+        label: PDF
+        type: fileupload
+        mode: file

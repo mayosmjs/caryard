@@ -1,0 +1,13 @@
+
+columns:
+    name:
+        label: Name
+        searchable: true
+        sortable: true
+    description:
+        label: Description
+        truncate: 80
+    created_at:
+        label: Created
+        type: datetime
+        sortable: true

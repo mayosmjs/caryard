@@ -1,0 +1,41 @@
+# ===================================
+#  List Column Configuration
+# ===================================
+
+columns:
+    id:
+        label: ID
+        type: number
+        searchable: true
+    photo_file:
+        label: Photo
+        type: image
+    full_name:
+        label: Full Name
+        type: text
+        searchable: true
+    title:
+        label: Title
+        type: text
+        searchable: true
+    company:
+        label: Company
+        type: text
+        searchable: true
+    country:
+        label: Country
+        type: text
+        searchable: true
+    expertise:
+        label: Expertise
+        type: text
+        searchable: true
+    is_featured:
+        label: Featured
+        type: switch
+    is_published:
+        label: Published
+        type: switch
+    created_at:
+        label: Created
+        type: datetime

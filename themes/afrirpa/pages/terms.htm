@@ -1,0 +1,151 @@
+url = "/terms"
+title = "Terms of Service"
+layout = "default"
+is_hidden = false
+==
+
+<style>
+/* ── Terms page ──────────────────────────────────────────── */
+.terms-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 52px 20px 80px;
+}
+
+.terms-lead {
+  border: 1px solid rgba(167,139,250,.2);
+  border-top: 4px solid #a78bfa;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(45,27,105,.08);
+  padding: 28px 32px;
+  margin-bottom: 32px;
+}
+
+.terms-lead p {
+  margin: 0;
+  color: #475569;
+  font-size: 15.5px;
+  line-height: 1.75;
+}
+
+.terms-section {
+  border: 1px solid rgba(11,42,74,.12);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 6px 28px rgba(45,27,105,.06);
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: box-shadow 200ms ease;
+}
+.terms-section:hover {
+  box-shadow: 0 12px 40px rgba(45,27,105,.11);
+}
+
+.terms-section-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(90deg, rgba(45,27,105,.06), rgba(167,139,250,.12));
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(167,139,250,.15);
+}
+
+.terms-num {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3d2485, #2d1b69);
+  color: #c4b5fd;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .03em;
+}
+
+.terms-section-head h2 {
+  margin: 0;
+  color: #2d1b69;
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.terms-section-body {
+  padding: 22px 24px;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.8;
+}
+.terms-section-body p { margin: 0; }
+
+@media (max-width: 600px) {
+  .terms-lead  { padding: 20px 18px; }
+  .terms-section-head { padding: 16px 18px; }
+  .terms-section-body { padding: 18px 18px; }
+}
+</style>
+
+<section class="submit-hero relative overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="{{ 'assets/images/gtc.png'|theme }}" alt="" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-850 via-gray-850 to-accent-900"></div>
+        <div class="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-primary-500/30 blur-[120px]"></div>
+        <div class="absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-accent-500/30 blur-[120px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+    </div>
+    <div class="submit-hero-inner relative z-10">
+        <span class="submit-pill">Legal &amp; Participation</span>
+        <h1>Terms of <span class="submit-gradient">Service</span></h1>
+        <p>Everything you need to know about using our platform and attending the event.</p>
+    </div>
+</section>
+
+<div class="terms-main">
+
+  <div class="terms-lead">
+    <p>Please read the following terms and conditions carefully before using this website or submitting any information. By accessing or using this site, you agree to be bound by these terms.</p>
+  </div>
+
+  <div class="terms-section">
+    <div class="terms-section-head">
+      <div class="terms-num">01</div>
+      <h2>Copyright and Use of Content</h2>
+    </div>
+    <div class="terms-section-body">
+      <p>All content, including text, images, graphics, and data, is the property of the event organizers unless otherwise stated. Unauthorized reproduction, distribution, or use of any materials is strictly prohibited without prior written consent.</p>
+    </div>
+  </div>
+
+  <div class="terms-section">
+    <div class="terms-section-head">
+      <div class="terms-num">02</div>
+      <h2>Submission of Abstracts and Data</h2>
+    </div>
+    <div class="terms-section-body">
+      <p>By submitting abstracts or personal information, you grant the organizers the right to use, reproduce, and publish your submission for event-related purposes. Personal data will be handled in accordance with our privacy policy and applicable laws.</p>
+    </div>
+  </div>
+
+  <div class="terms-section">
+    <div class="terms-section-head">
+      <div class="terms-num">03</div>
+      <h2>Disclaimer &amp; Liability</h2>
+    </div>
+    <div class="terms-section-body">
+      <p>The organizers strive to ensure the accuracy of information on this site but do not guarantee its completeness or reliability. The event schedule, speakers, and content are subject to change without notice. The organizers are not liable for any direct or indirect damages arising from the use of this website.</p>
+    </div>
+  </div>
+
+  <div class="terms-section">
+    <div class="terms-section-head">
+      <div class="terms-num">04</div>
+      <h2>External Links &amp; Changes</h2>
+    </div>
+    <div class="terms-section-body">
+      <p>This website may contain links to external sites. The organizers are not responsible for the content or privacy practices of those sites. The organizers reserve the right to update these terms at any time.</p>
+    </div>
+  </div>
+
+</div>

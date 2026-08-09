@@ -1,0 +1,154 @@
+modelClass: Majos\Conference\Models\Submission
+
+form:
+    fields:
+        status:
+            label: Status
+            type: partial
+            path: $/majos/conference/partials/_form_status
+            span: left
+        author_name:
+            label: Presenter
+            type: text
+            span: right
+            disabled: true
+        email:
+            label: Email
+            type: text
+            span: right
+            disabled: true
+        affiliation:
+            label: Affiliation
+            type: textarea
+            size: small
+            span: left
+            disabled: true
+        institution:
+            label: Institution
+            type: text
+            span: right
+            disabled: true
+        department:
+            label: Department
+            type: text
+            span: left
+            disabled: true
+        city:
+            label: City
+            type: text
+            span: right
+            disabled: true
+        country:
+            label: Country
+            type: text
+            span: left
+            disabled: true
+        phone:
+            label: Phone
+            type: text
+            span: right
+            disabled: true
+        mobile:
+            label: Mobile
+            type: text
+            span: right
+            disabled: true
+        title:
+            label: Title
+            type: text
+            span: full
+            disabled: true
+        authors:
+            label: Authors
+            type: textarea
+            size: small
+            span: full
+            disabled: true
+        presentation_type:
+            label: Presentation Type
+            type: radio
+            span: left
+            disabled: true
+            options:
+                'Oral Presentation': Oral Presentation
+                'Poster-Oral Presentation': Poster-Oral Presentation
+                'Poster Presentation': Poster Presentation
+                'Young Scientist Competition': Young Scientist Competition
+        category:
+            label: Category
+            type: radio
+            span: right
+            disabled: true
+            options:
+                'Artificial Intelligence': Artificial Intelligence
+                'Brachytherapy': Brachytherapy
+                'Nuclear Medicine': Nuclear Medicine
+                'Particle Therapy': Particle Therapy
+                'Quality Assurance': Quality Assurance
+                'Radiation Biology': Radiation Biology
+                'Radiation Imaging': Radiation Imaging
+                'Radiation Protection': Radiation Protection
+                'Radiation Therapy': Radiation Therapy
+                'Others': Others
+        abstract:
+            label: Abstract
+            type: textarea
+            size: giant
+            span: full
+            disabled: true
+        keywords:
+            label: Keywords
+            type: taglist
+            span: full
+            # separator: ','
+            disabled: true
+        paper_file:
+            label: PDF File
+            type: fileupload
+            mode: file
+            span: left
+            useCaption: true
+            disabled: true
+            thumbOptions:
+                mode: crop
+                extension: 'pdf'
+        submitter_ip:
+            label: IP Address
+            type: text
+            span: right
+            disabled: true
+        created_at:
+            label: Submitted
+            type: datepicker
+            mode: datetime
+            format: d/m/Y H:i
+            span: left
+            disabled: true
+        updated_at:
+            label: Updated
+            type: datepicker
+            mode: datetime
+            format: d/m/Y H:i
+            span: right
+            disabled: true
+        decided_at:
+            label: Decided At
+            type: datepicker
+            mode: datetime
+            format: d/m/Y H:i
+            span: left
+            disabled: true
+        decided_by:
+            label: Decided By
+            type: text
+            span: right
+            disabled: true
+
+    showCreated: true
+    showUpdated: true
+
+    # Preview configuration
+    preview:
+        title: backend::lang.form.preview_title
+        redirect: majos/conference/submissions/update/:id
+        redirectClose: majos/conference/submissions

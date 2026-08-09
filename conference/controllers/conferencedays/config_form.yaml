@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Conference Day
+
+# Model Class name
+modelClass: Majos\Conference\Models\ConferenceDay
+
+# Model Form Field configuration
+form: $/majos/conference/models/ConferenceDay/fields.yaml
+
+# Default redirect location
+defaultRedirect: majos/conference/conferencedays
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/conference/conferencedays/update/:id
+    redirectClose: majos/conference/conferencedays
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/conference/conferencedays
+    redirectClose: majos/conference/conferencedays
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

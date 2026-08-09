@@ -1,0 +1,18 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+name: Venue
+modelClass: Majos\Conference\Models\Venue
+form: $/majos/conference/models/Venue/fields.yaml
+defaultRedirect: majos/conference/venues
+create:
+    title: backend::lang.form.create_title
+    redirect: majos/conference/venues/update/:id
+    redirectClose: majos/conference/venues
+update:
+    title: backend::lang.form.update_title
+    redirect: majos/conference/venues
+    redirectClose: majos/conference/venues
+preview:
+    title: backend::lang.form.preview_title

@@ -1,0 +1,231 @@
+description = "Default layout"
+==
+function onStart()
+{
+    $this['siteSettings'] = \Majos\Conference\Models\Settings::instance();
+}
+==
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if this.page.title %}{{ this.page.title }} | {% endif %}AFRIRPA 2027 | 7th African Regional Congress</title>
+    <meta name="description"
+        content="{% if this.page.description %}{{ this.page.description }}{% else %}Join radiation protection professionals from across Africa for three days of expert sessions, workshops, and networking at the premier radiation protection conference.{% endif %}">
+    <link rel="icon" href="{{ 'assets/images/favicon/favicon.ico'|theme }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ 'assets/images/favicon/favicon-32x32.png'|theme }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ 'assets/images/favicon/favicon-16x16.png'|theme }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ 'assets/images/favicon/apple-touch-icon.png'|theme }}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% if this.page.title %}{{ this.page.title }} | {% endif %}AFRIRPA 2027">
+    <meta property="og:description"
+        content="{% if this.page.description %}{{ this.page.description }}{% else %}Join radiation protection professionals from across Africa for three days of expert sessions, workshops, and networking at the premier radiation protection conference.{% endif %}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="AFRIRPA 2027">
+    <meta property="og:url" content="{{ app.url }}{{ this.page.url }}">
+    <meta property="og:image" content="{{ app.url }}{{ 'assets/images/logo.png'|theme }}">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="AFRIRPA 2027 Logo">
+    <meta property="og:locale" content="en_US">
+
+    <link rel="stylesheet" href="{{'assets/css/tailwindcss.css'|theme }}">
+    <link rel="stylesheet" href="{{'assets/css/custom.css'|theme }}">
+    {% styles %}
+    <style>
+        :root {
+            --site-navy: #1a0534;
+            --site-navy-2: #2d0e6b;
+            --site-navy-3: #4c1d95;
+            --site-amber: #a855f7;
+            --site-amber-2: #c084fc;
+            --site-amber-soft: #faf5ff;
+        }
+
+        body {
+            background: #f7fafc;
+        }
+
+        [data-header].scrolled {
+            background: rgba(26, 5, 52, 0.94);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            backdrop-filter: blur(16px);
+        }
+
+        .site-about-menu {
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .site-about-menu > a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .site-about-dropdown {
+            position: absolute;
+            left: 0;
+            top: 100%;
+            min-width: 190px;
+            display: none;
+            border: 1px solid rgba(168, 85, 247, 0.22);
+            border-radius: 14px;
+            background: rgba(26, 5, 52, 0.98);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.24);
+            padding: 8px;
+        }
+
+        .site-about-menu:hover .site-about-dropdown,
+        .site-about-menu:focus-within .site-about-dropdown {
+            display: block;
+        }
+
+        .site-about-dropdown a {
+            display: block;
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #cbd5e1 !important;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .site-about-dropdown a:hover {
+            background: rgba(168, 85, 247, 0.14);
+            color: #e9d5ff !important;
+        }
+
+        .bg-gradient-to-br.from-primary-500.to-accent-500,
+        .bg-gradient-to-r.from-primary-500.to-accent-500,
+        .bg-gradient-to-r.from-primary-500.to-accent-500:hover {
+            background-image: linear-gradient(90deg, var(--site-amber-2), var(--site-amber)) !important;
+            color: #ffffff !important;
+        }
+
+        .shadow-primary-500\/25,
+        .hover\:shadow-primary-500\/30:hover {
+            box-shadow: 0 16px 32px rgba(168, 85, 247, 0.26) !important;
+        }
+
+        .text-gradient,
+        .bg-gradient-to-r.from-primary-400.via-accent-400.to-primary-400 {
+            background-image: linear-gradient(90deg, #e9d5ff, var(--site-amber), #c084fc) !important;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent !important;
+        }
+
+        .text-primary-500,
+        .text-primary-400,
+        .hover\:text-primary-400:hover,
+        .hover\:text-primary-500:hover {
+            color: var(--site-amber) !important;
+        }
+
+        .text-accent-300,
+        .text-accent-400,
+        .text-accent-500,
+        .text-accent-700 {
+            color: var(--site-amber) !important;
+        }
+
+        .border-primary-500,
+        .hover\:border-primary-500:hover,
+        .border-accent-200 {
+            border-color: rgba(168, 85, 247, 0.45) !important;
+        }
+
+        .bg-primary-50,
+        .bg-accent-50 {
+            background-color: rgba(168, 85, 247, 0.11) !important;
+        }
+
+        .bg-primary-500,
+        .bg-accent-500 {
+            background-color: var(--site-amber) !important;
+            color: #ffffff !important;
+        }
+
+        .bg-blue-500,
+        .bg-green-500 {
+            background-color: var(--site-navy-3) !important;
+        }
+
+        header .bg-gradient-to-br,
+        footer .bg-gradient-to-br {
+            background-image: linear-gradient(135deg, var(--site-amber-2), var(--site-amber)) !important;
+            color: #ffffff !important;
+        }
+
+        main > section:first-child .absolute.inset-0.bg-gradient-to-br {
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+                radial-gradient(circle at 18% 12%, rgba(168, 85, 247, 0.28), transparent 35%),
+                radial-gradient(circle at 86% 20%, rgba(192, 132, 252, 0.20), transparent 38%),
+                linear-gradient(135deg, rgba(26, 5, 52, 0.72) 0%, rgba(45, 14, 107, 0.52) 45%, rgba(26, 5, 52, 0.32) 100%) !important;
+            background-size: 64px 64px, 64px 64px, auto, auto, auto !important;
+        }
+
+        @media (max-width: 768px) {
+            main > section:first-child .absolute.inset-0.bg-gradient-to-br {
+                background:
+                    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                    radial-gradient(circle at 20% 15%, rgba(168, 85, 247, 0.22), transparent 40%),
+                    radial-gradient(circle at 80% 25%, rgba(192, 132, 252, 0.17), transparent 45%),
+                    linear-gradient(180deg, rgba(26, 5, 52, 0.62) 0%, rgba(45, 14, 107, 0.32) 60%, rgba(26, 5, 52, 0.22) 100%) !important;
+            }
+        }
+
+        main > section:first-child .bg-primary-500\/30,
+        main > section:first-child .bg-accent-500\/30,
+        main > section:first-child .bg-primary-600\/20 {
+            background-color: rgba(168, 85, 247, 0.22) !important;
+        }
+
+        .bg-gray-50 {
+            background-color: #f7fafc !important;
+        }
+
+        footer.bg-gray-950,
+        .bg-gray-950 {
+            background-color: var(--site-navy) !important;
+        }
+
+        .rounded-2xl.border,
+        .rounded-xl.border {
+            border-color: rgba(11, 42, 74, 0.14) !important;
+        }
+
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-white text-gray-900 antialiased">
+
+    {% partial 'header' %}
+
+    <main>
+        {% page %}
+    </main>
+
+    {% partial 'footer' %}
+
+    {% framework extras %}
+    {% scripts %}
+</body>
+
+</html>
