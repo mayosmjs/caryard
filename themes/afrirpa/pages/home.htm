@@ -90,7 +90,22 @@ order = "full_name"
         <h1 class="afrirpa-neon-title w-full text-[6.5rem] sm:text-[10rem] lg:text-[16rem]">
           AFRIRPA
         </h1>
-        <p class="mt-4 text-sm uppercase tracking-[0.35em] text-fuchsia-200/90 sm:text-base">7th African Regional Congress</p>
+        <div class="mt-10 flex flex-col items-center">
+          <span
+            class="inline-flex items-center gap-2.5 rounded-full border border-fuchsia-300/25 bg-fuchsia-500/10 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.28em] text-fuchsia-200/90 backdrop-blur-sm">
+            <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h20M3 18l7.5-9 4 5 3.5-4L21 18"/><circle cx="7" cy="7" r="1.5"/></svg>
+            Official Affiliates
+          </span>
+          <div class="mt-6 grid w-full max-w-lg grid-cols-2 items-stretch gap-4 sm:gap-6">
+            <div class="flex h-20 items-center justify-center rounded-xl border border-white/40 bg-white/[0.06] p-4 backdrop-blur-sm transition duration-300 hover:border-white/70 hover:bg-white/10 sm:h-28">
+              <img src="{{ 'assets/images/affiliates/eaarp.png'|theme }}" alt="EAARP" class="h-full w-full object-contain" loading="eager">
+            </div>
+            <div class="flex h-20 items-center justify-center rounded-xl border border-white/40 bg-white/[0.06] p-4 backdrop-blur-sm transition duration-300 hover:border-white/70 hover:bg-white/10 sm:h-28">
+              <img src="{{ 'assets/images/affiliates/irpa.png'|theme }}" alt="IRPA" class="h-full w-full object-contain" loading="eager">
+            </div>
+          </div>
+        </div>
+        <p class="mt-8 text-sm uppercase tracking-[0.35em] text-fuchsia-200/90 sm:text-base">7th African Regional Congress</p>
         <p class="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-fuchsia-100/90 sm:text-xl lg:text-2xl">
           Congress of the International Radiation Protection Association with a renewed focus on science, safety and shared progress.
         </p>
